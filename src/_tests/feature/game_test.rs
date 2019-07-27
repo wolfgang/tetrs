@@ -37,18 +37,71 @@ fn after_100_ms_the_brick_drops_down_one_row() {
         "|          |",
     ]);
 
-    game.tick(30);
+    game.tick(75);
     verify_frame(&game, vec![
         "| ####     |",
         "|          |",
         "|          |",
     ]);
 
-    game.tick(41);
+    game.tick(101);
     verify_frame(&game, vec![
         "|          |",
         "| ####     |",
         "|          |",
     ])
 
+}
+
+#[test]
+fn every_100_ms_the_brick_drops_down_one_row() {
+    let mut game = Game::new();
+    game.tick(50);
+    verify_frame(&game, vec![
+        "| ####     |",
+        "|          |",
+        "|          |",
+    ]);
+
+    game.tick(105);
+    verify_frame(&game, vec![
+        "|          |",
+        "| ####     |",
+        "|          |",
+    ]);
+
+    game.tick(141);
+    verify_frame(&game, vec![
+        "|          |",
+        "| ####     |",
+        "|          |",
+    ]);
+
+    game.tick(200);
+    verify_frame(&game, vec![
+        "|          |",
+        "|          |",
+        "| ####     |",
+    ]);
+
+}
+
+#[test]
+fn drop_multiple_rows_if_enough_time_has_passed() {
+    let mut game = Game::new();
+    game.tick(50);
+    verify_frame(&game, vec![
+        "| ####     |",
+        "|          |",
+        "|          |",
+    ]);
+
+    game.tick(305);
+    verify_frame(&game, vec![
+        "|          |",
+        "|          |",
+        "|          |",
+        "| ####     |",
+        "|          |",
+    ]);
 }

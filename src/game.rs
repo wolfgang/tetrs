@@ -1,18 +1,20 @@
 use std::io::Write;
 
 pub struct Game {
-    time_millis: u64,
+    last_drop_millis: u64,
     brick_row: u8,
 }
 
 impl Game {
     pub fn new() -> Game {
-        Game { brick_row: 0, time_millis: 0 }
+        Game { brick_row: 0, last_drop_millis: 0 }
     }
 
-    pub fn tick(&mut self, delta_millis: u64) {
-        self.time_millis += delta_millis;
-        if self.time_millis > 100 { self.brick_row += 1; }
+    pub fn tick(&mut self, new_time_millis: u64) {
+        while new_time_millis - self.last_drop_millis  >= 100 {
+            self.brick_row += 1;
+            self.last_drop_millis = self.last_drop_millis + 100;
+        }
     }
 
     pub fn render(&self, writer: &mut dyn Write) -> std::io::Result<()> {
