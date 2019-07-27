@@ -1,8 +1,6 @@
 use std::io::Write;
 
-pub struct Game {
-
-}
+pub struct Game {}
 
 impl Game {
     pub fn new() -> Game {
@@ -10,8 +8,10 @@ impl Game {
     }
 
     pub fn render(&self, writer: &mut dyn Write) -> std::io::Result<()> {
-        writer.write(b"HELLO1\n")?;
-        writer.write(b"HELLO2\n")?;
+        for _ in 0..16 {
+            writer.write(b"|          |\n")?;
+        }
+        writer.write(b"------------\n")?;
         Ok(())
     }
 }

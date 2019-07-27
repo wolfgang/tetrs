@@ -2,26 +2,25 @@ use std::io::Cursor;
 use std::str;
 
 pub type OutputBuffer = Cursor<Vec<u8>>;
-type Output<'a> = Vec<&'a str>;
+type OutputLines<'a> = Vec<&'a str>;
 
 
-pub fn assert_output(buffer: &OutputBuffer, expected_output: Output) {
-    let rendered_output = output_from(buffer);
-    assert_eq!(rendered_output.len(), expected_output.len(), "Number of lines in output not as expected");
-
+pub fn assert_output(buffer: &OutputBuffer, expected_output: OutputLines) {
     let line_length = expected_output[0].len();
-    let actual_lines: Vec<String> = rendered_output
+    let output_trimmed: String = output_lines_from(buffer)
         .iter()
         .map(|s| s[0..line_length].to_string())
-        .collect();
+        .collect::<Vec<String>>()
+        .join("\n");
 
-    assert_eq!(actual_lines, expected_output);
+    assert_eq!(output_trimmed, expected_output.join("\n"));
 }
 
-fn output_from(buffer: &OutputBuffer) -> Output {
+
+fn output_lines_from(buffer: &OutputBuffer) -> OutputLines {
     let actual_string = str::from_utf8(buffer.get_ref()).unwrap();
     actual_string.split("\n")
-        .filter(|s| *s!="")
-        .collect::<Output>()
+        .filter(|s| *s != "")
+        .collect::<OutputLines>()
         .to_vec()
 }

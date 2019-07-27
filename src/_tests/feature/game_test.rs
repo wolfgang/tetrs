@@ -12,7 +12,22 @@ fn render_initially_shows_field_with_one_brick() {
     game.render(&mut cursor).unwrap();
 
     assert_output(&cursor, vec![
-        "HELLO1",
-        "HELLO2"
+        "|          |",
+        "|          |",
+        "|          |",
+        "|          |",
+        "|          |",
+        "|          |",
+        "|          |",
+        "|          |",
+        "|          |",
+        "|          |",
+        "|          |",
+        "|          |",
+        "|          |",
+        "|          |",
+        "|          |",
+        "|          |",
+        "------------"
     ])
 }
