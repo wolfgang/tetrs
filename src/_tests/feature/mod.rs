@@ -1,1 +1,1 @@
-pub mod feature_tests_work;
+pub mod stdout_testing_with_cursor;
