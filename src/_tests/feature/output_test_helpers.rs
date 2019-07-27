@@ -7,7 +7,7 @@ type OutputLines<'a> = Vec<&'a str>;
 
 pub fn assert_output_column(buffer: &OutputBuffer, expected_output: OutputLines) {
     let line_length = expected_output[0].len();
-    let output_trimmed: String = output_lines_from(buffer)
+    let output_trimmed: String = output_lines_from(buffer)[0..expected_output.len()]
         .iter()
         .map(|s| s[0..line_length].to_string())
         .collect::<Vec<String>>()

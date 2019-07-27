@@ -29,3 +29,19 @@ fn render_initially_shows_field_with_one_brick() {
         "------------"
     ])
 }
+
+
+#[test]
+fn after_100_ms_the_brick_drops_down_one_row() {
+    let mut cursor = Cursor::new(Vec::new());
+    let mut game = Game::new();
+    game.tick(101);
+    game.render(&mut cursor).unwrap();
+
+    assert_output_column(&cursor, vec![
+        "|          |",
+        "| ####     |",
+        "|          |",
+        "|          |",
+    ])
+}
