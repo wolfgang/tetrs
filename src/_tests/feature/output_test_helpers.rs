@@ -1,8 +1,15 @@
 use std::io::Cursor;
 use std::str;
+use crate::game::Game;
 
 pub type OutputBuffer = Cursor<Vec<u8>>;
 type OutputLines<'a> = Vec<&'a str>;
+
+pub fn render_game(game: &Game) -> OutputBuffer {
+    let mut buffer = Cursor::new(Vec::new());
+    game.render(&mut buffer).unwrap();
+    buffer
+}
 
 
 pub fn assert_output_column(buffer: &OutputBuffer, expected_output: OutputLines) {
