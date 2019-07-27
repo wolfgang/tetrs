@@ -5,7 +5,7 @@ pub type OutputBuffer = Cursor<Vec<u8>>;
 type OutputLines<'a> = Vec<&'a str>;
 
 
-pub fn assert_output(buffer: &OutputBuffer, expected_output: OutputLines) {
+pub fn assert_output_column(buffer: &OutputBuffer, expected_output: OutputLines) {
     let line_length = expected_output[0].len();
     let output_trimmed: String = output_lines_from(buffer)
         .iter()
