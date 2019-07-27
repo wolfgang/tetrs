@@ -5,12 +5,12 @@ use crate::game::Game;
 pub type OutputBuffer = Cursor<Vec<u8>>;
 type OutputLines<'a> = Vec<&'a str>;
 
-pub fn render_game(game: &Game) -> OutputBuffer {
-    let mut buffer = Cursor::new(Vec::new());
-    game.render(&mut buffer).unwrap();
-    buffer
-}
 
+pub fn verify_frame(game: &Game, expected_output: OutputLines) {
+    let mut cursor = Cursor::new(Vec::new());
+    game.render(&mut cursor).unwrap();
+    assert_output_column(&cursor, expected_output)
+}
 
 pub fn assert_output_column(buffer: &OutputBuffer, expected_output: OutputLines) {
     let line_length = expected_output[0].len();
