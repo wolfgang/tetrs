@@ -6,7 +6,7 @@ use super::output_test_helpers::*;
 
 #[test]
 fn nothing() {
-    let buffer = render("line1 1234\nline2 23233");
+    let buffer = render("line1 1234\nline2 23233\n");
     assert_output(&buffer, vec!["line1", "line2"])
 }
 
