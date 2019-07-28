@@ -22,11 +22,21 @@ impl ToStringRenderer {
     }
 
     pub fn assert_frame(&self, expected_frame: Vec<&str>) {
+        self.assert_frame_internal(expected_frame, false);
+    }
+
+    pub fn assert_frame_exact(&self, expected_frame: Vec<&str>) {
+        self.assert_frame_internal(expected_frame, true);
+    }
+
+    fn assert_frame_internal(&self, expected_frame: Vec<&str>, exact: bool) {
+        let max_checked_lines = if exact { self.frame.len() } else { expected_frame.len() };
         assert_eq!(
-            self.frame_as_strings()[0 .. expected_frame.len()].join("\n"),
+            self.frame_as_strings()[0 .. max_checked_lines].join("\n"),
             expected_frame.join("\n")
         )
     }
+
 
     fn frame_as_strings(&self) -> Vec<String> {
         self.frame

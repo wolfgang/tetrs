@@ -9,7 +9,7 @@ fn render_initially_shows_field_with_one_brick() {
 
     game.render(&mut renderer);
 
-    renderer.assert_frame(vec![
+    renderer.assert_frame_exact(vec![
         ".####.....",
         "..........",
         "..........",
@@ -97,7 +97,7 @@ fn after_brick_reaches_bottom_it_stays_there() {
     let mut renderer = ToStringRenderer::with_height(6);
     game.tick(300);
     game.render(&mut renderer);
-    renderer.assert_frame(vec![
+    renderer.assert_frame_exact(vec![
         "..........",
         "..........",
         "..........",
@@ -108,7 +108,7 @@ fn after_brick_reaches_bottom_it_stays_there() {
 
     game.tick(300 + 700);
     game.render(&mut renderer);
-    renderer.assert_frame(vec![
+    renderer.assert_frame_exact(vec![
         "..........",
         "..........",
         "..........",
@@ -119,7 +119,7 @@ fn after_brick_reaches_bottom_it_stays_there() {
 
     game.tick(300 + 700 + 1000);
     game.render(&mut renderer);
-    renderer.assert_frame(vec![
+    renderer.assert_frame_exact(vec![
         "..........",
         "..........",
         "..........",
@@ -132,10 +132,9 @@ fn after_brick_reaches_bottom_it_stays_there() {
 #[test]
 fn can_use_game_builder_to_override_initial_time() {
     let mut game = Game::init()
-        .with_field_height(6)
         .with_now_millis(5000)
         .build();
-    let mut renderer = ToStringRenderer::with_height(6);
+    let mut renderer = ToStringRenderer::default();
 
     game.tick(5000 + 100);
     game.render(&mut renderer);
