@@ -6,6 +6,14 @@ pub struct ToStringRenderer {
 }
 
 impl ToStringRenderer {
+    pub fn default() -> ToStringRenderer {
+        Self::new(10, 16)
+    }
+
+    pub fn with_height(height: usize) -> ToStringRenderer {
+        Self::new(10, height)
+    }
+
     pub fn new(width: usize, height: usize) -> ToStringRenderer {
         ToStringRenderer {
             frame: vec![Vec::with_capacity(width); height],

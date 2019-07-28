@@ -83,6 +83,7 @@ impl Game {
     }
 
     pub fn render(&self, renderer: &mut dyn TRenderer) {
+        renderer.clear();
         for row in 0..self.field_height {
             if row == self.brick_row {
                 renderer.draw_bricklet_at(1, row);
