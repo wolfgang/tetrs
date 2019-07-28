@@ -1,9 +1,10 @@
 use std::io::Write;
+use crate::trenderer::TRenderer;
 
 pub struct GameBuilder {
     field_height: u8,
     current_time_millis: u64,
-    drop_interval: u16
+    drop_interval: u16,
 }
 
 impl GameBuilder {
@@ -79,5 +80,16 @@ impl Game {
         }
         writer.write(b"------------\n")?;
         Ok(self.field_height + 1)
+    }
+
+    pub fn render2(&self, renderer: &mut dyn TRenderer) {
+        for row in 0..self.field_height {
+            if row == self.brick_row {
+                renderer.draw_bricklet_at(1, row);
+                renderer.draw_bricklet_at(2, row);
+                renderer.draw_bricklet_at(3, row);
+                renderer.draw_bricklet_at(4, row);
+            }
+        }
     }
 }
