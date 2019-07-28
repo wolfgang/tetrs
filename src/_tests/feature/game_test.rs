@@ -28,7 +28,7 @@ fn render_initially_shows_field_with_one_brick() {
 
 
 #[test]
-fn every_100_ms_the_brick_drops_down_one_row() {
+fn every_100_ms_since_last_drop_the_brick_drops_down_one_row() {
     let mut game = Game::default();
     game.tick(50);
     verify_frame(&game, vec![
@@ -51,7 +51,7 @@ fn every_100_ms_the_brick_drops_down_one_row() {
         "|          |",
     ]);
 
-    game.tick(200);
+    game.tick(205);
     verify_frame(&game, vec![
         "|          |",
         "|          |",
