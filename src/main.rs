@@ -16,13 +16,13 @@ fn main() -> std::io::Result<()> {
 
     let mut rendered_lines = field_height + 1;
 
-    let mut last_frame_millis = get_now_millis();
+    let mut last_render_millis = get_now_millis();
     loop {
         let now_millis = get_now_millis();
-        if now_millis - last_frame_millis > 32 {
-            last_frame_millis = now_millis;
-            stdout.clear_last_lines(rendered_lines as usize)?;
+        if now_millis - last_render_millis >= 100 {
             game.tick(get_now_millis());
+            last_render_millis = now_millis;
+            stdout.clear_last_lines(rendered_lines as usize)?;
             rendered_lines = game.render(&mut stdout).unwrap();
         }
     }
