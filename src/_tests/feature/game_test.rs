@@ -1,6 +1,6 @@
 use super::output_test_helpers::*;
 
-use crate::game::{Game, GameConfig};
+use crate::game::{Game, GameConfig, GameBuilder};
 
 #[test]
 fn render_initially_shows_field_with_one_brick() {
@@ -57,7 +57,6 @@ fn every_100_ms_the_brick_drops_down_one_row() {
         "|          |",
         "| ####     |",
     ]);
-
 }
 
 #[test]
@@ -83,7 +82,7 @@ fn drop_multiple_rows_if_enough_time_has_passed() {
 
 #[test]
 fn after_brick_reaches_bottom_it_stays_there() {
-    let mut game = Game::with_config(&GameConfig { field_height: 6});
+    let mut game = Game::with_config(&GameConfig { field_height: 6 });
     verify_frame(&game, vec![
         "| ####     |",
         "|          |",
@@ -129,8 +128,12 @@ fn after_brick_reaches_bottom_it_stays_there() {
 }
 
 #[test]
-fn init_time_sets_last_drop_time() {
-    let mut game = Game::with_config(&GameConfig { field_height: 6 });
+fn can_use_game_builder_to_override_initial_time() {
+    let mut game = GameBuilder::init()
+        .with_field_height(6)
+        .with_current_time_millis(5000)
+        .build();
+
     game.init_time(5000);
     game.tick(5000 + 100);
     verify_frame(&game, vec![
@@ -149,5 +152,4 @@ fn render_returns_number_of_lines_outputted() {
     let game = Game::with_config(&GameConfig { field_height: 6 });
     let (_, number_of_lines) = render_to_cursor(&game);
     assert_eq!(number_of_lines, 7)
-
 }
