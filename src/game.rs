@@ -56,15 +56,15 @@ impl Game {
     }
 
     pub fn tick(&mut self, new_time_millis: u64) {
-        let current_row = self.brick_row;
-        while new_time_millis - self.last_drop_millis >= self.drop_interval as u64 {
+        let mut now = new_time_millis;
+        while now - self.last_drop_millis >= self.drop_interval as u64 {
             if self.brick_row < self.field_height - 1 {
                 self.brick_row += 1;
             }
-            self.last_drop_millis = self.last_drop_millis + self.drop_interval as u64;
+            now -= self.drop_interval as u64;
         }
 
-        if self.brick_row > current_row {
+        if now != new_time_millis {
             self.last_drop_millis = new_time_millis;
         }
     }
