@@ -3,13 +3,15 @@ use std::io::Write;
 pub struct GameBuilder {
     field_height: u8,
     current_time_millis: u64,
+    drop_interval: u16
 }
 
 impl GameBuilder {
     pub fn init() -> GameBuilder {
         GameBuilder {
             field_height: 16,
-            current_time_millis: 0
+            drop_interval: 100,
+            current_time_millis: 0,
         }
     }
 
@@ -23,19 +25,25 @@ impl GameBuilder {
         self
     }
 
+    pub fn with_drop_interval(&mut self, drop_interval: u16) -> &mut Self {
+        self.drop_interval = drop_interval;
+        self
+    }
     pub fn build(&self) -> Game {
         Game {
+            field_height: self.field_height,
+            drop_interval: self.drop_interval,
             last_drop_millis: self.current_time_millis,
             brick_row: 0,
-            field_height: self.field_height
         }
     }
 }
 
 pub struct Game {
+    field_height: u8,
+    drop_interval: u16,
     last_drop_millis: u64,
     brick_row: u8,
-    field_height: u8,
 }
 
 impl Game {
@@ -48,11 +56,11 @@ impl Game {
     }
 
     pub fn tick(&mut self, new_time_millis: u64) {
-        while new_time_millis - self.last_drop_millis >= 100 {
+        while new_time_millis - self.last_drop_millis >= self.drop_interval as u64 {
             if self.brick_row < self.field_height - 1 {
                 self.brick_row += 1;
             }
-            self.last_drop_millis = self.last_drop_millis + 100;
+            self.last_drop_millis = self.last_drop_millis + self.drop_interval as u64;
         }
     }
 

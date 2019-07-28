@@ -147,6 +147,26 @@ fn can_use_game_builder_to_override_initial_time() {
 }
 
 #[test]
+fn can_use_game_builder_to_override_drop_interval() {
+    let mut game = Game::init()
+        .with_drop_interval(250)
+        .build();
+
+    game.tick(150);
+    verify_frame(&game, vec![
+        "| ####     |",
+        "|          |",
+    ]);
+
+    game.tick(250);
+    verify_frame(&game, vec![
+        "|          |",
+        "| ####     |"
+    ]);
+}
+
+
+#[test]
 fn render_returns_number_of_lines_outputted() {
     let game = Game::init().with_field_height(6).build();
     let (_, number_of_lines) = render_to_cursor(&game);
