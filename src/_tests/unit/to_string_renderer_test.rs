@@ -1,4 +1,4 @@
-use crate::to_string_renderer::ToStringRenderer;
+use crate::_tests::to_string_renderer::ToStringRenderer;
 
 #[test]
 fn clear_fills_buffer_with_dots() {
