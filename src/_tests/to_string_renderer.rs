@@ -1,3 +1,5 @@
+use crate::trenderer::TRenderer;
+
 pub struct ToStringRenderer {
     pub frame: Vec<Vec<char>>,
     width: usize,
@@ -9,16 +11,6 @@ impl ToStringRenderer {
             frame: vec![Vec::with_capacity(width); height],
             width,
         }
-    }
-
-    pub fn clear(&mut self) {
-        for i in 0..self.frame.len() {
-            self.frame[i] = vec!['.'; self.width];
-        }
-    }
-
-    pub fn draw_brick_at(&mut self, x: u8, y: u8) {
-        self.frame[y as usize][x as usize] = '#'
     }
 
     pub fn assert_frame(&self, expected_frame: Vec<&str>) {
@@ -33,5 +25,17 @@ impl ToStringRenderer {
             .iter()
             .map(|row| { row.iter().collect() })
             .collect()
+    }
+}
+
+impl TRenderer for ToStringRenderer {
+    fn clear(&mut self) {
+        for i in 0..self.frame.len() {
+            self.frame[i] = vec!['.'; self.width];
+        }
+    }
+
+    fn draw_bricklet_at(&mut self, x: u8, y: u8) {
+        self.frame[y as usize][x as usize] = '#'
     }
 }
