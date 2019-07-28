@@ -15,7 +15,7 @@ impl ToStringRenderer {
 
     pub fn assert_frame(&self, expected_frame: Vec<&str>) {
         assert_eq!(
-            self.frame_as_strings().join("\n"),
+            self.frame_as_strings()[0 .. expected_frame.len()].join("\n"),
             expected_frame.join("\n")
         )
     }
