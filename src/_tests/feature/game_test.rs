@@ -12,7 +12,7 @@ fn render_initially_shows_field_with_one_brick() {
 
     renderer.clear();
 
-    game.render2(&mut renderer);
+    game.render(&mut renderer);
 
     renderer.assert_frame(vec![
         ".####.....",

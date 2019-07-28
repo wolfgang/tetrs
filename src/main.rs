@@ -26,7 +26,7 @@ fn main() -> std::io::Result<()> {
             game.tick(get_now_millis());
             last_frame_millis = now_millis;
             stdout.clear_last_lines(rendered_lines as usize)?;
-            game.render(&mut stdout).unwrap();
+            game.render_to_console(&mut stdout).unwrap();
         }
     }
 

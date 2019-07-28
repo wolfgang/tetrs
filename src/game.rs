@@ -70,7 +70,7 @@ impl Game {
         }
     }
 
-    pub fn render(&self, writer: &mut dyn Write) -> std::io::Result<u8> {
+    pub fn render_to_console(&self, writer: &mut dyn Write) -> std::io::Result<u8> {
         for row in 0..self.field_height {
             if row == self.brick_row {
                 writer.write(b"| ####     |\n")?;
@@ -82,7 +82,7 @@ impl Game {
         Ok(self.field_height + 1)
     }
 
-    pub fn render2(&self, renderer: &mut dyn TRenderer) {
+    pub fn render(&self, renderer: &mut dyn TRenderer) {
         for row in 0..self.field_height {
             if row == self.brick_row {
                 renderer.draw_bricklet_at(1, row);

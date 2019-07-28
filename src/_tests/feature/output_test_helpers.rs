@@ -13,7 +13,7 @@ pub fn verify_frame(game: &Game, expected_output: OutputLines) {
 
 pub fn render_to_cursor(game: &Game) -> (OutputBuffer, u8) {
     let mut cursor = Cursor::new(Vec::new());
-    let number_of_lines = game.render(&mut cursor).unwrap();
+    let number_of_lines = game.render_to_console(&mut cursor).unwrap();
     (cursor, number_of_lines)
 }
 
