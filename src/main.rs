@@ -1,33 +1,33 @@
 use console::Term;
 use tetrs::game::Game;
 use std::time::{SystemTime, UNIX_EPOCH};
+use raylib;
+use raylib::Color;
+use tetrs::raylib_renderer::RaylibRenderer;
 
 #[allow(unreachable_code)]
 fn main() -> std::io::Result<()> {
 
     let field_height = 16;
+
     let mut game = Game::init()
         .with_now_millis(get_now_millis())
         .with_field_height(field_height)
         .with_drop_interval(500)
         .build();
 
+    let rl = raylib::init()
+        .size(800, 600)
+        .title("TetRS")
+        .build();
 
-    let  rendered_lines = field_height + 1;
+    let mut renderer = RaylibRenderer::new(&rl, 10, field_height as usize);
 
-    let mut stdout = Term::stdout();
-    stdout.clear_screen()?;
-
-    let mut last_frame_millis = get_now_millis();
-
-    loop {
-        let now_millis = get_now_millis();
-        if now_millis - last_frame_millis >= 100 {
-            game.tick(get_now_millis());
-            last_frame_millis = now_millis;
-            stdout.clear_last_lines(rendered_lines as usize)?;
-            game.render_to_console(&mut stdout).unwrap();
-        }
+    while ! rl.window_should_close() {
+        rl.begin_drawing();
+        game.tick(get_now_millis());
+        game.render(&mut renderer);
+        rl.end_drawing();
     }
 
     Ok(())
