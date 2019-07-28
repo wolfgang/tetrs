@@ -7,9 +7,14 @@ type OutputLines<'a> = Vec<&'a str>;
 
 
 pub fn verify_frame(game: &Game, expected_output: OutputLines) {
-    let mut cursor = Cursor::new(Vec::new());
-    game.render(&mut cursor).unwrap();
+    let (cursor, _) = render_to_cursor(game);
     assert_output_column(&cursor, expected_output)
+}
+
+pub fn render_to_cursor(game: &Game) -> (OutputBuffer, u8) {
+    let mut cursor = Cursor::new(Vec::new());
+    let number_of_lines = game.render(&mut cursor).unwrap();
+    (cursor, number_of_lines)
 }
 
 pub fn assert_output_column(buffer: &OutputBuffer, expected_output: OutputLines) {

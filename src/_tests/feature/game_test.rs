@@ -153,3 +153,11 @@ fn after_brick_reaches_bottom_it_stays_there() {
         "------------"
     ]);
 }
+
+#[test]
+fn render_returns_number_of_lines_outputted() {
+    let game = Game::with_config(&GameConfig { field_height: 6 });
+    let (_, number_of_lines) = render_to_cursor(&game);
+    assert_eq!(number_of_lines, 7)
+
+}

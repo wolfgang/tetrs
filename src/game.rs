@@ -16,6 +16,7 @@ impl Game {
         Game::with_config(&GameConfig {field_height: 16})
     }
 
+
     pub fn with_config(config: & GameConfig) -> Game {
         Game {
             brick_row: 0,
@@ -32,7 +33,7 @@ impl Game {
         }
     }
 
-    pub fn render(&self, writer: &mut dyn Write) -> std::io::Result<()> {
+    pub fn render(&self, writer: &mut dyn Write) -> std::io::Result<u8> {
         for row in 0..self.field_height {
             if row == self.brick_row {
                 writer.write(b"| ####     |\n")?;
@@ -41,6 +42,6 @@ impl Game {
             }
         }
         writer.write(b"------------\n")?;
-        Ok(())
+        Ok(self.field_height + 1)
     }
 }
