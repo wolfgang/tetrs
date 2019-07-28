@@ -23,6 +23,13 @@ impl ToStringRenderer {
         self.frame_buffer[y as usize][x as usize] = '#'
     }
 
+    pub fn assert_frame(&self, expected_frame: Vec<&str>) {
+        assert_eq!(
+            self.frame_buffer_strings().join("\n"),
+            expected_frame.join("\n")
+        )
+    }
+
     pub fn frame_buffer_strings(&self) -> Vec<String> {
         self.frame_buffer
             .iter()

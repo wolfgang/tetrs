@@ -5,8 +5,7 @@ fn clear_fills_buffer_with_dots() {
     let mut renderer = ToStringRenderer::new(2, 4);
     renderer.clear();
 
-    assert_eq!(
-        renderer.frame_buffer_strings(),
+    renderer.assert_frame(
         vec![
             "..",
             "..",
@@ -26,15 +25,11 @@ fn draw_brick_at_draws_hash_at_given_position() {
     renderer.draw_brick_at(0, 1);
     renderer.draw_brick_at(1, 2);
 
-    assert_eq!(
-        renderer.frame_buffer_strings(),
-        vec![
-            "##.",
-            "#..",
-            ".#.",
-            "..."
-        ]
-    );
-
+    renderer.assert_frame(vec![
+        "##.",
+        "#..",
+        ".#.",
+        "..."
+    ]);
 }
 
