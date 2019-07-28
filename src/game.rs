@@ -12,7 +12,9 @@ impl Game {
 
     pub fn tick(&mut self, new_time_millis: u64) {
         while new_time_millis - self.last_drop_millis  >= 100 {
-            self.brick_row += 1;
+            if self.brick_row < 15 {
+                self.brick_row += 1;
+            }
             self.last_drop_millis = self.last_drop_millis + 100;
         }
     }
