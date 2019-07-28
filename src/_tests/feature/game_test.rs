@@ -1,6 +1,6 @@
 use super::output_test_helpers::*;
 
-use crate::game::Game;
+use crate::game::{Game, GameConfig};
 
 #[test]
 fn render_initially_shows_field_with_one_brick() {
@@ -109,25 +109,9 @@ fn drop_multiple_rows_if_enough_time_has_passed() {
 
 #[test]
 fn after_brick_reaches_bottom_it_stays_there() {
-    let mut game = Game::new();
+    let mut game = Game::with_config(&GameConfig { field_height: 6});
     verify_frame(&game, vec![
         "| ####     |",
-        "|          |",
-    ]);
-
-    game.tick(500);
-    verify_frame(&game, vec![
-        "|          |",
-        "|          |",
-        "|          |",
-        "|          |",
-        "|          |",
-        "| ####     |",
-        "|          |",
-        "|          |",
-        "|          |",
-        "|          |",
-        "|          |",
         "|          |",
         "|          |",
         "|          |",
@@ -136,39 +120,19 @@ fn after_brick_reaches_bottom_it_stays_there() {
         "------------"
     ]);
 
-    game.tick(500 + 900);
+    game.tick(300);
     verify_frame(&game, vec![
-        "|          |",
-        "|          |",
-        "|          |",
-        "|          |",
-        "|          |",
-        "|          |",
-        "|          |",
-        "|          |",
-        "|          |",
-        "|          |",
-        "|          |",
         "|          |",
         "|          |",
         "|          |",
         "| ####     |",
         "|          |",
+        "|          |",
         "------------"
     ]);
 
-    game.tick(500 + 900 + 500);
+    game.tick(300 + 700);
     verify_frame(&game, vec![
-        "|          |",
-        "|          |",
-        "|          |",
-        "|          |",
-        "|          |",
-        "|          |",
-        "|          |",
-        "|          |",
-        "|          |",
-        "|          |",
         "|          |",
         "|          |",
         "|          |",
@@ -178,5 +142,14 @@ fn after_brick_reaches_bottom_it_stays_there() {
         "------------"
     ]);
 
-
+    game.tick(300 + 700 + 1000);
+    verify_frame(&game, vec![
+        "|          |",
+        "|          |",
+        "|          |",
+        "|          |",
+        "|          |",
+        "| ####     |",
+        "------------"
+    ]);
 }

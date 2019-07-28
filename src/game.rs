@@ -1,5 +1,10 @@
 use std::io::Write;
 
+
+pub struct GameConfig {
+    pub field_height: u8
+}
+
 pub struct Game {
     last_drop_millis: u64,
     brick_row: u8,
@@ -8,7 +13,14 @@ pub struct Game {
 
 impl Game {
     pub fn new() -> Game {
-        Game { brick_row: 0, last_drop_millis: 0, field_height: 16 }
+        Game::with_config(&GameConfig {field_height: 16})
+    }
+
+    pub fn with_config(config: & GameConfig) -> Game {
+        Game {
+            brick_row: 0,
+            last_drop_millis: 0,
+            field_height: config.field_height }
     }
 
     pub fn tick(&mut self, new_time_millis: u64) {
