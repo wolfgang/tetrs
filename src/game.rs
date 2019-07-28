@@ -18,7 +18,7 @@ impl GameBuilder {
         self
     }
 
-    pub fn with_current_time_millis(&mut self, current_time_millis: u64) -> &mut Self {
+    pub fn with_now_millis(&mut self, current_time_millis: u64) -> &mut Self {
         self.current_time_millis = current_time_millis;
         self
     }
@@ -44,21 +44,12 @@ pub struct Game {
 }
 
 impl Game {
-    pub fn new() -> Game {
-        Game::with_config(&GameConfig { field_height: 16 })
+    pub fn init() -> GameBuilder {
+        GameBuilder::init()
     }
 
-
-    pub fn with_config(config: &GameConfig) -> Game {
-        Game {
-            brick_row: 0,
-            last_drop_millis: 0,
-            field_height: config.field_height,
-        }
-    }
-
-    pub fn init_time(&mut self, now_millis: u64) {
-        self.last_drop_millis = now_millis;
+    pub fn default() -> Game {
+        Self::init().build()
     }
 
     pub fn tick(&mut self, new_time_millis: u64) {

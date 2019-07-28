@@ -7,16 +7,18 @@ fn main() -> std::io::Result<()> {
     let mut stdout = Term::stdout();
 //    stdout.write_line("Hello, world!");
 
-    let mut game = Game::new();
+    let field_height = 16;
+    let mut game = Game::init()
+        .with_now_millis(get_now_millis())
+        .with_field_height(field_height)
+        .build();
 
-    let mut number_of_lines = 16;
 
-    game.init_time(get_now_millis());
-
+    let mut rendered_lines = field_height + 1;
     loop {
-        stdout.clear_last_lines(number_of_lines as usize)?;
+        stdout.clear_last_lines(rendered_lines as usize)?;
         game.tick(get_now_millis());
-        number_of_lines = game.render(&mut stdout).unwrap();
+        rendered_lines = game.render(&mut stdout).unwrap();
 
     }
 
