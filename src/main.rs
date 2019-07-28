@@ -5,7 +5,6 @@ use std::time::{SystemTime, UNIX_EPOCH};
 #[allow(unreachable_code)]
 fn main() -> std::io::Result<()> {
     let mut stdout = Term::stdout();
-//    stdout.write_line("Hello, world!");
 
     let field_height = 16;
     let mut game = Game::init()
@@ -15,11 +14,16 @@ fn main() -> std::io::Result<()> {
 
 
     let mut rendered_lines = field_height + 1;
-    loop {
-        stdout.clear_last_lines(rendered_lines as usize)?;
-        game.tick(get_now_millis());
-        rendered_lines = game.render(&mut stdout).unwrap();
 
+    let mut last_frame_millis = get_now_millis();
+    loop {
+        let now_millis = get_now_millis();
+        if now_millis - last_frame_millis > 32 {
+            last_frame_millis = now_millis;
+            stdout.clear_last_lines(rendered_lines as usize)?;
+            game.tick(get_now_millis());
+            rendered_lines = game.render(&mut stdout).unwrap();
+        }
     }
 
     Ok(())

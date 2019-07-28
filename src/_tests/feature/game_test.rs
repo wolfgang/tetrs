@@ -1,6 +1,6 @@
 use super::output_test_helpers::*;
 
-use crate::game::{Game, GameConfig};
+use crate::game::Game;
 
 #[test]
 fn render_initially_shows_field_with_one_brick() {

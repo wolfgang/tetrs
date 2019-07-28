@@ -32,11 +32,6 @@ impl GameBuilder {
     }
 }
 
-
-pub struct GameConfig {
-    pub field_height: u8
-}
-
 pub struct Game {
     last_drop_millis: u64,
     brick_row: u8,
