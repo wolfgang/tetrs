@@ -28,32 +28,6 @@ fn render_initially_shows_field_with_one_brick() {
 
 
 #[test]
-fn after_100_ms_the_brick_drops_down_one_row() {
-    let mut game = Game::new();
-    game.tick(30);
-    verify_frame(&game, vec![
-        "| ####     |",
-        "|          |",
-        "|          |",
-    ]);
-
-    game.tick(75);
-    verify_frame(&game, vec![
-        "| ####     |",
-        "|          |",
-        "|          |",
-    ]);
-
-    game.tick(101);
-    verify_frame(&game, vec![
-        "|          |",
-        "| ####     |",
-        "|          |",
-    ])
-
-}
-
-#[test]
 fn every_100_ms_the_brick_drops_down_one_row() {
     let mut game = Game::new();
     game.tick(50);
@@ -150,6 +124,22 @@ fn after_brick_reaches_bottom_it_stays_there() {
         "|          |",
         "|          |",
         "| ####     |",
+        "------------"
+    ]);
+}
+
+#[test]
+fn init_time_sets_last_drop_time() {
+    let mut game = Game::with_config(&GameConfig { field_height: 6 });
+    game.init_time(5000);
+    game.tick(5000 + 100);
+    verify_frame(&game, vec![
+        "|          |",
+        "| ####     |",
+        "|          |",
+        "|          |",
+        "|          |",
+        "|          |",
         "------------"
     ]);
 }

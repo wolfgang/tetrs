@@ -24,6 +24,10 @@ impl Game {
             field_height: config.field_height }
     }
 
+    pub fn init_time(&mut self, now_millis: u64) {
+        self.last_drop_millis = now_millis;
+    }
+
     pub fn tick(&mut self, new_time_millis: u64) {
         while new_time_millis - self.last_drop_millis  >= 100 {
             if self.brick_row < self.field_height - 1 {
