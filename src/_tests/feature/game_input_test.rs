@@ -5,13 +5,15 @@ use crate::tinput::TInput;
 use std::rc::Rc;
 use std::cell::RefCell;
 
-struct StubbedInput {
+type InputStubRef = Rc<RefCell<InputStub>>;
+
+struct InputStub {
     moving_right: bool,
     moving_left: bool
 }
 
-impl StubbedInput {
-    pub fn new_rc() -> Rc<RefCell<StubbedInput>> {
+impl InputStub {
+    pub fn new_rc() -> InputStubRef {
         Rc::new(RefCell::new(
             Self {
                 moving_right: false,
@@ -29,7 +31,7 @@ impl StubbedInput {
     }
 }
 
-impl TInput for StubbedInput {
+impl TInput for InputStub {
     fn wants_to_move_left(&self) -> bool {
         self.moving_left
     }
@@ -39,15 +41,9 @@ impl TInput for StubbedInput {
     }
 }
 
-
 #[test]
 fn cursor_right_moves_brick_right_every_50_ms() {
-    let input = StubbedInput::new_rc();
-    let mut game = Game::init()
-        .with_input(input.clone())
-        .with_drop_interval(1000)
-        .build();
-    let mut renderer = ToStringRenderer::default();
+    let (mut game, input, mut renderer) = setup_game();
 
     input.borrow_mut().toggle_moving_right(true);
 
@@ -74,7 +70,6 @@ fn cursor_right_moves_brick_right_every_50_ms() {
     game.render(&mut renderer);
     renderer.assert_frame(vec!["..####...."]);
 
-
     game.tick(200);
     game.render(&mut renderer);
     renderer.assert_frame(vec![".####....."]);
@@ -82,12 +77,7 @@ fn cursor_right_moves_brick_right_every_50_ms() {
 
 #[test]
 fn horizontal_movement_is_constrained_by_bounds() {
-    let input = StubbedInput::new_rc();
-    let mut game = Game::init()
-        .with_input(input.clone())
-        .with_drop_interval(5000)
-        .build();
-    let mut renderer = ToStringRenderer::default();
+    let (mut game, input, mut renderer) = setup_game();
 
     input.borrow_mut().toggle_moving_left(true);
 
@@ -114,5 +104,14 @@ fn horizontal_movement_is_constrained_by_bounds() {
     game.tick(450);
     game.render(&mut renderer);
     renderer.assert_frame(vec!["......####"]);
+}
 
+fn setup_game() -> (Game, InputStubRef, ToStringRenderer) {
+    let input = InputStub::new_rc();
+    let game = Game::init()
+        .with_input(input.clone())
+        .with_drop_interval(5000)
+        .build();
+
+    (game, input, ToStringRenderer::default())
 }
