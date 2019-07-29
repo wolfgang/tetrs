@@ -1,5 +1,5 @@
 use crate::_tests::helpers::to_string_renderer::*;
-use crate::gfx::trenderer::TRenderer;
+use crate::trenderer::TRenderer;
 
 #[test]
 fn clear_fills_buffer_with_dots() {

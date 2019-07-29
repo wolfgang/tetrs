@@ -1,4 +1,4 @@
-use crate::gfx::trenderer::TRenderer;
+use crate::trenderer::TRenderer;
 
 pub struct ToStringRenderer {
     pub frame: Vec<Vec<char>>,

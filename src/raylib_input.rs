@@ -2,7 +2,7 @@ use raylib::RaylibHandle;
 use raylib::consts::KEY_RIGHT;
 use crate::tinput::{TInput, TInputRef};
 use std::rc::Rc;
-use std::cell::{RefCell, Ref};
+use std::cell::RefCell;
 
 pub struct RaylibInput  {
     rl: Rc<RaylibHandle>

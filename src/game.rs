@@ -1,5 +1,5 @@
 use std::io::Write;
-use crate::gfx::trenderer::TRenderer;
+use crate::trenderer::TRenderer;
 use crate::tinput::{TInputRef, TInputNull};
 
 pub struct GameBuilder {

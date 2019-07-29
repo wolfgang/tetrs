@@ -1,7 +1,6 @@
 use raylib::{RaylibHandle, Color};
-use crate::gfx::trenderer::TRenderer;
+use crate::trenderer::TRenderer;
 use std::rc::Rc;
-use std::cell::RefCell;
 
 const BRICKLET_SIZE: i32 = 32;
 
