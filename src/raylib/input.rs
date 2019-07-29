@@ -16,7 +16,7 @@ impl RaylibInput {
 
 impl TInput for RaylibInput {
     fn wants_to_move_left(&self) -> bool {
-        self.rl.is_key_pressed(KEY_LEFT as i32)
+        self.rl.is_key_down(KEY_LEFT as i32)
     }
 
     fn wants_to_move_right(&self) -> bool {

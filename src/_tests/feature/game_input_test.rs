@@ -75,4 +75,8 @@ fn cursor_right_moves_brick_right_every_50_ms() {
     renderer.assert_frame(vec!["..####...."]);
 
 
+    game.tick(200);
+    game.render(&mut renderer);
+    renderer.assert_frame(vec![".####....."]);
+
 }
