@@ -2,4 +2,5 @@
 pub mod _tests;
 
 pub mod game;
+pub mod tinput;
 pub mod gfx;
