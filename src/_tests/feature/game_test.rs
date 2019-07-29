@@ -1,4 +1,4 @@
-use crate::_tests::to_string_renderer::ToStringRenderer;
+use crate::_tests::helpers::to_string_renderer::*;
 use crate::game::Game;
 
 #[test]
