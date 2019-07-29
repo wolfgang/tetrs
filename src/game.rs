@@ -124,7 +124,7 @@ impl Game {
     }
 
     fn get_horizontal_move_speed(&self, now_millis: u64) -> i8 {
-        if now_millis - self.last_move_millis >= 50 {
+        if self.brick_y < self.field_height - 1 && now_millis - self.last_move_millis >= 50 {
             if self.input.borrow().wants_to_move_right() && self.brick_x < self.field_width - 4 {
                 return 1
             }

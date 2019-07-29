@@ -106,6 +106,45 @@ fn horizontal_movement_is_constrained_by_bounds() {
     renderer.assert_frame(vec!["......####"]);
 }
 
+#[test]
+fn cannot_move_horizontally_when_on_ground() {
+    let input = InputStub::new_rc();
+    let mut game = Game::init()
+        .with_input(input.clone())
+        .with_drop_interval(100)
+        .with_field_height(2)
+        .build();
+
+    let mut renderer = ToStringRenderer::with_height(2);
+
+    game.tick(100);
+    game.render(&mut renderer);
+    renderer.assert_frame_exact(vec![
+        "..........",
+        ".####....."
+    ]);
+
+    input.borrow_mut().toggle_moving_left(true);
+
+    game.tick(150);
+    game.render(&mut renderer);
+    renderer.assert_frame_exact(vec![
+        "..........",
+        ".####....."
+    ]);
+
+    input.borrow_mut().toggle_moving_left(false);
+    input.borrow_mut().toggle_moving_right(true);
+
+    game.tick(200);
+    game.render(&mut renderer);
+    renderer.assert_frame_exact(vec![
+        "..........",
+        ".####....."
+    ]);
+
+}
+
 fn setup_game() -> (Game, InputStubRef, ToStringRenderer) {
     let input = InputStub::new_rc();
     let game = Game::init()
