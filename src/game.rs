@@ -44,6 +44,7 @@ impl GameBuilder {
             field_height: self.field_height,
             drop_interval: self.drop_interval,
             last_drop_millis: self.current_time_millis,
+            last_move_millis: 0,
             input: self.input.clone(),
             brick_x: 1,
             brick_y: 0,
@@ -55,6 +56,7 @@ pub struct Game {
     field_height: u8,
     drop_interval: u16,
     last_drop_millis: u64,
+    last_move_millis: u64,
     brick_x: u8,
     brick_y: u8,
     input: TInputRef
@@ -70,11 +72,13 @@ impl Game {
     }
 
     pub fn tick(&mut self, new_time_millis: u64) {
-        if self.input.borrow().wants_to_move_right() {
+        let mut now = new_time_millis;
+
+        if self.input.borrow().wants_to_move_right() && now - self.last_move_millis >= 50 {
+            self.last_move_millis = now;
             self.brick_x += 1;
         }
 
-        let mut now = new_time_millis;
         while now - self.last_drop_millis >= self.drop_interval as u64 {
             if self.brick_y < self.field_height - 1 {
                 self.brick_y += 1;

@@ -25,28 +25,35 @@ impl TInput for TInputAlwaysGoingRight {
 
 
 #[test]
-fn cursor_right_moves_brick_right() {
+fn cursor_right_moves_brick_right_every_50_ms() {
     let mut game = Game::init()
         .with_input(TInputAlwaysGoingRight::new_rc())
-        .with_drop_interval(100)
+        .with_drop_interval(1000)
         .build();
     let mut renderer = ToStringRenderer::default();
 
-    game.tick(50);
+    game.tick(10);
+    game.render(&mut renderer);
+    renderer.assert_frame(vec![
+        ".####.....",
+    ]);
 
+    game.tick(50);
     game.render(&mut renderer);
     renderer.assert_frame(vec![
         "..####....",
-        "..........",
-        "..........",
     ]);
 
-    game.tick(150);
+    game.tick(80);
     game.render(&mut renderer);
     renderer.assert_frame(vec![
-        "..........",
+        "..####....",
+    ]);
+
+    game.tick(100);
+    game.render(&mut renderer);
+    renderer.assert_frame(vec![
         "...####...",
-        "..........",
     ]);
 
 }
