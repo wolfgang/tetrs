@@ -2,7 +2,7 @@ use tetrs::game::Game;
 use std::time::{SystemTime, UNIX_EPOCH};
 use raylib;
 use tetrs::gfx::raylib_renderer::RaylibRenderer;
-use tetrs::raylib_input::RaylibInput;
+use tetrs::gfx::raylib_input::RaylibInput;
 use std::rc::Rc;
 
 fn main() {

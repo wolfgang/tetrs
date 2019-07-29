@@ -4,5 +4,4 @@ pub mod _tests;
 pub mod game;
 pub mod tinput;
 pub mod trenderer;
-pub mod raylib_input;
 pub mod gfx;
