@@ -1,10 +1,12 @@
 use std::io::Write;
 use crate::gfx::trenderer::TRenderer;
+use crate::tinput::{TInputRef, TInputNull};
 
 pub struct GameBuilder {
     field_height: u8,
     current_time_millis: u64,
     drop_interval: u16,
+    input: TInputRef
 }
 
 impl GameBuilder {
@@ -13,6 +15,7 @@ impl GameBuilder {
             field_height: 16,
             drop_interval: 100,
             current_time_millis: 0,
+            input: TInputNull::new_rc()
         }
     }
 
@@ -35,6 +38,7 @@ impl GameBuilder {
             field_height: self.field_height,
             drop_interval: self.drop_interval,
             last_drop_millis: self.current_time_millis,
+            input: self.input.clone(),
             brick_row: 0,
         }
     }
@@ -45,6 +49,7 @@ pub struct Game {
     drop_interval: u16,
     last_drop_millis: u64,
     brick_row: u8,
+    input: TInputRef
 }
 
 impl Game {
