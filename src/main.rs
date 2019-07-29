@@ -1,7 +1,7 @@
 use tetrs::game::Game;
 use std::time::{SystemTime, UNIX_EPOCH};
 use raylib;
-use tetrs::raylib_renderer::RaylibRenderer;
+use tetrs::gfx::raylib_renderer::RaylibRenderer;
 
 fn main() {
     let field_height = 16;
@@ -16,7 +16,7 @@ fn main() {
     let mut game = Game::init()
         .with_now_millis(get_now_millis())
         .with_field_height(field_height)
-        .with_drop_interval(500)
+        .with_drop_interval(1000)
         .build();
 
     while !rl.window_should_close() {

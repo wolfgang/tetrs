@@ -1,5 +1,5 @@
 use std::io::Write;
-use crate::trenderer::TRenderer;
+use crate::gfx::trenderer::TRenderer;
 
 pub struct GameBuilder {
     field_height: u8,
