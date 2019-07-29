@@ -1,5 +1,5 @@
 use raylib::RaylibHandle;
-use raylib::consts::KEY_RIGHT;
+use raylib::consts::{KEY_RIGHT, KEY_LEFT};
 use crate::tinput::{TInput, TInputRef};
 use std::rc::Rc;
 use std::cell::RefCell;
@@ -16,7 +16,7 @@ impl RaylibInput {
 
 impl TInput for RaylibInput {
     fn wants_to_move_left(&self) -> bool {
-        false
+        self.rl.is_key_pressed(KEY_LEFT as i32)
     }
 
     fn wants_to_move_right(&self) -> bool {

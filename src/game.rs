@@ -79,6 +79,12 @@ impl Game {
             self.brick_x += 1;
         }
 
+        if self.input.borrow().wants_to_move_left() && now - self.last_move_millis >= 50 {
+            self.last_move_millis = now;
+            self.brick_x -= 1;
+        }
+
+
         while now - self.last_drop_millis >= self.drop_interval as u64 {
             if self.brick_y < self.field_height - 1 {
                 self.brick_y += 1;
