@@ -41,6 +41,7 @@ impl GameBuilder {
 
     pub fn build(&self) -> Game {
         Game {
+            field_width: 10,
             field_height: self.field_height,
             drop_interval: self.drop_interval,
             last_drop_millis: self.current_time_millis,
@@ -54,6 +55,7 @@ impl GameBuilder {
 
 pub struct Game {
     field_height: u8,
+    field_width: u8,
     drop_interval: u16,
     last_drop_millis: u64,
     last_move_millis: u64,
@@ -123,8 +125,12 @@ impl Game {
 
     fn get_horizontal_move_speed(&self, now_millis: u64) -> i8 {
         if now_millis - self.last_move_millis >= 50 {
-            if self.input.borrow().wants_to_move_right() { return 1}
-            if self.input.borrow().wants_to_move_left() { return -1}
+            if self.input.borrow().wants_to_move_right() && self.brick_x < self.field_width - 4 {
+                return 1
+            }
+            if self.input.borrow().wants_to_move_left() && self.brick_x > 0 {
+                return -1
+            }
         }
         0
     }

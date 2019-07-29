@@ -79,3 +79,40 @@ fn cursor_right_moves_brick_right_every_50_ms() {
     game.render(&mut renderer);
     renderer.assert_frame(vec![".####....."]);
 }
+
+#[test]
+fn horizontal_movement_is_constrained_by_bounds() {
+    let input = StubbedInput::new_rc();
+    let mut game = Game::init()
+        .with_input(input.clone())
+        .with_drop_interval(5000)
+        .build();
+    let mut renderer = ToStringRenderer::default();
+
+    input.borrow_mut().toggle_moving_left(true);
+
+    game.tick(50);
+    game.render(&mut renderer);
+    renderer.assert_frame(vec!["####......"]);
+
+    game.tick(100);
+    game.render(&mut renderer);
+    renderer.assert_frame(vec!["####......"]);
+
+    input.borrow_mut().toggle_moving_left(false);
+    input.borrow_mut().toggle_moving_right(true);
+
+    game.tick(150);
+    game.tick(200);
+    game.tick(250);
+    game.tick(300);
+    game.tick(350);
+    game.tick(400);
+    game.render(&mut renderer);
+    renderer.assert_frame(vec!["......####"]);
+
+    game.tick(450);
+    game.render(&mut renderer);
+    renderer.assert_frame(vec!["......####"]);
+
+}
