@@ -1,2 +1,2 @@
-pub mod raylib_renderer;
-pub mod raylib_input;
+pub mod renderer;
+pub mod input;
