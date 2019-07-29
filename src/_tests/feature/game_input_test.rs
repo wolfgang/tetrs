@@ -22,12 +22,15 @@ impl InputStub {
         ))
     }
     
-    pub fn toggle_moving_right(&mut self, b: bool) {
-        self.moving_right = b;
+    pub fn is_moving_right(&mut self) {
+        self.moving_right = true;
+        self.moving_left = false;
     }
 
-    pub fn toggle_moving_left(&mut self, b: bool) {
-        self.moving_left = b;
+    pub fn is_moving_left(&mut self) {
+        self.moving_left = true;
+        self.moving_right = false;
+
     }
 }
 
@@ -45,7 +48,7 @@ impl TInput for InputStub {
 fn cursor_right_moves_brick_right_every_50_ms() {
     let (mut game, input, mut renderer) = setup_game();
 
-    input.borrow_mut().toggle_moving_right(true);
+    input.borrow_mut().is_moving_right();
 
     game.tick(10);
     game.render(&mut renderer);
@@ -63,8 +66,7 @@ fn cursor_right_moves_brick_right_every_50_ms() {
     game.render(&mut renderer);
     renderer.assert_frame(vec!["...####..."]);
 
-    input.borrow_mut().toggle_moving_right(false);
-    input.borrow_mut().toggle_moving_left(true);
+    input.borrow_mut().is_moving_left();
 
     game.tick(150);
     game.render(&mut renderer);
@@ -79,7 +81,7 @@ fn cursor_right_moves_brick_right_every_50_ms() {
 fn horizontal_movement_is_constrained_by_bounds() {
     let (mut game, input, mut renderer) = setup_game();
 
-    input.borrow_mut().toggle_moving_left(true);
+    input.borrow_mut().is_moving_left();
 
     game.tick(50);
     game.render(&mut renderer);
@@ -89,8 +91,7 @@ fn horizontal_movement_is_constrained_by_bounds() {
     game.render(&mut renderer);
     renderer.assert_frame(vec!["####......"]);
 
-    input.borrow_mut().toggle_moving_left(false);
-    input.borrow_mut().toggle_moving_right(true);
+    input.borrow_mut().is_moving_right();
 
     game.tick(150);
     game.tick(200);
@@ -124,7 +125,7 @@ fn cannot_move_horizontally_when_on_ground() {
         ".####....."
     ]);
 
-    input.borrow_mut().toggle_moving_left(true);
+    input.borrow_mut().is_moving_left();
 
     game.tick(150);
     game.render(&mut renderer);
@@ -133,8 +134,7 @@ fn cannot_move_horizontally_when_on_ground() {
         ".####....."
     ]);
 
-    input.borrow_mut().toggle_moving_left(false);
-    input.borrow_mut().toggle_moving_right(true);
+    input.borrow_mut().is_moving_right();
 
     game.tick(200);
     game.render(&mut renderer);
