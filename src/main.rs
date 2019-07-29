@@ -2,6 +2,9 @@ use tetrs::game::Game;
 use std::time::{SystemTime, UNIX_EPOCH};
 use raylib;
 use tetrs::gfx::raylib_renderer::RaylibRenderer;
+use tetrs::raylib_input::RaylibInput;
+use std::rc::Rc;
+use std::cell::RefCell;
 
 fn main() {
     let field_height = 16;
@@ -11,19 +14,22 @@ fn main() {
         .title("TetRS")
         .build();
 
-    let mut renderer = RaylibRenderer::new(&rl, 10, field_height as usize);
+    let rl_ref = Rc::new(RefCell::new(rl));
+
+    let mut renderer = RaylibRenderer::new(rl_ref.clone(), 10, field_height as usize);
 
     let mut game = Game::init()
         .with_now_millis(get_now_millis())
         .with_field_height(field_height)
         .with_drop_interval(1000)
+        .with_input(RaylibInput::new_ref(rl_ref.clone()))
         .build();
 
-    while !rl.window_should_close() {
-        rl.begin_drawing();
+    while !rl_ref.borrow().window_should_close() {
+        rl_ref.borrow().begin_drawing();
         game.tick(get_now_millis());
         game.render(&mut renderer);
-        rl.end_drawing();
+        rl_ref.borrow().end_drawing();
     }
 }
 
