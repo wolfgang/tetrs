@@ -6,21 +6,21 @@ use std::cell::RefCell;
 const BRICKLET_SIZE: i32 = 32;
 
 pub struct RaylibRenderer {
-    rl: Rc<RefCell<RaylibHandle>>,
+    rl: Rc<RaylibHandle>,
     width: usize,
     height: usize,
 }
 
 impl<'a> RaylibRenderer {
-    pub fn new(rl: Rc<RefCell<RaylibHandle>>, width: usize, height: usize) -> RaylibRenderer {
+    pub fn new(rl: Rc<RaylibHandle>, width: usize, height: usize) -> RaylibRenderer {
         RaylibRenderer { rl: rl.clone(), width, height }
     }
 }
 
 impl TRenderer for RaylibRenderer {
     fn clear(&mut self) {
-        self.rl.borrow().clear_background(Color::DARKBLUE);
-        self.rl.borrow().draw_rectangle(
+        self.rl.clear_background(Color::DARKBLUE);
+        self.rl.draw_rectangle(
             BRICKLET_SIZE,
             BRICKLET_SIZE,
             BRICKLET_SIZE * self.width as i32,
@@ -29,7 +29,7 @@ impl TRenderer for RaylibRenderer {
     }
 
     fn draw_bricklet_at(&mut self, x: u8, y: u8) {
-        self.rl.borrow().draw_rectangle(
+        self.rl.draw_rectangle(
             (x +1) as i32 * BRICKLET_SIZE,
             (y + 1) as i32 * BRICKLET_SIZE,
             BRICKLET_SIZE,

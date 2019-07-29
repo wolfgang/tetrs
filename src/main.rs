@@ -4,7 +4,6 @@ use raylib;
 use tetrs::gfx::raylib_renderer::RaylibRenderer;
 use tetrs::raylib_input::RaylibInput;
 use std::rc::Rc;
-use std::cell::RefCell;
 
 fn main() {
     let field_height = 16;
@@ -14,7 +13,7 @@ fn main() {
         .title("TetRS")
         .build();
 
-    let rl_ref = Rc::new(RefCell::new(rl));
+    let rl_ref = Rc::new(rl);
 
     let mut renderer = RaylibRenderer::new(rl_ref.clone(), 10, field_height as usize);
 
@@ -25,11 +24,11 @@ fn main() {
         .with_input(RaylibInput::new_ref(rl_ref.clone()))
         .build();
 
-    while !rl_ref.borrow().window_should_close() {
-        rl_ref.borrow().begin_drawing();
+    while !rl_ref.window_should_close() {
+        rl_ref.begin_drawing();
         game.tick(get_now_millis());
         game.render(&mut renderer);
-        rl_ref.borrow().end_drawing();
+        rl_ref.end_drawing();
     }
 }
 

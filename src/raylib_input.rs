@@ -5,11 +5,11 @@ use std::rc::Rc;
 use std::cell::{RefCell, Ref};
 
 pub struct RaylibInput  {
-    rl: Rc<RefCell<RaylibHandle>>
+    rl: Rc<RaylibHandle>
 }
 
 impl RaylibInput {
-    pub fn new_ref(rl: Rc<RefCell<RaylibHandle>>) -> TInputRef {
+    pub fn new_ref(rl: Rc<RaylibHandle>) -> TInputRef {
         Rc::new(RefCell::new(Self { rl: rl.clone() }))
     }
 }
@@ -20,6 +20,6 @@ impl TInput for RaylibInput {
     }
 
     fn wants_to_move_right(&self) -> bool {
-        self.rl.borrow().is_key_down(KEY_RIGHT as i32)
+        self.rl.is_key_down(KEY_RIGHT as i32)
     }
 }
