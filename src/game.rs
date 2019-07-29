@@ -79,42 +79,38 @@ impl Game {
 
     pub fn render(&self, renderer: &mut dyn TRenderer) {
         renderer.clear();
-        for row in 0..self.field_height {
-            if row == self.brick_y {
-                renderer.draw_bricklet_at(self.brick_x, row);
-                renderer.draw_bricklet_at(self.brick_x + 1, row);
-                renderer.draw_bricklet_at(self.brick_x + 2, row);
-                renderer.draw_bricklet_at(self.brick_x + 3, row);
-            }
-        }
+        renderer.draw_bricklet_at(self.brick_x, self.brick_y);
+        renderer.draw_bricklet_at(self.brick_x + 1, self.brick_y);
+        renderer.draw_bricklet_at(self.brick_x + 2, self.brick_y);
+        renderer.draw_bricklet_at(self.brick_x + 3, self.brick_y);
     }
 
-    fn move_brick_horizontally(&mut self, new_time_millis: u64) {
-        let speed = self.get_horizontal_move_speed(new_time_millis);
-        if speed != 0 {
-            self.last_move_millis = new_time_millis;
-            self.brick_x = (self.brick_x as i8 + speed) as u8;
-        }
+fn move_brick_horizontally(&mut self, new_time_millis: u64) {
+    let speed = self.get_horizontal_move_speed(new_time_millis);
+    if speed != 0 {
+        self.last_move_millis = new_time_millis;
+        self.brick_x = (self.brick_x as i8 + speed) as u8;
     }
+}
 
-    fn drop_brick(&mut self, new_time_millis: u64) -> () {
-        if self.brick_y < self.field_height - 1
-            && new_time_millis - self.last_drop_millis >= self.drop_interval as u64
-        {
-            self.brick_y += 1;
-            self.last_drop_millis = new_time_millis;
-        }
+fn drop_brick(&mut self, new_time_millis: u64) -> () {
+    if self.brick_y < self.field_height - 1
+        && new_time_millis - self.last_drop_millis >= self.drop_interval as u64
+    {
+        self.brick_y += 1;
+        self.last_drop_millis = new_time_millis;
     }
+}
 
-    fn get_horizontal_move_speed(&self, now_millis: u64) -> i8 {
-        if self.brick_y < self.field_height - 1 && now_millis - self.last_move_millis >= 50 {
-            if self.input.borrow().wants_to_move_right() && self.brick_x < self.field_width - 4 {
-                return 1;
-            }
-            if self.input.borrow().wants_to_move_left() && self.brick_x > 0 {
-                return -1;
-            }
+fn get_horizontal_move_speed(&self, now_millis: u64) -> i8 {
+    if self.brick_y < self.field_height - 1 && now_millis - self.last_move_millis >= 50 {
+        if self.input.borrow().wants_to_move_right() && self.brick_x < self.field_width - 4 {
+            return 1;
         }
-        0
+        if self.input.borrow().wants_to_move_left() && self.brick_x > 0 {
+            return -1;
+        }
     }
+    0
+}
 }
