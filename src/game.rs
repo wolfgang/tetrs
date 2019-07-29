@@ -33,13 +33,20 @@ impl GameBuilder {
         self.drop_interval = drop_interval;
         self
     }
+
+    pub fn with_input(&mut self, input: TInputRef) -> &mut Self {
+        self.input = input.clone();
+        self
+    }
+
     pub fn build(&self) -> Game {
         Game {
             field_height: self.field_height,
             drop_interval: self.drop_interval,
             last_drop_millis: self.current_time_millis,
             input: self.input.clone(),
-            brick_row: 0,
+            brick_x: 1,
+            brick_y: 0,
         }
     }
 }
@@ -48,7 +55,8 @@ pub struct Game {
     field_height: u8,
     drop_interval: u16,
     last_drop_millis: u64,
-    brick_row: u8,
+    brick_x: u8,
+    brick_y: u8,
     input: TInputRef
 }
 
@@ -62,10 +70,14 @@ impl Game {
     }
 
     pub fn tick(&mut self, new_time_millis: u64) {
+        if self.input.borrow().wants_to_move_right() {
+            self.brick_x += 1;
+        }
+
         let mut now = new_time_millis;
         while now - self.last_drop_millis >= self.drop_interval as u64 {
-            if self.brick_row < self.field_height - 1 {
-                self.brick_row += 1;
+            if self.brick_y < self.field_height - 1 {
+                self.brick_y += 1;
             }
             now -= self.drop_interval as u64;
         }
@@ -77,7 +89,7 @@ impl Game {
 
     pub fn render_to_console(&self, writer: &mut dyn Write) -> std::io::Result<u8> {
         for row in 0..self.field_height {
-            if row == self.brick_row {
+            if row == self.brick_y {
                 writer.write(b"| ####     |\n")?;
             } else {
                 writer.write(b"|          |\n")?;
@@ -90,11 +102,11 @@ impl Game {
     pub fn render(&self, renderer: &mut dyn TRenderer) {
         renderer.clear();
         for row in 0..self.field_height {
-            if row == self.brick_row {
-                renderer.draw_bricklet_at(1, row);
-                renderer.draw_bricklet_at(2, row);
-                renderer.draw_bricklet_at(3, row);
-                renderer.draw_bricklet_at(4, row);
+            if row == self.brick_y {
+                renderer.draw_bricklet_at(self.brick_x, row);
+                renderer.draw_bricklet_at(self.brick_x + 1, row);
+                renderer.draw_bricklet_at(self.brick_x + 2, row);
+                renderer.draw_bricklet_at(self.brick_x + 3, row);
             }
         }
     }
