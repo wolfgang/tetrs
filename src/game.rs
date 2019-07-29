@@ -1,4 +1,3 @@
-use std::io::Write;
 use crate::trenderer::TRenderer;
 use crate::tinput::{TInputRef, TInputNull};
 
@@ -76,18 +75,6 @@ impl Game {
     pub fn tick(&mut self, new_time_millis: u64) {
         self.move_brick_horizontally(new_time_millis);
         self.drop_brick(new_time_millis)
-    }
-
-    pub fn render_to_console(&self, writer: &mut dyn Write) -> std::io::Result<u8> {
-        for row in 0..self.field_height {
-            if row == self.brick_y {
-                writer.write(b"| ####     |\n")?;
-            } else {
-                writer.write(b"|          |\n")?;
-            }
-        }
-        writer.write(b"------------\n")?;
-        Ok(self.field_height + 1)
     }
 
     pub fn render(&self, renderer: &mut dyn TRenderer) {
