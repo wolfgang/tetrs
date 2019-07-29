@@ -72,19 +72,14 @@ impl Game {
     }
 
     pub fn tick(&mut self, new_time_millis: u64) {
+
+        let speed = self.get_horizontal_move_speed(new_time_millis);
+        if speed != 0 {
+            self.last_move_millis = new_time_millis;
+            self.brick_x = (self.brick_x as i8 + speed) as u8;
+        }
+
         let mut now = new_time_millis;
-
-        if self.input.borrow().wants_to_move_right() && now - self.last_move_millis >= 50 {
-            self.last_move_millis = now;
-            self.brick_x += 1;
-        }
-
-        if self.input.borrow().wants_to_move_left() && now - self.last_move_millis >= 50 {
-            self.last_move_millis = now;
-            self.brick_x -= 1;
-        }
-
-
         while now - self.last_drop_millis >= self.drop_interval as u64 {
             if self.brick_y < self.field_height - 1 {
                 self.brick_y += 1;
@@ -95,6 +90,14 @@ impl Game {
         if now != new_time_millis {
             self.last_drop_millis = new_time_millis;
         }
+    }
+
+    fn get_horizontal_move_speed(&self, now_millis: u64) -> i8 {
+        if now_millis - self.last_move_millis >= 50 {
+            if self.input.borrow().wants_to_move_right() { return 1}
+            if self.input.borrow().wants_to_move_left() { return -1}
+        }
+        0
     }
 
     pub fn render_to_console(&self, writer: &mut dyn Write) -> std::io::Result<u8> {
