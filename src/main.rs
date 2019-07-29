@@ -1,8 +1,8 @@
 use tetrs::game::Game;
 use std::time::{SystemTime, UNIX_EPOCH};
 use raylib;
-use tetrs::gfx::raylib_renderer::RaylibRenderer;
-use tetrs::gfx::raylib_input::RaylibInput;
+use tetrs::raylib::raylib_renderer::RaylibRenderer;
+use tetrs::raylib::raylib_input::RaylibInput;
 use std::rc::Rc;
 
 fn main() {
