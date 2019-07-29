@@ -6,7 +6,7 @@ pub struct GameBuilder {
     field_height: u8,
     current_time_millis: u64,
     drop_interval: u16,
-    input: TInputRef
+    input: TInputRef,
 }
 
 impl GameBuilder {
@@ -15,7 +15,7 @@ impl GameBuilder {
             field_height: 16,
             drop_interval: 100,
             current_time_millis: 0,
-            input: TInputNull::new_rc()
+            input: TInputNull::new_rc(),
         }
     }
 
@@ -61,7 +61,7 @@ pub struct Game {
     last_move_millis: u64,
     brick_x: u8,
     brick_y: u8,
-    input: TInputRef
+    input: TInputRef,
 }
 
 impl Game {
@@ -111,14 +111,10 @@ impl Game {
     }
 
     fn drop_brick(&mut self, new_time_millis: u64) -> () {
-        let mut now = new_time_millis;
-        while now - self.last_drop_millis >= self.drop_interval as u64 {
-            if self.brick_y < self.field_height - 1 {
-                self.brick_y += 1;
-            }
-            now -= self.drop_interval as u64;
-        }
-        if now != new_time_millis {
+        if self.brick_y < self.field_height - 1
+            && new_time_millis - self.last_drop_millis >= self.drop_interval as u64
+        {
+            self.brick_y += 1;
             self.last_drop_millis = new_time_millis;
         }
     }
@@ -126,10 +122,10 @@ impl Game {
     fn get_horizontal_move_speed(&self, now_millis: u64) -> i8 {
         if self.brick_y < self.field_height - 1 && now_millis - self.last_move_millis >= 50 {
             if self.input.borrow().wants_to_move_right() && self.brick_x < self.field_width - 4 {
-                return 1
+                return 1;
             }
             if self.input.borrow().wants_to_move_left() && self.brick_x > 0 {
-                return -1
+                return -1;
             }
         }
         0

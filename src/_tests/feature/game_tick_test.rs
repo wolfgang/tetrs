@@ -68,65 +68,35 @@ fn every_100_ms_since_last_drop_the_brick_drops_down_one_row() {
     ]);
 }
 
-#[test]
-fn drop_brick_multiple_rows_if_enough_time_has_passed() {
-    let mut game = Game::default();
-    let mut renderer = ToStringRenderer::default();
-    game.tick(50);
-    game.render(&mut renderer);
-    renderer.assert_frame(vec![
-        ".####.....",
-        "..........",
-        ".........."
-    ]);
-
-    game.tick(305);
-    game.render(&mut renderer);
-    renderer.assert_frame(vec![
-        "..........",
-        "..........",
-        "..........",
-        ".####.....",
-        ".........."
-    ]);
-}
 
 #[test]
 fn after_brick_reaches_bottom_it_stays_there() {
-    let mut game = Game::init().with_field_height(6).build();
-    let mut renderer = ToStringRenderer::with_height(6);
+    let mut game = Game::init().with_field_height(3).build();
+    let mut renderer = ToStringRenderer::with_height(3);
+    game.tick(100);
+    game.render(&mut renderer);
+    renderer.assert_frame_exact(vec![
+        "..........",
+        ".####.....",
+        "..........",
+    ]);
+
+    game.tick(200);
+    game.render(&mut renderer);
+    renderer.assert_frame_exact(vec![
+        "..........",
+        "..........",
+        ".####.....",
+    ]);
+
     game.tick(300);
     game.render(&mut renderer);
     renderer.assert_frame_exact(vec![
         "..........",
         "..........",
-        "..........",
         ".####.....",
-        "..........",
-        ".........."
     ]);
 
-    game.tick(300 + 700);
-    game.render(&mut renderer);
-    renderer.assert_frame_exact(vec![
-        "..........",
-        "..........",
-        "..........",
-        "..........",
-        "..........",
-        ".####....."
-    ]);
-
-    game.tick(300 + 700 + 1000);
-    game.render(&mut renderer);
-    renderer.assert_frame_exact(vec![
-        "..........",
-        "..........",
-        "..........",
-        "..........",
-        "..........",
-        ".####....."
-    ]);
 }
 
 #[test]
