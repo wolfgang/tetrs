@@ -18,6 +18,11 @@ impl TestableGameBuilder {
         self
     }
 
+    pub fn with_drop_interval(&mut self, drop_interval: u16) -> &mut Self {
+        self.game_builder = self.game_builder.with_drop_interval(drop_interval).clone();
+        self
+    }
+
     pub fn build(&mut self) -> TestableGame {
         let input = InputStub::new_rc();
         TestableGame {
@@ -55,9 +60,16 @@ impl TestableGame {
         self.game.tick(now);
     }
 
-    pub fn verify_frame_after(&mut self, now: u64, expected_frame: Vec<&str>) {
+    pub fn verify_exact_frame_after(&mut self, now: u64, expected_frame: Vec<&str>) {
         self.game.tick(now);
         self.game.render(&mut self.renderer);
         self.renderer.assert_frame_exact(expected_frame);
     }
+
+    pub fn verify_frame_after(&mut self, now: u64, expected_frame: Vec<&str>) {
+        self.game.tick(now);
+        self.game.render(&mut self.renderer);
+        self.renderer.assert_frame(expected_frame);
+    }
+
 }
