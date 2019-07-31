@@ -89,7 +89,7 @@ fn after_brick_reaches_bottom_it_stays_there() {
         ".####.....",
     ]);
 
-    game.tick(300);
+    game.tick(250);
     game.render(&mut renderer);
     renderer.assert_frame_exact(vec![
         "..........",

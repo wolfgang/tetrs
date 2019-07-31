@@ -48,6 +48,7 @@ impl GameBuilder {
             input: self.input.clone(),
             brick_x: 1,
             brick_y: 0,
+            field: vec![vec![0; 10]; self.field_height as usize]
         }
     }
 }
@@ -61,6 +62,7 @@ pub struct Game {
     brick_x: u8,
     brick_y: u8,
     input: TInputRef,
+    field: Vec<Vec<u8>>
 }
 
 impl Game {
@@ -79,6 +81,15 @@ impl Game {
 
     pub fn render(&self, renderer: &mut dyn TRenderer) {
         renderer.clear();
+
+        for (y, row) in self.field.iter().enumerate() {
+            for (x, col) in row.iter().enumerate() {
+                if *col != 0 {
+                    renderer.draw_bricklet_at(x as u8, y as u8)
+                }
+            }
+        }
+
         renderer.draw_bricklet_at(self.brick_x, self.brick_y);
         renderer.draw_bricklet_at(self.brick_x + 1, self.brick_y);
         renderer.draw_bricklet_at(self.brick_x + 2, self.brick_y);
@@ -99,6 +110,16 @@ fn drop_brick(&mut self, new_time_millis: u64) -> () {
     {
         self.brick_y += 1;
         self.last_drop_millis = new_time_millis;
+    }
+    else if new_time_millis - self.last_drop_millis >= self.drop_interval as u64 {
+        self.last_drop_millis = new_time_millis;
+        let index = self.brick_y as usize;
+        self.field[index][1] = 1;
+        self.field[index][2] = 1;
+        self.field[index][3] = 1;
+        self.field[index][4] = 1;
+
+        self.brick_y = 0;
     }
 }
 

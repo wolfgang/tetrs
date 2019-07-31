@@ -136,7 +136,7 @@ fn cannot_move_horizontally_when_on_ground() {
 
     input.borrow_mut().is_moving_right();
 
-    game.tick(200);
+    game.tick(190);
     game.render(&mut renderer);
     renderer.assert_frame_exact(vec![
         "..........",
