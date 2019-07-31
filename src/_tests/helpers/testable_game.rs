@@ -44,6 +44,10 @@ impl TestableGame {
     pub fn init() -> TestableGameBuilder {
         TestableGameBuilder::new()
     }
+
+    pub fn default() -> Self {
+        Self::init().build()
+    }
     pub fn is_moving_left(&mut self) {
         self.input.borrow_mut().is_moving_left();
     }
@@ -62,14 +66,22 @@ impl TestableGame {
 
     pub fn verify_exact_frame_after(&mut self, now: u64, expected_frame: Vec<&str>) {
         self.game.tick(now);
-        self.game.render(&mut self.renderer);
-        self.renderer.assert_frame_exact(expected_frame);
+        self.render();
+        self.assert_frame_exact(expected_frame);
     }
 
     pub fn verify_frame_after(&mut self, now: u64, expected_frame: Vec<&str>) {
         self.game.tick(now);
-        self.game.render(&mut self.renderer);
+        self.render();
         self.renderer.assert_frame(expected_frame);
+    }
+
+    pub fn render(&mut self)  {
+        self.game.render(&mut self.renderer);
+    }
+
+    pub fn assert_frame_exact(&self, expected_frame: Vec<&str>) {
+        self.renderer.assert_frame_exact(expected_frame);
     }
 
 }
