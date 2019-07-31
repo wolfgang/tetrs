@@ -90,10 +90,9 @@ impl Game {
             }
         }
 
-        renderer.draw_bricklet_at(self.brick_x, self.brick_y);
-        renderer.draw_bricklet_at(self.brick_x + 1, self.brick_y);
-        renderer.draw_bricklet_at(self.brick_x + 2, self.brick_y);
-        renderer.draw_bricklet_at(self.brick_x + 3, self.brick_y);
+        for offset in 0 .. 4 {
+            renderer.draw_bricklet_at(self.brick_x + offset, self.brick_y);
+        }
     }
 
 fn move_brick_horizontally(&mut self, new_time_millis: u64) {
@@ -115,10 +114,10 @@ fn drop_brick(&mut self, new_time_millis: u64) -> () {
         self.last_drop_millis = new_time_millis;
         let x = self.brick_x as usize;
         let y = self.brick_y as usize;
-        self.field[y][x] = 1;
-        self.field[y][x+1] = 1;
-        self.field[y][x+2] = 1;
-        self.field[y][x+3] = 1;
+
+        for offset in 0 .. 4 {
+            self.field[y][x + offset] = 1;
+        }
 
         self.brick_x = 1;
         self.brick_y = 0;
