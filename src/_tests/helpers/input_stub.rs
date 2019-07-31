@@ -29,6 +29,11 @@ impl InputStub {
         self.moving_right = false;
 
     }
+
+    pub fn is_not_moving(&mut self) {
+        self.moving_left = false;
+        self.moving_right = false;
+    }
 }
 
 impl TInput for InputStub {

@@ -113,12 +113,14 @@ fn drop_brick(&mut self, new_time_millis: u64) -> () {
     }
     else if new_time_millis - self.last_drop_millis >= self.drop_interval as u64 {
         self.last_drop_millis = new_time_millis;
-        let index = self.brick_y as usize;
-        self.field[index][1] = 1;
-        self.field[index][2] = 1;
-        self.field[index][3] = 1;
-        self.field[index][4] = 1;
+        let x = self.brick_x as usize;
+        let y = self.brick_y as usize;
+        self.field[y][x] = 1;
+        self.field[y][x+1] = 1;
+        self.field[y][x+2] = 1;
+        self.field[y][x+3] = 1;
 
+        self.brick_x = 1;
         self.brick_y = 0;
     }
 }
