@@ -2,7 +2,7 @@ use crate::_tests::helpers::testable_game::TestableGame;
 
 #[test]
 fn when_hitting_ground_spawn_another_brick_after_100_ms() {
-    let mut game = TestableGame::with_field_height(4);
+    let mut game = TestableGame::init().with_field_height(4).build();
 
     game.is_moving_right();
     game.tick(100);
@@ -33,7 +33,8 @@ fn when_hitting_ground_spawn_another_brick_after_100_ms() {
 
 #[test]
 fn when_hitting_another_brick_brick_stops_right_there() {
-    let mut game = TestableGame::with_field_height(4);
+    let mut game = TestableGame::init().with_field_height(4).build();
+
 
     game.is_moving_right();
     game.tick(100);

@@ -1,6 +1,33 @@
 use crate::_tests::helpers::input_stub::{InputStubRef, InputStub};
-use crate::game::Game;
+use crate::game::{Game, GameBuilder};
 use crate::_tests::helpers::to_string_renderer::ToStringRenderer;
+
+pub struct TestableGameBuilder {
+    game_builder: GameBuilder,
+}
+
+impl TestableGameBuilder {
+    pub fn new() -> Self {
+        TestableGameBuilder {
+            game_builder: GameBuilder::init()
+        }
+    }
+
+    pub fn with_field_height(&mut self, field_height: u8) -> &mut Self {
+        self.game_builder = self.game_builder.with_field_height(field_height).clone();
+        self
+    }
+
+    pub fn build(&mut self) -> TestableGame {
+        let input = InputStub::new_rc();
+        TestableGame {
+            input: input.clone(),
+            game: self.game_builder.with_input(input.clone()).build(),
+            renderer: ToStringRenderer::with_height(self.game_builder.field_height as usize)
+        }
+    }
+}
+
 
 pub struct TestableGame {
     input: InputStubRef,
@@ -9,17 +36,9 @@ pub struct TestableGame {
 }
 
 impl TestableGame {
-    pub fn with_field_height(field_height: u8) -> Self {
-        let input = InputStub::new_rc();
-        Self {
-            input: input.clone(),
-            game: Game::init()
-                .with_input(input.clone())
-                .with_field_height(field_height).build(),
-            renderer: ToStringRenderer::with_height(field_height as usize),
-        }
+    pub fn init() -> TestableGameBuilder {
+        TestableGameBuilder::new()
     }
-
     pub fn is_moving_left(&mut self) {
         self.input.borrow_mut().is_moving_left();
     }

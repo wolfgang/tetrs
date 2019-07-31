@@ -1,8 +1,9 @@
 use crate::trenderer::TRenderer;
 use crate::tinput::{TInputRef, TInputNull};
 
+#[derive(Clone)]
 pub struct GameBuilder {
-    field_height: u8,
+    pub field_height: u8,
     current_time_millis: u64,
     drop_interval: u16,
     input: TInputRef,
