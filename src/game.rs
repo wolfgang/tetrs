@@ -46,8 +46,8 @@ impl GameBuilder {
             last_drop_millis: self.current_time_millis,
             last_move_millis: 0,
             input: self.input.clone(),
-            active_brick: Brick { x: 1, y: 0, width: 4},
-            field: vec![vec![0; 10]; self.field_height as usize]
+            active_brick: Brick { x: 1, y: 0, width: 4 },
+            field: vec![vec![0; 10]; self.field_height as usize],
         }
     }
 }
@@ -55,7 +55,7 @@ impl GameBuilder {
 struct Brick {
     x: u8,
     y: u8,
-    width: u8
+    width: u8,
 }
 
 pub struct Game {
@@ -66,7 +66,7 @@ pub struct Game {
     last_move_millis: u64,
     active_brick: Brick,
     input: TInputRef,
-    field: Vec<Vec<u8>>
+    field: Vec<Vec<u8>>,
 }
 
 impl Game {
@@ -85,7 +85,55 @@ impl Game {
 
     pub fn render(&self, renderer: &mut dyn TRenderer) {
         renderer.clear();
+        self.render_field(renderer);
+        self.render_active_brick(renderer)
+    }
 
+    fn move_brick_horizontally(&mut self, now_millis: u64) {
+        let speed = self.get_horizontal_move_speed(now_millis);
+        if speed != 0 {
+            self.last_move_millis = now_millis;
+            self.active_brick.x = (self.active_brick.x as i8 + speed) as u8;
+        }
+    }
+
+    fn drop_brick(&mut self, now_millis: u64) -> () {
+        if self.active_brick.y < self.field_height - 1 && self.is_time_to_drop(now_millis)
+        {
+            self.active_brick.y += 1;
+            self.last_drop_millis = now_millis;
+        } else if self.is_time_to_drop(now_millis) {
+            self.last_drop_millis = now_millis;
+            let x = self.active_brick.x as usize;
+            let y = self.active_brick.y as usize;
+
+            for offset in 0..self.active_brick.width as usize {
+                self.field[y][x + offset] = 1;
+            }
+
+            self.active_brick.x = 1;
+            self.active_brick.y = 0;
+        }
+    }
+
+    fn get_horizontal_move_speed(&self, now_millis: u64) -> i8 {
+        if self.active_brick.y < self.field_height - 1 && now_millis - self.last_move_millis >= 50 {
+            if self.input.borrow().wants_to_move_right() &&
+                self.active_brick.x < self.field_width - self.active_brick.width {
+                return 1;
+            }
+            if self.input.borrow().wants_to_move_left() && self.active_brick.x > 0 {
+                return -1;
+            }
+        }
+        0
+    }
+
+    fn is_time_to_drop(&self, now_millis: u64) -> bool {
+        now_millis - self.last_drop_millis >= self.drop_interval as u64
+    }
+
+    fn render_field(&self, renderer: &mut dyn TRenderer) {
         for (y, row) in self.field.iter().enumerate() {
             for (x, col) in row.iter().enumerate() {
                 if *col != 0 {
@@ -93,55 +141,11 @@ impl Game {
                 }
             }
         }
+    }
 
-        for offset in 0 .. self.active_brick.width {
+    fn render_active_brick(&self, renderer: &mut dyn TRenderer) -> () {
+        for offset in 0..self.active_brick.width {
             renderer.draw_bricklet_at(self.active_brick.x + offset, self.active_brick.y);
         }
     }
-
-fn move_brick_horizontally(&mut self, now_millis: u64) {
-    let speed = self.get_horizontal_move_speed(now_millis);
-    if speed != 0 {
-        self.last_move_millis = now_millis;
-        self.active_brick.x = (self.active_brick.x as i8 + speed) as u8;
-    }
-}
-
-fn drop_brick(&mut self, now_millis: u64) -> () {
-    if self.active_brick.y < self.field_height - 1 && self.is_time_to_drop(now_millis)
-    {
-        self.active_brick.y += 1;
-        self.last_drop_millis = now_millis;
-    }
-    else if self.is_time_to_drop(now_millis) {
-        self.last_drop_millis = now_millis;
-        let x = self.active_brick.x as usize;
-        let y = self.active_brick.y as usize;
-
-        for offset in 0 .. self.active_brick.width as usize {
-            self.field[y][x + offset] = 1;
-        }
-
-        self.active_brick.x = 1;
-        self.active_brick.y = 0;
-    }
-}
-
-fn get_horizontal_move_speed(&self, now_millis: u64) -> i8 {
-    if self.active_brick.y < self.field_height - 1 && now_millis - self.last_move_millis >= 50 {
-        if self.input.borrow().wants_to_move_right() &&
-            self.active_brick.x < self.field_width - self.active_brick.width {
-            return 1;
-        }
-        if self.input.borrow().wants_to_move_left() && self.active_brick.x > 0 {
-            return -1;
-        }
-    }
-    0
-}
-
-fn is_time_to_drop(&self, now_millis: u64) -> bool {
-    now_millis - self.last_drop_millis >= self.drop_interval as u64
-}
-
 }
