@@ -78,9 +78,9 @@ impl Game {
         Self::init().build()
     }
 
-    pub fn tick(&mut self, new_time_millis: u64) {
-        self.move_brick_horizontally(new_time_millis);
-        self.drop_brick(new_time_millis)
+    pub fn tick(&mut self, now_millis: u64) {
+        self.move_brick_horizontally(now_millis);
+        self.drop_brick(now_millis)
     }
 
     pub fn render(&self, renderer: &mut dyn TRenderer) {
@@ -99,23 +99,22 @@ impl Game {
         }
     }
 
-fn move_brick_horizontally(&mut self, new_time_millis: u64) {
-    let speed = self.get_horizontal_move_speed(new_time_millis);
+fn move_brick_horizontally(&mut self, now_millis: u64) {
+    let speed = self.get_horizontal_move_speed(now_millis);
     if speed != 0 {
-        self.last_move_millis = new_time_millis;
+        self.last_move_millis = now_millis;
         self.active_brick.x = (self.active_brick.x as i8 + speed) as u8;
     }
 }
 
-fn drop_brick(&mut self, new_time_millis: u64) -> () {
-    if self.active_brick.y < self.field_height - 1
-        && new_time_millis - self.last_drop_millis >= self.drop_interval as u64
+fn drop_brick(&mut self, now_millis: u64) -> () {
+    if self.active_brick.y < self.field_height - 1 && self.is_time_to_drop(now_millis)
     {
         self.active_brick.y += 1;
-        self.last_drop_millis = new_time_millis;
+        self.last_drop_millis = now_millis;
     }
-    else if new_time_millis - self.last_drop_millis >= self.drop_interval as u64 {
-        self.last_drop_millis = new_time_millis;
+    else if self.is_time_to_drop(now_millis) {
+        self.last_drop_millis = now_millis;
         let x = self.active_brick.x as usize;
         let y = self.active_brick.y as usize;
 
@@ -140,4 +139,9 @@ fn get_horizontal_move_speed(&self, now_millis: u64) -> i8 {
     }
     0
 }
+
+fn is_time_to_drop(&self, now_millis: u64) -> bool {
+    now_millis - self.last_drop_millis >= self.drop_interval as u64
+}
+
 }
