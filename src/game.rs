@@ -46,11 +46,15 @@ impl GameBuilder {
             last_drop_millis: self.current_time_millis,
             last_move_millis: 0,
             input: self.input.clone(),
-            brick_x: 1,
-            brick_y: 0,
+            active_brick: Brick { x: 1, y: 0},
             field: vec![vec![0; 10]; self.field_height as usize]
         }
     }
+}
+
+struct Brick {
+    x: u8,
+    y: u8
 }
 
 pub struct Game {
@@ -59,8 +63,7 @@ pub struct Game {
     drop_interval: u16,
     last_drop_millis: u64,
     last_move_millis: u64,
-    brick_x: u8,
-    brick_y: u8,
+    active_brick: Brick,
     input: TInputRef,
     field: Vec<Vec<u8>>
 }
@@ -91,7 +94,7 @@ impl Game {
         }
 
         for offset in 0 .. 4 {
-            renderer.draw_bricklet_at(self.brick_x + offset, self.brick_y);
+            renderer.draw_bricklet_at(self.active_brick.x + offset, self.active_brick.y);
         }
     }
 
@@ -99,37 +102,37 @@ fn move_brick_horizontally(&mut self, new_time_millis: u64) {
     let speed = self.get_horizontal_move_speed(new_time_millis);
     if speed != 0 {
         self.last_move_millis = new_time_millis;
-        self.brick_x = (self.brick_x as i8 + speed) as u8;
+        self.active_brick.x = (self.active_brick.x as i8 + speed) as u8;
     }
 }
 
 fn drop_brick(&mut self, new_time_millis: u64) -> () {
-    if self.brick_y < self.field_height - 1
+    if self.active_brick.y < self.field_height - 1
         && new_time_millis - self.last_drop_millis >= self.drop_interval as u64
     {
-        self.brick_y += 1;
+        self.active_brick.y += 1;
         self.last_drop_millis = new_time_millis;
     }
     else if new_time_millis - self.last_drop_millis >= self.drop_interval as u64 {
         self.last_drop_millis = new_time_millis;
-        let x = self.brick_x as usize;
-        let y = self.brick_y as usize;
+        let x = self.active_brick.x as usize;
+        let y = self.active_brick.y as usize;
 
         for offset in 0 .. 4 {
             self.field[y][x + offset] = 1;
         }
 
-        self.brick_x = 1;
-        self.brick_y = 0;
+        self.active_brick.x = 1;
+        self.active_brick.y = 0;
     }
 }
 
 fn get_horizontal_move_speed(&self, now_millis: u64) -> i8 {
-    if self.brick_y < self.field_height - 1 && now_millis - self.last_move_millis >= 50 {
-        if self.input.borrow().wants_to_move_right() && self.brick_x < self.field_width - 4 {
+    if self.active_brick.y < self.field_height - 1 && now_millis - self.last_move_millis >= 50 {
+        if self.input.borrow().wants_to_move_right() && self.active_brick.x < self.field_width - 4 {
             return 1;
         }
-        if self.input.borrow().wants_to_move_left() && self.brick_x > 0 {
+        if self.input.borrow().wants_to_move_left() && self.active_brick.x > 0 {
             return -1;
         }
     }
