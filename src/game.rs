@@ -46,7 +46,7 @@ impl GameBuilder {
             last_drop_millis: self.current_time_millis,
             last_move_millis: 0,
             input: self.input.clone(),
-            active_brick: Brick { x: 1, y: 0},
+            active_brick: Brick { x: 1, y: 0, width: 4},
             field: vec![vec![0; 10]; self.field_height as usize]
         }
     }
@@ -54,7 +54,8 @@ impl GameBuilder {
 
 struct Brick {
     x: u8,
-    y: u8
+    y: u8,
+    width: u8
 }
 
 pub struct Game {
@@ -93,7 +94,7 @@ impl Game {
             }
         }
 
-        for offset in 0 .. 4 {
+        for offset in 0 .. self.active_brick.width {
             renderer.draw_bricklet_at(self.active_brick.x + offset, self.active_brick.y);
         }
     }
@@ -118,7 +119,7 @@ fn drop_brick(&mut self, new_time_millis: u64) -> () {
         let x = self.active_brick.x as usize;
         let y = self.active_brick.y as usize;
 
-        for offset in 0 .. 4 {
+        for offset in 0 .. self.active_brick.width as usize {
             self.field[y][x + offset] = 1;
         }
 
@@ -129,7 +130,8 @@ fn drop_brick(&mut self, new_time_millis: u64) -> () {
 
 fn get_horizontal_move_speed(&self, now_millis: u64) -> i8 {
     if self.active_brick.y < self.field_height - 1 && now_millis - self.last_move_millis >= 50 {
-        if self.input.borrow().wants_to_move_right() && self.active_brick.x < self.field_width - 4 {
+        if self.input.borrow().wants_to_move_right() &&
+            self.active_brick.x < self.field_width - self.active_brick.width {
             return 1;
         }
         if self.input.borrow().wants_to_move_left() && self.active_brick.x > 0 {
