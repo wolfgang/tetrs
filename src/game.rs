@@ -99,7 +99,7 @@ impl Game {
 
     fn drop_brick(&mut self, now_millis: u64) -> () {
         if self.is_time_to_drop(now_millis) {
-            if self.active_brick.y < self.field_height - 1 {
+            if self.can_drop() {
                 self.active_brick.y += 1;
                 self.last_drop_millis = now_millis;
             } else {
@@ -128,6 +128,18 @@ impl Game {
             }
         }
         0
+    }
+
+    fn can_drop(&self) -> bool {
+        if self.active_brick.y == self.field_height - 1 { return false}
+
+        for offset in 0 .. self.active_brick.width {
+            if self.field[self.active_brick.y as usize + 1][(self.active_brick.x + offset) as usize] !=0 {
+                return false
+            }
+        }
+
+        return true
     }
 
     fn is_time_to_drop(&self, now_millis: u64) -> bool {

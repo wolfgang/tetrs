@@ -20,7 +20,7 @@ fn main() {
     let mut game = Game::init()
         .with_now_millis(get_now_millis())
         .with_field_height(field_height)
-        .with_drop_interval(1000)
+        .with_drop_interval(500)
         .with_input(RaylibInput::new_ref(rl_ref.clone()))
         .build();
 
