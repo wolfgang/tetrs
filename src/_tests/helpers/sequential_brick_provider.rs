@@ -1,8 +1,6 @@
-use crate::brick_provider::BrickProvider;
+use crate::brick_provider::{BrickProvider, Bricklets};
 use std::rc::Rc;
 use std::cell::RefCell;
-
-type Bricklets = Vec<(u8, u8)>;
 
 pub struct SequentialBrickProvider {
     sequence: Vec<Bricklets>,
