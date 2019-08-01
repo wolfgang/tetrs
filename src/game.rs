@@ -40,6 +40,8 @@ impl GameBuilder {
     }
 
     pub fn build(&self) -> Game {
+        let bricklets = vec![(0, 0), (1, 0), (2, 0), (3, 0)];
+
         Game {
             field_width: 10,
             field_height: self.field_height,
@@ -47,7 +49,7 @@ impl GameBuilder {
             last_drop_millis: self.current_time_millis,
             last_move_millis: 0,
             input: self.input.clone(),
-            active_brick: Brick { x: 1, y: 0, width: 4 },
+            active_brick: Brick { x: 1, y: 0, width: 4, bricklets },
             field: vec![vec![0; 10]; self.field_height as usize],
         }
     }
@@ -57,6 +59,7 @@ struct Brick {
     x: u8,
     y: u8,
     width: u8,
+    bricklets: Vec<(u8, u8)>,
 }
 
 pub struct Game {
@@ -108,8 +111,8 @@ impl Game {
                 let x = self.active_brick.x as usize;
                 let y = self.active_brick.y as usize;
 
-                for offset in 0..self.active_brick.width as usize {
-                    self.field[y][x + offset] = 1;
+                for (bx, by) in &self.active_brick.bricklets {
+                    self.field[y + *by as usize][x + *bx as usize] = 1;
                 }
 
                 self.active_brick.x = 1;
@@ -132,15 +135,15 @@ impl Game {
     }
 
     fn can_drop(&self) -> bool {
-        if self.active_brick.y == self.field_height - 1 { return false}
+        if self.active_brick.y == self.field_height - 1 { return false; }
 
-        for offset in 0 .. self.active_brick.width {
-            if self.field[self.active_brick.y as usize + 1][(self.active_brick.x + offset) as usize] !=0 {
-                return false
+        for (bx, _) in &self.active_brick.bricklets {
+            if self.field[self.active_brick.y as usize + 1][(self.active_brick.x + *bx) as usize] != 0 {
+                return false;
             }
         }
 
-        return true
+        return true;
     }
 
     fn is_time_to_drop(&self, now_millis: u64) -> bool {
