@@ -4,6 +4,8 @@ use crate::_tests::helpers::sequential_brick_provider::SequentialBrickProvider;
 #[test]
 fn more_complex_bricks() {
     let brick_provider = SequentialBrickProvider::new_rc();
+    // 2x   ####   1x ####
+    //      #
     brick_provider.borrow_mut().add(vec![(0, 0), (1, 0), (2, 0), (3, 0), (0, 1)]);
     brick_provider.borrow_mut().add(vec![(0, 0), (1, 0), (2, 0), (3, 0), (0, 1)]);
     brick_provider.borrow_mut().add(vec![(0, 0), (1, 0), (2, 0), (3, 0)]);

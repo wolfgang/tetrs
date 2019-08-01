@@ -4,6 +4,7 @@ use raylib;
 use tetrs::raylib::renderer::RaylibRenderer;
 use tetrs::raylib::input::RaylibInput;
 use std::rc::Rc;
+use tetrs::brick_provider::RandomBrickProvider;
 
 fn main() {
     let field_height = 16;
@@ -21,7 +22,8 @@ fn main() {
         .with_now_millis(get_now_millis())
         .with_field_height(field_height)
         .with_drop_interval(500)
-        .with_input(RaylibInput::new_ref(rl_ref.clone()))
+        .with_input(RaylibInput::new_rc(rl_ref.clone()))
+        .with_brick_provider(RandomBrickProvider::new_rc())
         .build();
 
     while !rl_ref.window_should_close() {

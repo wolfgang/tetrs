@@ -9,7 +9,7 @@ pub struct RaylibInput  {
 }
 
 impl RaylibInput {
-    pub fn new_ref(rl: Rc<RaylibHandle>) -> TInputRef {
+    pub fn new_rc(rl: Rc<RaylibHandle>) -> TInputRef {
         Rc::new(RefCell::new(Self { rl: rl.clone() }))
     }
 }
