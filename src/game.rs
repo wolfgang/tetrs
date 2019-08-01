@@ -8,7 +8,7 @@ pub struct GameBuilder {
     current_time_millis: u64,
     drop_interval: u16,
     input: TInputRef,
-    brick_provider: BrickProviderRef
+    brick_provider: BrickProviderRef,
 }
 
 impl GameBuilder {
@@ -18,7 +18,7 @@ impl GameBuilder {
             drop_interval: 100,
             current_time_millis: 0,
             input: TInputNull::new_rc(),
-            brick_provider: SingleBrickProvider::new_rc()
+            brick_provider: SingleBrickProvider::new_rc(),
         }
     }
 
@@ -59,7 +59,7 @@ impl GameBuilder {
             active_brick: Brick { x: 1, y: 0, width: 4, bricklets },
             field: vec![vec![0; 10]; self.field_height as usize],
             input: self.input.clone(),
-            brick_provider: self.brick_provider.clone()
+            brick_provider: self.brick_provider.clone(),
         }
     }
 }
@@ -80,7 +80,7 @@ pub struct Game {
     field: Vec<Vec<u8>>,
     active_brick: Brick,
     input: TInputRef,
-    brick_provider: BrickProviderRef
+    brick_provider: BrickProviderRef,
 }
 
 impl Game {
@@ -146,10 +146,10 @@ impl Game {
     }
 
     fn can_drop(&self) -> bool {
-        if self.active_brick.y == self.field_height - 1 { return false; }
-
-        for (bx, _) in &self.active_brick.bricklets {
-            if self.field[self.active_brick.y as usize + 1][(self.active_brick.x + *bx) as usize] != 0 {
+        for (bx, by) in &self.active_brick.bricklets {
+            let x = (self.active_brick.x + *bx) as usize;
+            let y = (self.active_brick.y + *by) as usize;
+            if y == self.field_height as usize - 1 || self.field[y + 1][x] != 0 {
                 return false;
             }
         }
