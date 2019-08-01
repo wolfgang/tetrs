@@ -38,12 +38,17 @@ impl GameBuilder {
     }
 
     pub fn with_input(&mut self, input: TInputRef) -> &mut Self {
-        self.input = input.clone();
+        self.input = input;
+        self
+    }
+
+    pub fn with_brick_provider(&mut self, brick_provider: BrickProviderRef) -> &mut Self {
+        self.brick_provider = brick_provider;
         self
     }
 
     pub fn build(&self) -> Game {
-        let bricklets = self.brick_provider.next();
+        let bricklets = self.brick_provider.borrow_mut().next();
 
         Game {
             field_width: 10,
@@ -122,7 +127,7 @@ impl Game {
 
                 self.active_brick.x = 1;
                 self.active_brick.y = 0;
-                self.active_brick.bricklets = self.brick_provider.next();
+                self.active_brick.bricklets = self.brick_provider.borrow_mut().next();
             }
         }
     }
@@ -167,8 +172,10 @@ impl Game {
     }
 
     fn render_active_brick(&self, renderer: &mut dyn TRenderer) -> () {
-        for offset in 0..self.active_brick.width {
-            renderer.draw_bricklet_at(self.active_brick.x + offset, self.active_brick.y);
+        for (bx, by) in &self.active_brick.bricklets {
+            let x = self.active_brick.x + *bx;
+            let y = self.active_brick.y + *by;
+            renderer.draw_bricklet_at(x, y);
         }
     }
 }

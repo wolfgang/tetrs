@@ -1,6 +1,7 @@
 use crate::_tests::helpers::input_stub::{InputStubRef, InputStub};
 use crate::game::{Game, GameBuilder};
 use crate::_tests::helpers::to_string_renderer::ToStringRenderer;
+use crate::brick_provider::BrickProviderRef;
 
 pub struct TestableGameBuilder {
     game_builder: GameBuilder,
@@ -20,6 +21,11 @@ impl TestableGameBuilder {
 
     pub fn with_drop_interval(&mut self, drop_interval: u16) -> &mut Self {
         self.game_builder = self.game_builder.with_drop_interval(drop_interval).clone();
+        self
+    }
+
+    pub fn with_brick_provider(&mut self, brick_provider: BrickProviderRef) -> &mut Self {
+        self.game_builder = self.game_builder.with_brick_provider(brick_provider).clone();
         self
     }
 
