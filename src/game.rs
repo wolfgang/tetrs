@@ -1,5 +1,6 @@
 use crate::trenderer::TRenderer;
 use crate::tinput::{TInputRef, TInputNull};
+use crate::brick_provider::{SingleBrickProvider, BrickProviderRef};
 
 #[derive(Clone)]
 pub struct GameBuilder {
@@ -7,6 +8,7 @@ pub struct GameBuilder {
     current_time_millis: u64,
     drop_interval: u16,
     input: TInputRef,
+    brick_provider: BrickProviderRef
 }
 
 impl GameBuilder {
@@ -16,6 +18,7 @@ impl GameBuilder {
             drop_interval: 100,
             current_time_millis: 0,
             input: TInputNull::new_rc(),
+            brick_provider: SingleBrickProvider::new_rc()
         }
     }
 
@@ -40,7 +43,7 @@ impl GameBuilder {
     }
 
     pub fn build(&self) -> Game {
-        let bricklets = vec![(0, 0), (1, 0), (2, 0), (3, 0)];
+        let bricklets = self.brick_provider.next();
 
         Game {
             field_width: 10,
@@ -48,9 +51,10 @@ impl GameBuilder {
             drop_interval: self.drop_interval,
             last_drop_millis: self.current_time_millis,
             last_move_millis: 0,
-            input: self.input.clone(),
             active_brick: Brick { x: 1, y: 0, width: 4, bricklets },
             field: vec![vec![0; 10]; self.field_height as usize],
+            input: self.input.clone(),
+            brick_provider: self.brick_provider.clone()
         }
     }
 }
@@ -68,9 +72,10 @@ pub struct Game {
     drop_interval: u16,
     last_drop_millis: u64,
     last_move_millis: u64,
+    field: Vec<Vec<u8>>,
     active_brick: Brick,
     input: TInputRef,
-    field: Vec<Vec<u8>>,
+    brick_provider: BrickProviderRef
 }
 
 impl Game {
@@ -117,6 +122,7 @@ impl Game {
 
                 self.active_brick.x = 1;
                 self.active_brick.y = 0;
+                self.active_brick.bricklets = self.brick_provider.next();
             }
         }
     }
