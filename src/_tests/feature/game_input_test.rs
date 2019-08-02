@@ -31,6 +31,7 @@ fn horizontal_movement_is_constrained_by_bounds() {
     game.tick(300);
     game.tick(350);
     game.verify_frame_after(400, vec!["......####"]);
+    game.verify_frame_after(450, vec!["......####"]);
 }
 
 #[test]

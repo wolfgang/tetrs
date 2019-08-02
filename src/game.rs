@@ -99,7 +99,6 @@ impl Brick {
 
         true
     }
-
 }
 
 pub struct Game {
@@ -167,9 +166,7 @@ impl Game {
         if !self.can_move(now_millis) { return 0; };
 
         if self.input.borrow().wants_to_move_right() {
-            if self.active_brick.for_all_bricklets(|x, y| {
-                x < self.field_width as usize - 1 && self.field[y][x + 1] == 0
-            }) {
+            if self.active_brick.for_all_bricklets(|x, y| { self.is_empty_cell(x + 1, y) }) {
                 return 1;
             }
         }
@@ -183,7 +180,7 @@ impl Game {
 
     fn can_drop(&self) -> bool {
         self.active_brick.for_all_bricklets(|x, y| {
-            y < self.field_height as usize - 1 &&  self.field[y + 1][x] == 0
+            self.is_empty_cell(x, y + 1)
         })
     }
 
@@ -193,6 +190,12 @@ impl Game {
 
     fn can_move(&self, now_millis: u64) -> bool {
         self.active_brick.y < self.field_height - 1 && now_millis - self.last_move_millis >= 50
+    }
+
+    fn is_empty_cell(&self, x: usize, y: usize) -> bool {
+        x < self.field_width as usize
+            && y < self.field_height as usize
+            && self.field[y][x] == 0
     }
 
     fn render_field(&self, renderer: &mut dyn TRenderer) {
