@@ -22,19 +22,9 @@ impl TestableGameBuilder {
     }
 
     pub fn with_field(&mut self, field_str: Vec<&'static str>) -> &mut Self {
-        let mut field = Vec::with_capacity(field_str.len());
-        for row in field_str {
-            let mut field_row = Vec::with_capacity(row.len());
-            for col in row.chars() {
-                if col == '.' {
-                    field_row.push(0)
-                }
-                else {
-                    field_row.push(1);
-                }
-            }
-            field.push(field_row.clone());
-        }
+        let field: Vec<Vec<u8>> = field_str.iter().map(|row| {
+            row.chars().map(|c| { if c == '.' { 0 } else { 1 } }).collect()
+        }).collect();
 
         self.game_builder = self.game_builder.with_field(field).clone();
         self
@@ -52,7 +42,6 @@ impl TestableGameBuilder {
         }
         self.game_builder = self.game_builder.with_brick_provider(brick_provider).clone();
         self
-
     }
 
     pub fn build(&mut self) -> TestableGame {
@@ -60,7 +49,7 @@ impl TestableGameBuilder {
         TestableGame {
             input: input.clone(),
             game: self.game_builder.with_input(input.clone()).build(),
-            renderer: ToStringRenderer::with_height(self.game_builder.field_height as usize)
+            renderer: ToStringRenderer::with_height(self.game_builder.field_height as usize),
         }
     }
 }
@@ -108,12 +97,11 @@ impl TestableGame {
         self.renderer.assert_frame(expected_frame);
     }
 
-    pub fn render(&mut self)  {
+    pub fn render(&mut self) {
         self.game.render(&mut self.renderer);
     }
 
     pub fn assert_frame_exact(&self, expected_frame: Vec<&str>) {
         self.renderer.assert_frame_exact(expected_frame);
     }
-
 }
