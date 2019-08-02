@@ -21,9 +21,7 @@ impl SingleBrickProvider {
 }
 
 impl BrickProvider for SingleBrickProvider {
-    fn next(&mut self) -> Vec<(u8, u8)> {
-        vec![(0, 0), (1, 0), (2, 0), (3, 0)]
-    }
+    fn next(&mut self) -> Vec<(u8, u8)> { i_block() }
 }
 
 pub struct RandomBrickProvider {

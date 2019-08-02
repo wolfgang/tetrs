@@ -1,14 +1,15 @@
 use crate::_tests::helpers::testable_game::TestableGame;
 use crate::_tests::helpers::sequential_brick_provider::SequentialBrickProvider;
+use crate::game::brick_factory::*;
 
 #[test]
 fn more_complex_bricks() {
     let brick_provider = SequentialBrickProvider::new_rc();
     // 2x   ####   1x ####
     //      #
-    brick_provider.borrow_mut().add(vec![(0, 0), (1, 0), (2, 0), (3, 0), (0, 1)]);
-    brick_provider.borrow_mut().add(vec![(0, 0), (1, 0), (2, 0), (3, 0), (0, 1)]);
-    brick_provider.borrow_mut().add(vec![(0, 0), (1, 0), (2, 0), (3, 0)]);
+    brick_provider.borrow_mut().add(j_block_flipped());
+    brick_provider.borrow_mut().add(j_block_flipped());
+    brick_provider.borrow_mut().add(i_block());
 
     let mut game = TestableGame::init()
         .with_field_height(5)
