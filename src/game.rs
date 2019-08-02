@@ -166,13 +166,15 @@ impl Game {
         if !self.can_move(now_millis) { return 0; };
 
         if self.input.borrow().wants_to_move_right() {
-            if self.active_brick.for_all_bricklets(|x, y| { self.is_empty_cell(x + 1, y) }) {
+            if self.active_brick.for_all_bricklets(|x, y| { self.is_empty_cell(x as i32 + 1, y) }) {
                 return 1;
             }
         }
 
-        if self.input.borrow().wants_to_move_left() && self.active_brick.x > 0 {
-            return -1;
+        if self.input.borrow().wants_to_move_left() {
+            if self.active_brick.for_all_bricklets(|x, y| { self.is_empty_cell(x as i32 - 1, y) }) {
+                return -1;
+            }
         }
 
         0
@@ -180,7 +182,7 @@ impl Game {
 
     fn can_drop(&self) -> bool {
         self.active_brick.for_all_bricklets(|x, y| {
-            self.is_empty_cell(x, y + 1)
+            self.is_empty_cell(x as i32, y + 1)
         })
     }
 
@@ -192,10 +194,11 @@ impl Game {
         self.active_brick.y < self.field_height - 1 && now_millis - self.last_move_millis >= 50
     }
 
-    fn is_empty_cell(&self, x: usize, y: usize) -> bool {
-        x < self.field_width as usize
+    fn is_empty_cell(&self, x: i32, y: usize) -> bool {
+        x >= 0
+            && (x as usize) < self.field_width as usize
             && y < self.field_height as usize
-            && self.field[y][x] == 0
+            && self.field[y][x as usize] == 0
     }
 
     fn render_field(&self, renderer: &mut dyn TRenderer) {

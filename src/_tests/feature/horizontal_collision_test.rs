@@ -26,5 +26,32 @@ fn moving_right_is_blocked_by_existing_brick() {
         "...####...",
         "...#......"
     ])
+}
+
+#[test]
+fn moving_left_is_blocked_by_existing_brick() {
+    let mut game = TestableGame::init()
+        .with_brick_sequence(vec![o_block()])
+        .with_field(vec![
+            "..........",
+            "#.........",
+            "#.........",
+            "#........."])
+        .build();
+
+    game.verify_frame_after(1, vec![
+        ".##.......",
+        "###.......",
+        "#.........",
+        "#........."
+    ]);
+
+    game.is_moving_left();
+    game.verify_frame_after(50, vec![
+        ".##.......",
+        "###.......",
+        "#.........",
+        "#........."
+    ]);
 
 }
