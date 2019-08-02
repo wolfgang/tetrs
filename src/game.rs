@@ -163,21 +163,10 @@ impl Game {
     }
 
     fn get_horizontal_move_speed(&self, now_millis: u64) -> i8 {
-        if !self.can_move(now_millis) { return 0; };
-
-        if self.input.borrow().wants_to_move_right() {
-            if self.active_brick.for_all_bricklets(|x, y| { self.is_empty_cell(x as i32 + 1, y) }) {
-                return 1;
-            }
-        }
-
-        if self.input.borrow().wants_to_move_left() {
-            if self.active_brick.for_all_bricklets(|x, y| { self.is_empty_cell(x as i32 - 1, y) }) {
-                return -1;
-            }
-        }
-
-        0
+        if !self.is_time_to_move(now_millis) { return 0; };
+        if self.input.borrow().wants_to_move_right() && self.can_move_to(1) { return 1; }
+        if self.input.borrow().wants_to_move_left() && self.can_move_to(-1) { return -1 }
+        return 0;
     }
 
     fn can_drop(&self) -> bool {
@@ -190,8 +179,12 @@ impl Game {
         now_millis - self.last_drop_millis >= self.drop_interval as u64
     }
 
-    fn can_move(&self, now_millis: u64) -> bool {
+    fn is_time_to_move(&self, now_millis: u64) -> bool {
         self.active_brick.y < self.field_height - 1 && now_millis - self.last_move_millis >= 50
+    }
+
+    fn can_move_to(&self, offset: i32) -> bool {
+        self.active_brick.for_all_bricklets(|x, y| { self.is_empty_cell(x as i32 + offset, y) })
     }
 
     fn is_empty_cell(&self, x: i32, y: usize) -> bool {
