@@ -75,7 +75,7 @@ impl GameBuilder {
             drop_interval: self.drop_interval,
             last_drop_millis: self.current_time_millis,
             last_move_millis: 0,
-            active_brick: Brick { x: 1, y: 0, width: 4, bricklets },
+            active_brick: Brick { x: 1, y: 0, bricklets },
             input: self.input.clone(),
             brick_provider: self.brick_provider.clone(),
         }
@@ -85,7 +85,6 @@ impl GameBuilder {
 struct Brick {
     x: u8,
     y: u8,
-    width: u8,
     bricklets: Vec<(u8, u8)>,
 }
 
@@ -95,7 +94,7 @@ impl Brick {
             let x = (self.x + *bx) as usize;
             let y = (self.y + *by) as usize;
 
-            if condition(x, y) { return true }
+            if condition(x, y) { return true; }
         }
 
         false
@@ -164,21 +163,20 @@ impl Game {
     }
 
     fn get_horizontal_move_speed(&self, now_millis: u64) -> i8 {
-        if self.active_brick.y < self.field_height - 1 && now_millis - self.last_move_millis >= 50 {
-            if self.input.borrow().wants_to_move_right() {
-                if self.active_brick.for_any_bricklet(|x, y| {
-                    x == self.field_width as usize - 1 || self.field[y][x + 1] != 0
-                })
-                {
-                    return 0;
-                }
+        if !self.can_move(now_millis) { return 0; };
 
+        if self.input.borrow().wants_to_move_right() {
+            if !self.active_brick.for_any_bricklet(|x, y| {
+                x == self.field_width as usize - 1 || self.field[y][x + 1] != 0
+            }) {
                 return 1;
             }
-            if self.input.borrow().wants_to_move_left() && self.active_brick.x > 0 {
-                return -1;
-            }
         }
+
+        if self.input.borrow().wants_to_move_left() && self.active_brick.x > 0 {
+            return -1;
+        }
+
         0
     }
 
@@ -190,6 +188,10 @@ impl Game {
 
     fn is_time_to_drop(&self, now_millis: u64) -> bool {
         now_millis - self.last_drop_millis >= self.drop_interval as u64
+    }
+
+    fn can_move(&self, now_millis: u64) -> bool {
+        self.active_brick.y < self.field_height - 1 && now_millis - self.last_move_millis >= 50
     }
 
     fn render_field(&self, renderer: &mut dyn TRenderer) {
