@@ -89,16 +89,17 @@ struct Brick {
 }
 
 impl Brick {
-    pub fn for_any_bricklet<F>(&self, condition: F) -> bool where F: Fn(usize, usize) -> bool {
+    pub fn for_all_bricklets<F>(&self, condition: F) -> bool where F: Fn(usize, usize) -> bool {
         for (bx, by) in &self.bricklets {
             let x = (self.x + *bx) as usize;
             let y = (self.y + *by) as usize;
 
-            if condition(x, y) { return true; }
+            if !condition(x, y) { return false; }
         }
 
-        false
+        true
     }
+
 }
 
 pub struct Game {
@@ -166,8 +167,8 @@ impl Game {
         if !self.can_move(now_millis) { return 0; };
 
         if self.input.borrow().wants_to_move_right() {
-            if !self.active_brick.for_any_bricklet(|x, y| {
-                x == self.field_width as usize - 1 || self.field[y][x + 1] != 0
+            if self.active_brick.for_all_bricklets(|x, y| {
+                x < self.field_width as usize - 1 && self.field[y][x + 1] == 0
             }) {
                 return 1;
             }
@@ -181,8 +182,8 @@ impl Game {
     }
 
     fn can_drop(&self) -> bool {
-        !self.active_brick.for_any_bricklet(|x, y| {
-            y == self.field_height as usize - 1 || self.field[y + 1][x] != 0
+        self.active_brick.for_all_bricklets(|x, y| {
+            y < self.field_height as usize - 1 &&  self.field[y + 1][x] == 0
         })
     }
 
