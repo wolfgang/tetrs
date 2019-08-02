@@ -21,6 +21,25 @@ impl TestableGameBuilder {
         self
     }
 
+    pub fn with_field(&mut self, field_str: Vec<&'static str>) -> &mut Self {
+        let mut field = Vec::with_capacity(field_str.len());
+        for row in field_str {
+            let mut field_row = Vec::with_capacity(row.len());
+            for col in row.chars() {
+                if col == '.' {
+                    field_row.push(0)
+                }
+                else {
+                    field_row.push(1);
+                }
+            }
+            field.push(field_row.clone());
+        }
+
+        self.game_builder = self.game_builder.with_field(field).clone();
+        self
+    }
+
     pub fn with_drop_interval(&mut self, drop_interval: u16) -> &mut Self {
         self.game_builder = self.game_builder.with_drop_interval(drop_interval).clone();
         self

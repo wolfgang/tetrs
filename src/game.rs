@@ -10,6 +10,7 @@ use brick_provider::{SingleBrickProvider, BrickProviderRef};
 #[derive(Clone)]
 pub struct GameBuilder {
     pub field_height: u8,
+    initial_field: Vec<Vec<u8>>,
     current_time_millis: u64,
     drop_interval: u16,
     input: TInputRef,
@@ -20,6 +21,7 @@ impl GameBuilder {
     pub fn init() -> GameBuilder {
         GameBuilder {
             field_height: 16,
+            initial_field: Vec::new(),
             drop_interval: 100,
             current_time_millis: 0,
             input: TInputNull::new_rc(),
@@ -29,6 +31,11 @@ impl GameBuilder {
 
     pub fn with_field_height(&mut self, field_height: u8) -> &mut Self {
         self.field_height = field_height;
+        self
+    }
+
+    pub fn with_field(&mut self, field: Vec<Vec<u8>>) -> &mut Self {
+        self.initial_field = field;
         self
     }
 
@@ -54,6 +61,10 @@ impl GameBuilder {
 
     pub fn build(&self) -> Game {
         let bricklets = self.brick_provider.borrow_mut().next();
+        let mut initial_field = self.initial_field.clone();
+        if initial_field.len() == 0 {
+            initial_field = vec![vec![0; 10]; self.field_height as usize]
+        }
 
         Game {
             field_width: 10,
@@ -62,7 +73,7 @@ impl GameBuilder {
             last_drop_millis: self.current_time_millis,
             last_move_millis: 0,
             active_brick: Brick { x: 1, y: 0, width: 4, bricklets },
-            field: vec![vec![0; 10]; self.field_height as usize],
+            field: initial_field,
             input: self.input.clone(),
             brick_provider: self.brick_provider.clone(),
         }
