@@ -1,6 +1,7 @@
 use std::{rc::Rc, cell::RefCell};
 use std::time::{SystemTime, UNIX_EPOCH};
 use rand::{Rng, SeedableRng, rngs::StdRng};
+use crate::game::brick_factory::*;
 
 
 pub type BrickProviderRef = Rc<RefCell<dyn BrickProvider>>;
@@ -33,10 +34,11 @@ pub struct RandomBrickProvider {
 impl RandomBrickProvider {
     pub fn new_rc() -> BrickProviderRef {
         let bricks = vec![
-            vec![(0, 0), (1, 0), (2, 0), (3, 0), (0, 1)],
-            vec![(0, 0), (1, 0), (2, 0), (3, 0)],
-            vec![(0, 0), (1, 0), (0, 1), (1, 1)],
-            vec![(0, 0), (1, 0), (2, 0), (1, 1)]
+            i_block(),
+            o_block(),
+            j_block_flipped(),
+            t_block_flipped()
+
         ];
         let seed = SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_secs();
 

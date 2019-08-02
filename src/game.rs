@@ -1,6 +1,7 @@
 pub mod tinput;
 pub mod trenderer;
 pub mod brick_provider;
+pub mod brick_factory;
 
 use tinput::{TInputRef, TInputNull};
 use trenderer::TRenderer;
