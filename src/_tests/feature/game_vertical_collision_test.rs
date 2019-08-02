@@ -8,37 +8,33 @@ fn when_hitting_ground_spawn_another_brick_after_100_ms() {
         .with_brick_sequence(vec![j_block_flipped(), i_block()])
         .build();
 
-    game.is_moving_right();
     game.tick(100);
     game.verify_exact_frame_after(200, vec![
         "..........",
         "..........",
-        "...####...",
-        "...#......"
+        ".####.....",
+        ".#........"
     ]);
-
-    game.is_not_moving();
 
     game.verify_exact_frame_after(250, vec![
         "..........",
         "..........",
-        "...####...",
-        "...#......"
+        ".####.....",
+        ".#........"
     ]);
 
     game.verify_exact_frame_after(300, vec![
         ".####.....",
         "..........",
-        "...####...",
-        "...#......"
+        ".####.....",
+        ".#........"
     ]);
 
-    game.is_moving_left();
     game.verify_exact_frame_after(400, vec![
         "..........",
-        "####......",
-        "...####...",
-        "...#......"
+        ".####.....",
+        ".####.....",
+        ".#........"
     ]);
 }
 
@@ -48,33 +44,30 @@ fn when_hitting_another_brick_brick_spawn_another_brick_after_100ms() {
         with_field_height(5)
         .with_brick_sequence(vec![j_block_flipped(), i_block(), t_block_flipped()])
         .build();
-    game.is_moving_right();
     game.tick(100);
     game.tick(300);
     game.verify_exact_frame_after(400, vec![
         "..........",
         "..........",
         "..........",
-        "....####..",
-        "....#....."
+        ".####.....",
+        ".#........"
     ]);
-
-    game.is_not_moving();
 
     game.verify_exact_frame_after(450, vec![
         "..........",
         "..........",
         "..........",
-        "....####..",
-        "....#....."
+        ".####.....",
+        ".#........"
     ]);
 
     game.verify_exact_frame_after(500, vec![
         ".####.....",
         "..........",
         "..........",
-        "....####..",
-        "....#....."
+        ".####.....",
+        ".#........"
     ]);
 
     game.tick(600);
@@ -82,15 +75,15 @@ fn when_hitting_another_brick_brick_spawn_another_brick_after_100ms() {
         "..........",
         "..........",
         ".####.....",
-        "....####..",
-        "....#....."
+        ".####.....",
+        ".#........"
     ]);
 
     game.verify_exact_frame_after(800, vec![
         ".###......",
         "..#.......",
         ".####.....",
-        "....####..",
-        "....#....."
+        ".####.....",
+        ".#........"
     ]);
 }
