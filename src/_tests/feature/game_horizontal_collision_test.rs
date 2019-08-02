@@ -1,33 +1,36 @@
 use crate::_tests::helpers::testable_game::TestableGame;
+use crate::game::brick_factory::{i_block, j_block_flipped};
 
 #[test]
 fn when_hitting_ground_spawn_another_brick_after_100_ms() {
-    let mut game = TestableGame::init().with_field_height(4).build();
+    let mut game = TestableGame::init()
+        .with_field_height(4)
+        .with_brick_sequence(vec![j_block_flipped(), i_block()])
+        .build();
 
     game.is_moving_right();
     game.tick(100);
-    game.tick(200);
-    game.verify_exact_frame_after(300, vec![
+    game.verify_exact_frame_after(200, vec![
         "..........",
         "..........",
-        "..........",
-        "....####.."
+        "...####...",
+        "...#......"
     ]);
 
     game.is_not_moving();
-    game.verify_exact_frame_after(400, vec![
+    game.verify_exact_frame_after(300, vec![
         ".####.....",
         "..........",
-        "..........",
-        "....####.."
+        "...####...",
+        "...#......"
     ]);
 
     game.is_moving_left();
-    game.verify_exact_frame_after(500, vec![
+    game.verify_exact_frame_after(400, vec![
         "..........",
         "####......",
-        "..........",
-        "....####.."
+        "...####...",
+        "...#......"
     ]);
 }
 
