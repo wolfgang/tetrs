@@ -1,7 +1,9 @@
 use crate::_tests::helpers::input_stub::{InputStubRef, InputStub};
-use crate::game::{Game, GameBuilder};
 use crate::_tests::helpers::to_string_renderer::ToStringRenderer;
-use crate::game::brick_provider::BrickProviderRef;
+use crate::_tests::helpers::sequential_brick_provider::SequentialBrickProvider;
+
+use crate::game::{Game, GameBuilder};
+use crate::game::brick_provider::Bricklets;
 
 pub struct TestableGameBuilder {
     game_builder: GameBuilder,
@@ -24,9 +26,14 @@ impl TestableGameBuilder {
         self
     }
 
-    pub fn with_brick_provider(&mut self, brick_provider: BrickProviderRef) -> &mut Self {
+    pub fn with_brick_sequence(&mut self, brick_sequence: Vec<Bricklets>) -> &mut Self {
+        let brick_provider = SequentialBrickProvider::new_rc();
+        for bricklets in brick_sequence {
+            brick_provider.borrow_mut().add(bricklets)
+        }
         self.game_builder = self.game_builder.with_brick_provider(brick_provider).clone();
         self
+
     }
 
     pub fn build(&mut self) -> TestableGame {
