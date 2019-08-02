@@ -1,8 +1,10 @@
-use raylib::RaylibHandle;
-use raylib::consts::{KEY_RIGHT, KEY_LEFT};
-use crate::tinput::{TInput, TInputRef};
 use std::rc::Rc;
 use std::cell::RefCell;
+
+use raylib::RaylibHandle;
+use raylib::consts::{KEY_RIGHT, KEY_LEFT};
+
+use crate::game::tinput::{TInput, TInputRef};
 
 pub struct RaylibInput  {
     rl: Rc<RaylibHandle>

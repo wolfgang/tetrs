@@ -1,6 +1,9 @@
+pub mod tinput;
+
 use crate::trenderer::TRenderer;
-use crate::tinput::{TInputRef, TInputNull};
 use crate::brick_provider::{SingleBrickProvider, BrickProviderRef};
+use tinput::{TInputRef, TInputNull};
+
 
 #[derive(Clone)]
 pub struct GameBuilder {

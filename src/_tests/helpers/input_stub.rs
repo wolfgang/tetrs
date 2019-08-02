@@ -1,6 +1,6 @@
 use std::rc::Rc;
 use std::cell::RefCell;
-use crate::tinput::TInput;
+use crate::game::tinput::TInput;
 
 pub type InputStubRef = Rc<RefCell<InputStub>>;
 
