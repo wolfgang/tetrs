@@ -1,7 +1,7 @@
 use crate::_tests::helpers::input_stub::{InputStubRef, InputStub};
 use crate::game::{Game, GameBuilder};
 use crate::_tests::helpers::to_string_renderer::ToStringRenderer;
-use crate::brick_provider::BrickProviderRef;
+use crate::game::brick_provider::BrickProviderRef;
 
 pub struct TestableGameBuilder {
     game_builder: GameBuilder,

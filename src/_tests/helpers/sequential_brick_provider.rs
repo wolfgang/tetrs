@@ -1,4 +1,4 @@
-use crate::brick_provider::{BrickProvider, Bricklets};
+use crate::game::brick_provider::{BrickProvider, Bricklets};
 use std::rc::Rc;
 use std::cell::RefCell;
 
