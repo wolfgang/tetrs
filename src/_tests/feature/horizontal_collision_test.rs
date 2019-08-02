@@ -1,37 +1,30 @@
 use crate::_tests::helpers::testable_game::TestableGame;
-use crate::game::brick_factory::{j_block_flipped, o_block, i_block};
+use crate::game::brick_factory::*;
 
-#[ignore]
 #[test]
 fn moving_right_is_blocked_by_existing_brick() {
     let mut game = TestableGame::init()
-        .with_field_height(4)
-        .with_brick_sequence(vec![j_block_flipped(), i_block(), o_block()])
+        .with_brick_sequence(vec![o_block()])
+        .with_field(vec![
+            "..........",
+            "...####...",
+            "...####...",
+            "...#......"])
         .build();
 
+    game.verify_frame_after(1, vec![
+        ".##.......",
+        ".######...",
+        "...####...",
+        "...#......"
+    ]);
+
     game.is_moving_right();
-    game.tick(100);
-    game.verify_frame_after(200, vec![
-        "..........",
-        "..........",
+    game.verify_frame_after(50, vec![
+        ".##.......",
+        ".######...",
         "...####...",
         "...#......"
-    ]);
+    ])
 
-    game.tick(300);
-    game.verify_frame_after(400, vec![
-        "..........",
-        "...####...",
-        "...####...",
-        "...#......"
-    ]);
-
-    game.is_not_moving();
-
-    game.verify_frame_after(500, vec![
-        "##........",
-        "######....",
-        "..####....",
-        "..#......."
-    ]);
 }

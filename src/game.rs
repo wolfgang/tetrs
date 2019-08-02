@@ -77,7 +77,7 @@ impl GameBuilder {
             last_move_millis: 0,
             active_brick: Brick { x: 1, y: 0, width: 4, bricklets },
             input: self.input.clone(),
-            brick_provider: self.brick_provider.clone()
+            brick_provider: self.brick_provider.clone(),
         }
     }
 }
@@ -152,8 +152,15 @@ impl Game {
 
     fn get_horizontal_move_speed(&self, now_millis: u64) -> i8 {
         if self.active_brick.y < self.field_height - 1 && now_millis - self.last_move_millis >= 50 {
-            if self.input.borrow().wants_to_move_right() &&
-                self.active_brick.x < self.field_width - self.active_brick.width {
+            if self.input.borrow().wants_to_move_right() {
+                for (bx, by) in &self.active_brick.bricklets {
+                    let x = (self.active_brick.x + *bx) as usize;
+                    let y = (self.active_brick.y + *by) as usize;
+                    if x == self.field_width as usize - 1 || self.field[y][x + 1] != 0 {
+                        return 0;
+                    }
+                }
+
                 return 1;
             }
             if self.input.borrow().wants_to_move_left() && self.active_brick.x > 0 {
