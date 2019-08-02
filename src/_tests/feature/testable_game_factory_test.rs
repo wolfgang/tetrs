@@ -4,7 +4,6 @@ use crate::game::brick_factory::o_block;
 #[test]
 fn can_initialize_field() {
     let mut game = TestableGame::init()
-        .with_field_height(4)
         .with_brick_sequence(vec![o_block()])
         .with_field(vec![
             "..........",

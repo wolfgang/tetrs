@@ -61,21 +61,23 @@ impl GameBuilder {
 
     pub fn build(&self) -> Game {
         let bricklets = self.brick_provider.borrow_mut().next();
-        let mut initial_field = self.initial_field.clone();
-        if initial_field.len() == 0 {
-            initial_field = vec![vec![0; 10]; self.field_height as usize]
+        let mut field = self.initial_field.clone();
+        let mut field_height = field.len() as u8;
+        if field.len() == 0 {
+            field = vec![vec![0; 10]; self.field_height as usize];
+            field_height = self.field_height;
         }
 
         Game {
             field_width: 10,
-            field_height: self.field_height,
+            field_height,
+            field,
             drop_interval: self.drop_interval,
             last_drop_millis: self.current_time_millis,
             last_move_millis: 0,
             active_brick: Brick { x: 1, y: 0, width: 4, bricklets },
-            field: initial_field,
             input: self.input.clone(),
-            brick_provider: self.brick_provider.clone(),
+            brick_provider: self.brick_provider.clone()
         }
     }
 }
