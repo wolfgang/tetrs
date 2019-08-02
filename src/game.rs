@@ -89,6 +89,19 @@ struct Brick {
     bricklets: Vec<(u8, u8)>,
 }
 
+impl Brick {
+    pub fn for_any_bricklet<F>(&self, condition: F) -> bool where F: Fn(usize, usize) -> bool {
+        for (bx, by) in &self.bricklets {
+            let x = (self.x + *bx) as usize;
+            let y = (self.y + *by) as usize;
+
+            if condition(x, y) { return true }
+        }
+
+        false
+    }
+}
+
 pub struct Game {
     field_height: u8,
     field_width: u8,
@@ -153,12 +166,11 @@ impl Game {
     fn get_horizontal_move_speed(&self, now_millis: u64) -> i8 {
         if self.active_brick.y < self.field_height - 1 && now_millis - self.last_move_millis >= 50 {
             if self.input.borrow().wants_to_move_right() {
-                for (bx, by) in &self.active_brick.bricklets {
-                    let x = (self.active_brick.x + *bx) as usize;
-                    let y = (self.active_brick.y + *by) as usize;
-                    if x == self.field_width as usize - 1 || self.field[y][x + 1] != 0 {
-                        return 0;
-                    }
+                if self.active_brick.for_any_bricklet(|x, y| {
+                    x == self.field_width as usize - 1 || self.field[y][x + 1] != 0
+                })
+                {
+                    return 0;
                 }
 
                 return 1;
@@ -171,15 +183,9 @@ impl Game {
     }
 
     fn can_drop(&self) -> bool {
-        for (bx, by) in &self.active_brick.bricklets {
-            let x = (self.active_brick.x + *bx) as usize;
-            let y = (self.active_brick.y + *by) as usize;
-            if y == self.field_height as usize - 1 || self.field[y + 1][x] != 0 {
-                return false;
-            }
-        }
-
-        return true;
+        !self.active_brick.for_any_bricklet(|x, y| {
+            y == self.field_height as usize - 1 || self.field[y + 1][x] != 0
+        })
     }
 
     fn is_time_to_drop(&self, now_millis: u64) -> bool {
