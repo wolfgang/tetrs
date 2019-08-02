@@ -1,10 +1,6 @@
-use std::rc::Rc;
-use std::cell::RefCell;
-
+use std::{rc::Rc, cell::RefCell};
 use std::time::{SystemTime, UNIX_EPOCH};
-
-use rand::{Rng, SeedableRng};
-use rand::rngs::StdRng;
+use rand::{Rng, SeedableRng, rngs::StdRng};
 
 
 pub type BrickProviderRef = Rc<RefCell<dyn BrickProvider>>;

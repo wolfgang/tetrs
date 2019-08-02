@@ -2,10 +2,8 @@ use std::time::{SystemTime, UNIX_EPOCH};
 use std::rc::Rc;
 
 use raylib;
-use tetrs::raylib::renderer::RaylibRenderer;
-use tetrs::raylib::input::RaylibInput;
-use tetrs::game::Game;
-use tetrs::game::brick_provider::RandomBrickProvider;
+use tetrs::raylib::{renderer::RaylibRenderer, input::RaylibInput};
+use tetrs::game::{Game, brick_provider::RandomBrickProvider};
 
 fn main() {
     let field_height = 16;

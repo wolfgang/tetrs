@@ -1,5 +1,4 @@
-use std::rc::Rc;
-use std::cell::RefCell;
+use std::{rc::Rc, cell::RefCell};
 
 use raylib::RaylibHandle;
 use raylib::consts::{KEY_RIGHT, KEY_LEFT};

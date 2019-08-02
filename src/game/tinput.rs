@@ -1,8 +1,6 @@
-use std::cell::RefCell;
-use std::rc::Rc;
+use std::{cell::RefCell, rc::Rc};
 
 pub type TInputRef = Rc<RefCell<dyn TInput>>;
-
 
 pub trait TInput {
     fn wants_to_move_left(&self) -> bool;
