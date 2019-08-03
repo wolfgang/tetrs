@@ -6,7 +6,8 @@ pub type InputStubRef = Rc<RefCell<InputStub>>;
 
 pub struct InputStub {
     moving_right: bool,
-    moving_left: bool
+    moving_left: bool,
+    rotating: bool
 }
 
 impl InputStub {
@@ -14,7 +15,8 @@ impl InputStub {
         Rc::new(RefCell::new(
             Self {
                 moving_right: false,
-                moving_left: false
+                moving_left: false,
+                rotating: false
             }
         ))
     }
@@ -34,6 +36,10 @@ impl InputStub {
         self.moving_left = false;
         self.moving_right = false;
     }
+
+    pub fn is_rotating(&mut self) {
+        self.rotating = true;
+    }
 }
 
 impl TInput for InputStub {
@@ -43,5 +49,9 @@ impl TInput for InputStub {
 
     fn wants_to_move_right(&self) -> bool {
         self.moving_right
+    }
+
+    fn wants_to_rotate(&self) -> bool {
+        self.rotating
     }
 }

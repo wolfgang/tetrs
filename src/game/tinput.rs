@@ -5,6 +5,7 @@ pub type TInputRef = Rc<RefCell<dyn TInput>>;
 pub trait TInput {
     fn wants_to_move_left(&self) -> bool;
     fn wants_to_move_right(&self) -> bool;
+    fn wants_to_rotate(&self) ->  bool;
 }
 
 pub struct TInputNull {}
@@ -21,6 +22,10 @@ impl TInput for TInputNull {
     }
 
     fn wants_to_move_right(&self) -> bool {
+        false
+    }
+
+    fn wants_to_rotate(&self) -> bool {
         false
     }
 }

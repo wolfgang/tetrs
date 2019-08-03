@@ -69,6 +69,7 @@ impl TestableGame {
     pub fn default() -> Self {
         Self::init().build()
     }
+
     pub fn is_moving_left(&mut self) {
         self.input.borrow_mut().is_moving_left();
     }
@@ -79,6 +80,10 @@ impl TestableGame {
 
     pub fn is_not_moving(&mut self) {
         self.input.borrow_mut().is_not_moving();
+    }
+
+    pub fn is_rotating(&mut self) {
+        self.input.borrow_mut().is_rotating();
     }
 
     pub fn tick(&mut self, now: u64) {

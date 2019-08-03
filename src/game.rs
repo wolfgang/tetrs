@@ -123,6 +123,7 @@ impl Game {
     }
 
     pub fn tick(&mut self, now_millis: u64) {
+        self.rotate_brick(now_millis);
         self.move_brick_horizontally(now_millis);
         self.drop_brick(now_millis)
     }
@@ -131,6 +132,12 @@ impl Game {
         renderer.clear();
         self.render_field(renderer);
         self.render_active_brick(renderer)
+    }
+
+    fn rotate_brick(&mut self, _now_millis: u64) {
+        if self.input.borrow().wants_to_rotate() {
+
+        }
     }
 
     fn move_brick_horizontally(&mut self, now_millis: u64) {
