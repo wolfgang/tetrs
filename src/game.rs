@@ -90,15 +90,18 @@ struct Brick {
 }
 
 impl Brick {
-    pub fn for_all_bricklets<F>(&self, condition: F) -> bool where F: Fn(usize, usize) -> bool {
-        for (bx, by) in &self.bricklets[0] {
-            let x = (self.x + *bx) as usize;
-            let y = (self.y + *by) as usize;
-
+    pub fn all_bricklets<F>(&self, condition: F) -> bool where F: Fn(usize, usize) -> bool {
+        for (x, y) in self.current_bricklets() {
             if !condition(x, y) { return false; }
         }
 
         true
+    }
+
+    pub fn current_bricklets(&self) -> Vec<(usize, usize)> {
+        self.bricklets[0].iter().map(|(bx, by)| {
+            ((self.x + *bx) as usize, (self.y + *by) as usize)
+        }).collect()
     }
 }
 
@@ -136,9 +139,7 @@ impl Game {
     }
 
     fn rotate_brick(&mut self, _now_millis: u64) {
-        if self.input.borrow().wants_to_rotate() {
-
-        }
+        if self.input.borrow().wants_to_rotate() {}
     }
 
     fn move_brick_horizontally(&mut self, now_millis: u64) {
@@ -156,11 +157,9 @@ impl Game {
                 self.last_drop_millis = now_millis;
             } else {
                 self.last_drop_millis = now_millis;
-                let x = self.active_brick.x as usize;
-                let y = self.active_brick.y as usize;
 
-                for (bx, by) in &self.active_brick.bricklets[0] {
-                    self.field[y + *by as usize][x + *bx as usize] = 1;
+                for (x, y) in self.active_brick.current_bricklets() {
+                    self.field[y][x] = 1;
                 }
 
                 self.active_brick.x = 1;
@@ -173,12 +172,12 @@ impl Game {
     fn get_horizontal_move_speed(&self, now_millis: u64) -> i8 {
         if !self.is_time_to_move(now_millis) { return 0; };
         if self.input.borrow().wants_to_move_right() && self.can_move_to(1) { return 1; }
-        if self.input.borrow().wants_to_move_left() && self.can_move_to(-1) { return -1 }
+        if self.input.borrow().wants_to_move_left() && self.can_move_to(-1) { return -1; }
         return 0;
     }
 
     fn can_drop(&self) -> bool {
-        self.active_brick.for_all_bricklets(|x, y| {
+        self.active_brick.all_bricklets(|x, y| {
             self.is_empty_cell(x as i32, y + 1)
         })
     }
@@ -192,7 +191,7 @@ impl Game {
     }
 
     fn can_move_to(&self, offset: i32) -> bool {
-        self.active_brick.for_all_bricklets(|x, y| { self.is_empty_cell(x as i32 + offset, y) })
+        self.active_brick.all_bricklets(|x, y| { self.is_empty_cell(x as i32 + offset, y) })
     }
 
     fn is_empty_cell(&self, x: i32, y: usize) -> bool {
@@ -213,10 +212,8 @@ impl Game {
     }
 
     fn render_active_brick(&self, renderer: &mut dyn TRenderer) -> () {
-        for (bx, by) in &self.active_brick.bricklets[0] {
-            let x = self.active_brick.x + *bx;
-            let y = self.active_brick.y + *by;
-            renderer.draw_bricklet_at(x, y);
+        for (x, y) in self.active_brick.current_bricklets() {
+            renderer.draw_bricklet_at(x as u8, y as u8);
         }
     }
 }
