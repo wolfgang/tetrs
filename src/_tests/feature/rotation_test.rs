@@ -14,6 +14,11 @@ fn rotating_simple_shape() {
 
     game.is_rotating();
 
+    game.verify_frame_after(30, vec![
+        ".####.....",
+        ".........."
+    ]);
+
     game.verify_frame_after(50, vec![
         "..#.......",
         "..#.......",
@@ -22,15 +27,20 @@ fn rotating_simple_shape() {
         ".........."
     ]);
 
-    game.stop_rotating();
-
     game.verify_frame_after(100, vec![
+        "..........",
+        ".####.....",
+        "..........",
+        "..........",
+        ".........."
+    ]);
+
+    game.verify_frame_after(150, vec![
         "..........",
         "..#.......",
         "..#.......",
         "..#.......",
-        "..#.......",
-        ".........."
+        "..#......."
     ]);
 
 }

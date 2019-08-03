@@ -76,7 +76,8 @@ impl GameBuilder {
             drop_interval: self.drop_interval,
             last_drop_millis: self.current_time_millis,
             last_move_millis: 0,
-            active_brick: Brick { x: 1, y: 0, phase: 0,  bricklets },
+            last_rotation_millis: 0,
+            active_brick: Brick { x: 1, y: 0, phase: 0, bricklets },
             input: self.input.clone(),
             brick_provider: self.brick_provider.clone(),
         }
@@ -104,6 +105,10 @@ impl Brick {
             ((self.x + *bx) as usize, (self.y + *by) as usize)
         }).collect()
     }
+
+    pub fn next_phase(&mut self) {
+        self.phase = (self.phase + 1) % self.bricklets.len();
+    }
 }
 
 pub struct Game {
@@ -112,6 +117,7 @@ pub struct Game {
     drop_interval: u16,
     last_drop_millis: u64,
     last_move_millis: u64,
+    last_rotation_millis: u64,
     field: Vec<Vec<u8>>,
     active_brick: Brick,
     input: TInputRef,
@@ -139,9 +145,10 @@ impl Game {
         self.render_active_brick(renderer)
     }
 
-    fn rotate_brick(&mut self, _now_millis: u64) {
-        if self.input.borrow().wants_to_rotate() {
-            self.active_brick.phase += 1;
+    fn rotate_brick(&mut self, now_millis: u64) {
+        if now_millis - self.last_rotation_millis >= 50 && self.input.borrow().wants_to_rotate() {
+            self.last_rotation_millis = now_millis;
+            self.active_brick.next_phase();
         }
     }
 
