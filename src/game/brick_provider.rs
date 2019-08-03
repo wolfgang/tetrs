@@ -5,11 +5,11 @@ use crate::game::brick_factory::*;
 
 
 pub type BrickProviderRef = Rc<RefCell<dyn BrickProvider>>;
-pub type Bricklets = Vec<(u8, u8)>;
+pub type Bricklets = Vec<Vec<(u8, u8)>>;
 
 
 pub trait BrickProvider {
-    fn next(&mut self) -> Vec<(u8, u8)>;
+    fn next(&mut self) -> Bricklets;
 }
 
 pub struct SingleBrickProvider {}
@@ -21,7 +21,7 @@ impl SingleBrickProvider {
 }
 
 impl BrickProvider for SingleBrickProvider {
-    fn next(&mut self) -> Vec<(u8, u8)> { i_block() }
+    fn next(&mut self) -> Bricklets { i_block() }
 }
 
 pub struct RandomBrickProvider {
@@ -45,7 +45,7 @@ impl RandomBrickProvider {
 }
 
 impl BrickProvider for RandomBrickProvider {
-    fn next(&mut self) -> Vec<(u8, u8)> {
+    fn next(&mut self) -> Bricklets {
         let index = self.rng.gen_range(0, self.bricks.len());
         self.bricks[index].clone()
     }

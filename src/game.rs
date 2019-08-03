@@ -6,6 +6,7 @@ pub mod brick_factory;
 use tinput::{TInputRef, TInputNull};
 use trenderer::TRenderer;
 use brick_provider::{SingleBrickProvider, BrickProviderRef};
+use crate::game::brick_provider::Bricklets;
 
 #[derive(Clone)]
 pub struct GameBuilder {
@@ -85,12 +86,12 @@ impl GameBuilder {
 struct Brick {
     x: u8,
     y: u8,
-    bricklets: Vec<(u8, u8)>,
+    bricklets: Bricklets,
 }
 
 impl Brick {
     pub fn for_all_bricklets<F>(&self, condition: F) -> bool where F: Fn(usize, usize) -> bool {
-        for (bx, by) in &self.bricklets {
+        for (bx, by) in &self.bricklets[0] {
             let x = (self.x + *bx) as usize;
             let y = (self.y + *by) as usize;
 
@@ -158,7 +159,7 @@ impl Game {
                 let x = self.active_brick.x as usize;
                 let y = self.active_brick.y as usize;
 
-                for (bx, by) in &self.active_brick.bricklets {
+                for (bx, by) in &self.active_brick.bricklets[0] {
                     self.field[y + *by as usize][x + *bx as usize] = 1;
                 }
 
@@ -212,7 +213,7 @@ impl Game {
     }
 
     fn render_active_brick(&self, renderer: &mut dyn TRenderer) -> () {
-        for (bx, by) in &self.active_brick.bricklets {
+        for (bx, by) in &self.active_brick.bricklets[0] {
             let x = self.active_brick.x + *bx;
             let y = self.active_brick.y + *by;
             renderer.draw_bricklet_at(x, y);

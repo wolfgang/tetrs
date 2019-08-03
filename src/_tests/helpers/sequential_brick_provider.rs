@@ -22,7 +22,7 @@ impl SequentialBrickProvider {
 }
 
 impl BrickProvider for SequentialBrickProvider {
-    fn next(&mut self) -> Vec<(u8, u8)> {
+    fn next(&mut self) -> Bricklets {
         let next = self.sequence[self.current_index].clone();
         self.current_index += 1;
         next
