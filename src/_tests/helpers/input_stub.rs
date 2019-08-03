@@ -40,6 +40,10 @@ impl InputStub {
     pub fn is_rotating(&mut self) {
         self.rotating = true;
     }
+
+    pub fn stop_rotating(&mut self) {
+        self.rotating = false;
+    }
 }
 
 impl TInput for InputStub {

@@ -86,6 +86,10 @@ impl TestableGame {
         self.input.borrow_mut().is_rotating();
     }
 
+    pub fn stop_rotating(&mut self) {
+        self.input.borrow_mut().stop_rotating();
+    }
+
     pub fn tick(&mut self, now: u64) {
         self.game.tick(now);
     }

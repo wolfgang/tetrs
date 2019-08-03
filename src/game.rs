@@ -76,7 +76,7 @@ impl GameBuilder {
             drop_interval: self.drop_interval,
             last_drop_millis: self.current_time_millis,
             last_move_millis: 0,
-            active_brick: Brick { x: 1, y: 0, bricklets },
+            active_brick: Brick { x: 1, y: 0, phase: 0,  bricklets },
             input: self.input.clone(),
             brick_provider: self.brick_provider.clone(),
         }
@@ -86,6 +86,7 @@ impl GameBuilder {
 struct Brick {
     x: u8,
     y: u8,
+    phase: usize,
     bricklets: Bricklets,
 }
 
@@ -99,7 +100,7 @@ impl Brick {
     }
 
     pub fn current_bricklets(&self) -> Vec<(usize, usize)> {
-        self.bricklets[0].iter().map(|(bx, by)| {
+        self.bricklets[self.phase].iter().map(|(bx, by)| {
             ((self.x + *bx) as usize, (self.y + *by) as usize)
         }).collect()
     }
@@ -139,7 +140,9 @@ impl Game {
     }
 
     fn rotate_brick(&mut self, _now_millis: u64) {
-        if self.input.borrow().wants_to_rotate() {}
+        if self.input.borrow().wants_to_rotate() {
+            self.active_brick.phase += 1;
+        }
     }
 
     fn move_brick_horizontally(&mut self, now_millis: u64) {
