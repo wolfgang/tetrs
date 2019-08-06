@@ -53,7 +53,7 @@ pub fn t_block() -> BrickDef {
     }
 }
 
-pub fn j_block() -> BrickDef {
+pub fn l_block() -> BrickDef {
     BrickDef {
         brick_type: J_BLOCK,
         bricklets:
@@ -93,7 +93,7 @@ pub fn t_block_flipped() -> BrickDef {
 
 // ###
 // #
-pub fn j_block_flipped() -> BrickDef {
+pub fn l_block_flipped() -> BrickDef {
     BrickDef {
         brick_type: J_BLOCK,
         bricklets: vec![vec![(0, 0), (1, 0), (2, 0), (0, 1)]],

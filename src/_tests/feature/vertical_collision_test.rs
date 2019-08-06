@@ -1,11 +1,11 @@
 use crate::_tests::helpers::testable_game::TestableGame;
-use crate::game::brick_factory::{i_block, j_block_flipped, t_block_flipped};
+use crate::game::brick_factory::{i_block, l_block_flipped, t_block_flipped};
 
 #[test]
 fn when_hitting_ground_spawn_another_brick_after_100_ms() {
     let mut game = TestableGame::init()
         .with_field_height(4)
-        .with_brick_sequence(vec![j_block_flipped(), i_block()])
+        .with_brick_sequence(vec![l_block_flipped(), i_block()])
         .build();
 
     game.tick(100);
@@ -42,7 +42,7 @@ fn when_hitting_ground_spawn_another_brick_after_100_ms() {
 fn when_hitting_another_brick_brick_spawn_another_brick_after_100ms() {
     let mut game = TestableGame::init().
         with_field_height(5)
-        .with_brick_sequence(vec![j_block_flipped(), i_block(), t_block_flipped()])
+        .with_brick_sequence(vec![l_block_flipped(), i_block(), t_block_flipped()])
         .build();
     game.tick(100);
     game.tick(300);

@@ -1,5 +1,5 @@
 use crate::_tests::helpers::testable_game::TestableGame;
-use crate::game::brick_factory::{i_block, j_block};
+use crate::game::brick_factory::{i_block, l_block};
 
 #[test]
 fn rotating_brick_with_collision_1() {
@@ -13,7 +13,7 @@ fn rotating_brick_with_collision_1() {
             "..........",
         ])
         .with_drop_interval(500)
-        .with_brick_sequence(vec![j_block()])
+        .with_brick_sequence(vec![l_block()])
         .build();
 
     game.verify_frame_after(500, vec![
@@ -43,7 +43,7 @@ fn rotating_brick_with_collision_2() {
             "..........",
         ])
         .with_drop_interval(500)
-        .with_brick_sequence(vec![j_block()])
+        .with_brick_sequence(vec![l_block()])
         .build();
 
     game.verify_frame_after(1, vec![
@@ -98,7 +98,7 @@ fn rotating_brick_with_collision_3() {
 #[test]
 fn j_block_moving_left() {
     let mut game = TestableGame::init()
-        .with_brick_sequence(vec![j_block()])
+        .with_brick_sequence(vec![l_block()])
         .with_drop_interval(500)
         .build();
 

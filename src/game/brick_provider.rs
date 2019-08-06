@@ -38,7 +38,7 @@ impl RandomBrickProvider {
         let bricks = vec![
             i_block(),
             o_block(),
-            j_block(),
+            l_block(),
             t_block()
 
         ];
