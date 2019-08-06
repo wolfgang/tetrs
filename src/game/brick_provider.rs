@@ -37,10 +37,9 @@ impl RandomBrickProvider {
     pub fn new_rc() -> BrickProviderRef {
         let bricks = vec![
             i_block(),
-//            o_block(),
-//            j_block_flipped(),
+            o_block(),
             j_block(),
-//            t_block_flipped()
+            t_block()
 
         ];
         let seed = SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_secs();

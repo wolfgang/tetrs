@@ -2,6 +2,7 @@ use std::rc::Rc;
 
 use raylib::{RaylibHandle, Color};
 use crate::game::trenderer::TRenderer;
+use crate::game::brick_factory::{I_BLOCK, O_BLOCK, T_BLOCK, J_BLOCK};
 
 const BRICKLET_SIZE: i32 = 32;
 
@@ -15,11 +16,21 @@ impl<'a> RaylibRenderer {
     pub fn new(rl: Rc<RaylibHandle>, width: usize, height: usize) -> RaylibRenderer {
         RaylibRenderer { rl: rl.clone(), width, height }
     }
+
+    fn brick_color_for(brick_type: u8) -> Color {
+        if brick_type == I_BLOCK { return Color::SKYBLUE}
+        if brick_type == O_BLOCK { return Color::RED}
+        if brick_type == T_BLOCK { return Color::VIOLET}
+        if brick_type == J_BLOCK { return Color::BLUE}
+
+        return Color::WHITE;
+    }
+
 }
 
 impl TRenderer for RaylibRenderer {
     fn clear(&mut self) {
-        self.rl.clear_background(Color::DARKBLUE);
+        self.rl.clear_background(Color::BLACK);
         self.rl.draw_rectangle(
             BRICKLET_SIZE,
             BRICKLET_SIZE,
@@ -34,6 +45,7 @@ impl TRenderer for RaylibRenderer {
             (y + 1) as i32 * BRICKLET_SIZE,
             BRICKLET_SIZE,
             BRICKLET_SIZE,
-            Color::RED);
+            Self::brick_color_for(_brick_type));
     }
+
 }

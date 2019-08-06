@@ -108,6 +108,10 @@ impl Brick {
         self.phase = self.next_phase();
     }
 
+    pub fn brick_type(&self) -> u8 {
+        self.brick_def.brick_type
+    }
+
     fn next_phase(&self) -> usize {
         (self.phase + 1) % self.brick_def.bricklets.len()
     }
@@ -187,7 +191,7 @@ impl Game {
                 self.last_drop_millis = now_millis;
 
                 for (x, y) in self.active_brick.current_bricklets() {
-                    self.field[y][x] = 1;
+                    self.field[y][x] = self.active_brick.brick_type();
                 }
 
                 self.active_brick.x = 1;
@@ -240,7 +244,7 @@ impl Game {
         for (y, row) in self.field.iter().enumerate() {
             for (x, col) in row.iter().enumerate() {
                 if *col != 0 {
-                    renderer.draw_bricklet_at(x as u8, y as u8, 0)
+                    renderer.draw_bricklet_at(x as u8, y as u8, *col)
                 }
             }
         }
@@ -248,7 +252,7 @@ impl Game {
 
     fn render_active_brick(&self, renderer: &mut dyn TRenderer) -> () {
         for (x, y) in self.active_brick.current_bricklets() {
-            renderer.draw_bricklet_at(x as u8, y as u8, 0);
+            renderer.draw_bricklet_at(x as u8, y as u8, self.active_brick.brick_type());
         }
     }
 }
