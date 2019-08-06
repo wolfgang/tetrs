@@ -61,13 +61,14 @@ impl GameBuilder {
     }
 
     pub fn build(&self) -> Game {
-        let bricklets = self.brick_provider.borrow_mut().next();
         let mut field = self.initial_field.clone();
         let mut field_height = field.len() as u8;
         if field.len() == 0 {
             field = vec![vec![0; 10]; self.field_height as usize];
             field_height = self.field_height;
         }
+        
+        let brick_dev = self.brick_provider.borrow_mut().next();
 
         Game {
             field_width: 10,
@@ -77,7 +78,7 @@ impl GameBuilder {
             last_drop_millis: self.current_time_millis,
             last_move_millis: 0,
             last_rotation_millis: 0,
-            active_brick: Brick { x: 1, y: 0, phase: 0, brick_def: bricklets },
+            active_brick: Brick { x: 1, y: 0, phase: 0, brick_def: brick_dev },
             input: self.input.clone(),
             brick_provider: self.brick_provider.clone(),
         }
@@ -87,11 +88,18 @@ impl GameBuilder {
 struct Brick {
     x: i8,
     y: u8,
-    phase: usize,
+    pub phase: usize,
     brick_def: BrickDef,
 }
 
 impl Brick {
+    pub fn reset(&mut self, brick_def: BrickDef) {
+        self.x = 1;
+        self.y = 0;
+        self.brick_def = brick_def;
+        self.phase = 0;
+    }
+
     pub fn all_bricklets<F>(&self, condition: F) -> bool where F: Fn(usize, usize) -> bool {
         self.all_bricklets_at(self.phase, condition)
     }
@@ -194,9 +202,7 @@ impl Game {
                     self.field[y][x] = self.active_brick.brick_type();
                 }
 
-                self.active_brick.x = 1;
-                self.active_brick.y = 0;
-                self.active_brick.brick_def = self.brick_provider.borrow_mut().next();
+                self.active_brick.reset(self.brick_provider.borrow_mut().next());
             }
         }
     }

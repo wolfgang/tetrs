@@ -123,4 +123,39 @@ fn can_use_game_builder_to_override_drop_interval() {
 }
 
 
+#[test]
+fn reset_rotation_for_new_brick() {
+    let mut game = TestableGame::init()
+        .with_field_height(5)
+        .build();
+
+    game.verify_frame_after(0, vec![
+        ".####.....",
+        "..........",
+    ]);
+
+    game.tick(100);
+    game.is_rotating();
+    game.verify_frame_after(150, vec![
+        "..........",
+        "...#......",
+        "...#......",
+        "...#......",
+        "...#......",
+    ]);
+
+    game.stop_rotating();
+
+    game.verify_frame_after(200, vec![
+        ".####.....",
+        "...#......",
+        "...#......",
+        "...#......",
+        "...#......",
+    ]);
+
+
+}
+
+
 
