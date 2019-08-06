@@ -87,8 +87,8 @@ fn rotating_brick_with_collision_3() {
     ]);
 
     game.verify_frame_after(300, vec![
-        ".####.....",
         "..........",
+        ".####.....",
         "..........",
         "..........",
         ".########."
