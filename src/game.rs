@@ -100,11 +100,28 @@ impl Brick {
         true
     }
 
+    pub fn all_next_bricklets<F>(&self, condition: F) -> bool where F: Fn(usize, usize) -> bool {
+        for (x, y) in self.next_bricklets() {
+            if !condition(x, y) { return false; }
+        }
+
+        true
+    }
+
     pub fn current_bricklets(&self) -> Vec<(usize, usize)> {
         self.bricklets[self.phase].iter().map(|(bx, by)| {
             ((self.x + *bx) as usize, (self.y + *by) as usize)
         }).collect()
     }
+
+    pub fn next_bricklets(&self) -> Vec<(usize, usize)> {
+
+        let next_phase = (self.phase + 1) % self.bricklets.len();
+        self.bricklets[next_phase].iter().map(|(bx, by)| {
+            ((self.x + *bx) as usize, (self.y + *by) as usize)
+        }).collect()
+    }
+
 
     pub fn next_phase(&mut self) {
         self.phase = (self.phase + 1) % self.bricklets.len();
@@ -183,12 +200,11 @@ impl Game {
     }
 
     fn can_rotate(&self) -> bool {
-        self.active_brick.all_bricklets(|x, y| {
-            self.is_empty_cell(x as i32, y + 1) &&
-                self.is_empty_cell(x as i32 + 1, y)
+        self.active_brick.all_next_bricklets(|x, y| {
+            self.is_empty_cell(x as i32, y)
+
         })
     }
-
 
     fn get_horizontal_move_speed(&self, now_millis: u64) -> i8 {
         if !self.is_time_to_move(now_millis) { return 0; };

@@ -45,8 +45,8 @@ fn rotating_simple_shape() {
 }
 
 #[test]
-fn rotating_brick_with_collision() {
-    let mut game =  TestableGame::init()
+fn rotating_brick_with_collision_1() {
+    let mut game = TestableGame::init()
         .with_field(vec![
             "..........",
             "..........",
@@ -73,5 +73,74 @@ fn rotating_brick_with_collision() {
         ".###......",
         ".####....."
     ]);
+}
 
+#[test]
+fn rotating_brick_with_collision_2() {
+    let mut game = TestableGame::init()
+        .with_field(vec![
+            "..........",
+            "....####..",
+            "..........",
+            "..........",
+        ])
+        .with_brick_sequence(vec![j_block()])
+        .build();
+
+    game.verify_frame_after(1, vec![
+        ".#........",
+        ".#######..",
+        "..........",
+        "..........",
+    ]);
+
+    game.is_rotating();
+
+    game.verify_frame_after(50, vec![
+        "..##......",
+        "..#.####..",
+        "..#.......",
+        "..........",
+    ]);
+}
+
+#[test]
+fn rotating_brick_with_collision_3() {
+    let mut game = TestableGame::init()
+        .with_field(vec![
+            "..........",
+            "..........",
+            "..........",
+            "..........",
+            ".########."
+        ])
+        .with_brick_sequence(vec![i_block()])
+        .with_drop_interval(500)
+        .build();
+
+    game.is_rotating();
+    game.verify_frame_after(50, vec![
+        "...#......",
+        "...#......",
+        "...#......",
+        "...#......",
+        ".########."
+    ]);
+
+    game.verify_frame_after(100, vec![
+        ".####.....",
+        "..........",
+        "..........",
+        "..........",
+        ".########."
+    ]);
+
+//    game.is_rotating();
+//
+//    game.verify_frame_after(50, vec![
+//        "..##......",
+//        "..#.####..",
+//        "..#.......",
+//        "..........",
+//    ]);
 }
