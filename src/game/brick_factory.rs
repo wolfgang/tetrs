@@ -16,11 +16,9 @@ pub fn i_block() -> BrickDef {
                 "..#.",
                 "..#.",
                 "..#."]),
-
             from_strings(vec![
                 "....",
                 "####"]),
-
             from_strings(vec![
                 ".#..",
                 ".#..",
@@ -37,7 +35,7 @@ pub fn o_block() -> BrickDef {
             from_strings(vec![
                 "##",
                 "##"])
-        ]
+        ],
     }
 }
 
@@ -77,7 +75,36 @@ pub fn l_block() -> BrickDef {
                 ".#.",
                 "##."
             ]),
-        ]
+        ],
+    }
+}
+
+
+pub fn j_block() -> BrickDef {
+    BrickDef {
+        brick_type: J_BLOCK,
+        bricklets:
+        vec![
+            from_strings(vec![
+                "..#",
+                "###"
+            ]),
+            from_strings(vec![
+                ".#.",
+                ".#.",
+                ".##"
+            ]),
+            from_strings(vec![
+                "...",
+                "###",
+                "#.."
+            ]),
+            from_strings(vec![
+                "##.",
+                ".#.",
+                ".#."
+            ]),
+        ],
     }
 }
 
