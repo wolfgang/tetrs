@@ -93,38 +93,36 @@ struct Brick {
 
 impl Brick {
     pub fn all_bricklets<F>(&self, condition: F) -> bool where F: Fn(usize, usize) -> bool {
-        for (x, y) in self.current_bricklets() {
-            if !condition(x, y) { return false; }
-        }
-
-        true
+        self.all_bricklets_at(self.phase, condition)
     }
 
     pub fn all_next_bricklets<F>(&self, condition: F) -> bool where F: Fn(usize, usize) -> bool {
-        for (x, y) in self.next_bricklets() {
-            if !condition(x, y) { return false; }
-        }
-
-        true
+        self.all_bricklets_at(self.next_phase(), condition)
     }
 
     pub fn current_bricklets(&self) -> Vec<(usize, usize)> {
-        self.bricklets[self.phase].iter().map(|(bx, by)| {
-            ((self.x + *bx) as usize, (self.y + *by) as usize)
-        }).collect()
+        self.bricklets_at(self.phase)
     }
 
-    pub fn next_bricklets(&self) -> Vec<(usize, usize)> {
-
-        let next_phase = (self.phase + 1) % self.bricklets.len();
-        self.bricklets[next_phase].iter().map(|(bx, by)| {
-            ((self.x + *bx) as usize, (self.y + *by) as usize)
-        }).collect()
+    pub fn goto_next_phase(&mut self) {
+        self.phase = self.next_phase();
     }
 
+    fn next_phase(&self) -> usize {
+        (self.phase + 1) % self.bricklets.len()
+    }
 
-    pub fn next_phase(&mut self) {
-        self.phase = (self.phase + 1) % self.bricklets.len();
+    fn all_bricklets_at<F>(&self, phase: usize, condition: F) -> bool where F: Fn(usize, usize) -> bool {
+        for (x, y) in self.bricklets_at(phase) {
+            if !condition(x, y) { return false; }
+        }
+        true
+    }
+
+    fn bricklets_at(&self, phase: usize) -> Vec<(usize, usize)> {
+        self.bricklets[phase].iter().map(|(bx, by)| {
+            ((self.x + *bx) as usize, (self.y + *by) as usize)
+        }).collect()
     }
 }
 
@@ -168,7 +166,7 @@ impl Game {
             self.can_rotate()
         {
             self.last_rotation_millis = now_millis;
-            self.active_brick.next_phase();
+            self.active_brick.goto_next_phase();
         }
     }
 
