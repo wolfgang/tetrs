@@ -85,7 +85,7 @@ impl GameBuilder {
 }
 
 struct Brick {
-    x: u8,
+    x: i8,
     y: u8,
     phase: usize,
     bricklets: Bricklets,
@@ -121,7 +121,7 @@ impl Brick {
 
     fn bricklets_at(&self, phase: usize) -> Vec<(usize, usize)> {
         self.bricklets[phase].iter().map(|(bx, by)| {
-            ((self.x + *bx) as usize, (self.y + *by) as usize)
+            ((self.x + *bx as i8) as usize, (self.y + *by) as usize)
         }).collect()
     }
 }
@@ -161,7 +161,7 @@ impl Game {
     }
 
     fn rotate_brick(&mut self, now_millis: u64) {
-        if now_millis - self.last_rotation_millis >= 50 &&
+        if now_millis - self.last_rotation_millis >= 150 &&
             self.input.borrow().wants_to_rotate() &&
             self.can_rotate()
         {
@@ -174,7 +174,7 @@ impl Game {
         let speed = self.get_horizontal_move_speed(now_millis);
         if speed != 0 {
             self.last_move_millis = now_millis;
-            self.active_brick.x = (self.active_brick.x as i8 + speed) as u8;
+            self.active_brick.x = self.active_brick.x + speed;
         }
     }
 
