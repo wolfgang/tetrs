@@ -69,7 +69,7 @@ impl GameBuilder {
             field_height = self.field_height;
         }
         
-        let brick_dev = self.brick_provider.borrow_mut().next();
+        let brick_def = self.brick_provider.borrow_mut().next();
 
         Game {
             field_width: 10,
@@ -79,7 +79,7 @@ impl GameBuilder {
             last_drop_millis: self.current_time_millis,
             last_move_millis: 0,
             last_rotation_millis: 0,
-            active_brick: Brick { x: 1, y: 0, phase: 0, brick_def: brick_dev },
+            active_brick: Brick::new(brick_def),
             input: self.input.clone(),
             brick_provider: self.brick_provider.clone(),
         }

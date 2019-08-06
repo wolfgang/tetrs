@@ -3,11 +3,21 @@ use crate::game::brick_provider::BrickDef;
 pub struct Brick {
     pub x: i8,
     pub y: u8,
-    pub phase: usize,
-    pub brick_def: BrickDef,
+    phase: usize,
+    brick_def: BrickDef,
 }
 
 impl Brick {
+    pub fn new(brick_def: BrickDef) -> Self {
+        Self {
+            x: 1,
+            y: 0,
+            phase: 0,
+            brick_def
+        }
+    }
+
+
     pub fn reset(&mut self, brick_def: BrickDef) {
         self.x = 1;
         self.y = 0;
