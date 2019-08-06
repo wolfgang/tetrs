@@ -12,28 +12,28 @@ fn when_hitting_ground_spawn_another_brick_after_100_ms() {
     game.verify_exact_frame_after(200, vec![
         "..........",
         "..........",
-        ".####.....",
+        ".###......",
         ".#........"
     ]);
 
     game.verify_exact_frame_after(250, vec![
         "..........",
         "..........",
-        ".####.....",
+        ".###......",
         ".#........"
     ]);
 
     game.verify_exact_frame_after(300, vec![
         ".####.....",
         "..........",
-        ".####.....",
+        ".###......",
         ".#........"
     ]);
 
     game.verify_exact_frame_after(400, vec![
         "..........",
         ".####.....",
-        ".####.....",
+        ".###......",
         ".#........"
     ]);
 }
@@ -50,7 +50,7 @@ fn when_hitting_another_brick_brick_spawn_another_brick_after_100ms() {
         "..........",
         "..........",
         "..........",
-        ".####.....",
+        ".###......",
         ".#........"
     ]);
 
@@ -58,7 +58,7 @@ fn when_hitting_another_brick_brick_spawn_another_brick_after_100ms() {
         "..........",
         "..........",
         "..........",
-        ".####.....",
+        ".###......",
         ".#........"
     ]);
 
@@ -66,7 +66,7 @@ fn when_hitting_another_brick_brick_spawn_another_brick_after_100ms() {
         ".####.....",
         "..........",
         "..........",
-        ".####.....",
+        ".###......",
         ".#........"
     ]);
 
@@ -75,7 +75,7 @@ fn when_hitting_another_brick_brick_spawn_another_brick_after_100ms() {
         "..........",
         "..........",
         ".####.....",
-        ".####.....",
+        ".###......",
         ".#........"
     ]);
 
@@ -83,7 +83,7 @@ fn when_hitting_another_brick_brick_spawn_another_brick_after_100ms() {
         ".###......",
         "..#.......",
         ".####.....",
-        ".####.....",
+        ".###......",
         ".#........"
     ]);
 }

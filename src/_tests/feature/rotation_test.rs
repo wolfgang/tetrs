@@ -1,5 +1,5 @@
 use crate::_tests::helpers::testable_game::TestableGame;
-use crate::game::brick_factory::i_block;
+use crate::game::brick_factory::{i_block, j_block};
 
 #[test]
 fn rotating_simple_shape() {
@@ -42,5 +42,25 @@ fn rotating_simple_shape() {
         "...#......",
         "...#......"
     ]);
+}
 
+#[test]
+fn rotating_brick_with_collision() {
+    let mut game =  TestableGame::init()
+        .with_field(vec![
+            "..........",
+            "..........",
+            "..........",
+            "..........",
+            "..........",
+            "..........",
+        ])
+        .with_brick_sequence(vec![j_block()])
+        .build();
+
+    game.verify_frame_after(1, vec![
+        ".#........",
+        ".###......",
+        ".........."
+    ])
 }

@@ -16,7 +16,7 @@ fn use_sequential_provider() {
 
     game.tick(200);
     game.verify_exact_frame_after(300, vec![
-        ".####.....",
+        ".###......",
         ".#........",
         ".####....."
     ]);

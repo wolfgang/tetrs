@@ -21,8 +21,14 @@ pub fn  t_block_flipped() -> Bricklets {
     vec![vec![(0, 0), (1, 0), (2, 0), (1, 1)]]
 }
 
-// ####
+// ###
 // #
 pub fn j_block_flipped() -> Bricklets {
-    vec![vec![(0, 0), (1, 0), (2, 0), (3, 0), (0, 1)]]
+    vec![vec![(0, 0), (1, 0), (2, 0), (0, 1)]]
+}
+
+// #
+// ###
+pub fn j_block() -> Bricklets {
+    vec![vec![(0, 0), (0, 1), (1, 1), (2, 1)]]
 }
