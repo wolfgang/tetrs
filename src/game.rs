@@ -181,7 +181,7 @@ impl Game {
     }
 
     fn is_time_to_move(&self, now_millis: u64) -> bool {
-        self.active_brick.y < self.field_height - 1 && now_millis - self.last_move_millis >= 50
+        self.active_brick.is_above(self.field_height - 1) && now_millis - self.last_move_millis >= 50
     }
 
     fn can_move_to(&self, offset: i32) -> bool {
