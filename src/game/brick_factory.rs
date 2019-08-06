@@ -67,6 +67,16 @@ pub fn j_block() -> BrickDef {
                 ".#.",
                 ".#."
             ]),
+            from_strings(vec![
+                "...",
+                "###",
+                "..#"
+            ]),
+            from_strings(vec![
+                ".#.",
+                ".#.",
+                "##."
+            ]),
         ]
     }
 }
