@@ -28,7 +28,7 @@ impl TRenderer for RaylibRenderer {
             Color::GREEN);
     }
 
-    fn draw_bricklet_at(&mut self, x: u8, y: u8) {
+    fn draw_bricklet_at(&mut self, x: u8, y: u8, _brick_type: u8) {
         self.rl.draw_rectangle(
             (x +1) as i32 * BRICKLET_SIZE,
             (y + 1) as i32 * BRICKLET_SIZE,

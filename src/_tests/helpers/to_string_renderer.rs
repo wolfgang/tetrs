@@ -53,7 +53,7 @@ impl TRenderer for ToStringRenderer {
         }
     }
 
-    fn draw_bricklet_at(&mut self, x: u8, y: u8) {
+    fn draw_bricklet_at(&mut self, x: u8, y: u8, _brick_type: u8) {
         self.frame[y as usize][x as usize] = '#'
     }
 }

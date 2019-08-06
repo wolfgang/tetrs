@@ -240,7 +240,7 @@ impl Game {
         for (y, row) in self.field.iter().enumerate() {
             for (x, col) in row.iter().enumerate() {
                 if *col != 0 {
-                    renderer.draw_bricklet_at(x as u8, y as u8)
+                    renderer.draw_bricklet_at(x as u8, y as u8, 0)
                 }
             }
         }
@@ -248,7 +248,7 @@ impl Game {
 
     fn render_active_brick(&self, renderer: &mut dyn TRenderer) -> () {
         for (x, y) in self.active_brick.current_bricklets() {
-            renderer.draw_bricklet_at(x as u8, y as u8);
+            renderer.draw_bricklet_at(x as u8, y as u8, 0);
         }
     }
 }
