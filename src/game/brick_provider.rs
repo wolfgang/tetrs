@@ -41,7 +41,8 @@ impl RandomBrickProvider {
             j_block(),
             o_block(),
             t_block(),
-            s_block()
+            s_block(),
+            z_block()
 
         ];
         let seed = SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_secs();

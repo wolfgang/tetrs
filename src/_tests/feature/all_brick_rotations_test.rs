@@ -155,6 +155,7 @@ fn rotations_for_s_block() {
     ]);
 }
 
+
 #[test]
 fn rotations_for_t_block() {
     let mut game = TestableGame::init()
@@ -191,4 +192,43 @@ fn rotations_for_t_block() {
         "..#.......",
         ".###......"
     ]);
+}
+
+#[test]
+fn rotations_for_z_block() {
+    let mut game = TestableGame::init()
+        .with_drop_interval(5000)
+        .with_brick_sequence(vec![z_block()])
+        .build();
+
+    game.verify_frame_after(0, vec![
+        ".##.......",
+        "..##......"
+    ]);
+
+    game.is_rotating();
+
+    game.verify_frame_after(150, vec![
+        "...#......",
+        "..##......",
+        "..#......."
+    ]);
+
+    game.verify_frame_after(300, vec![
+        "..........",
+        ".##.......",
+        "..##......"
+    ]);
+
+    game.verify_frame_after(450, vec![
+        "..#.......",
+        ".##.......",
+        ".#........"
+    ]);
+
+    game.verify_frame_after(600, vec![
+        ".##.......",
+        "..##......"
+    ]);
+
 }

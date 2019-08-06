@@ -5,6 +5,7 @@ pub const O_BLOCK: u8 = 2;
 pub const T_BLOCK: u8 = 3;
 pub const J_BLOCK: u8 = 4;
 pub const S_BLOCK: u8 = 5;
+pub const Z_BLOCK: u8 = 6;
 
 pub fn i_block() -> BrickDef {
     BrickDef {
@@ -153,6 +154,33 @@ pub fn s_block() -> BrickDef {
 }
 
 
+pub fn z_block() -> BrickDef {
+    BrickDef {
+        brick_type: Z_BLOCK,
+        bricklets:
+        vec![
+            from_strings(vec![
+                "##.",
+                ".##."
+            ]),
+            from_strings(vec![
+                "..#",
+                ".##",
+                ".#."
+            ]),
+            from_strings(vec![
+                "...",
+                "##.",
+                ".##"
+            ]),
+            from_strings(vec![
+                ".#",
+                "##",
+                "#."
+            ]),
+        ],
+    }
+}
 // ###
 //  #
 pub fn t_block_flipped() -> BrickDef {
