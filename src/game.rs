@@ -146,7 +146,10 @@ impl Game {
     }
 
     fn rotate_brick(&mut self, now_millis: u64) {
-        if now_millis - self.last_rotation_millis >= 50 && self.input.borrow().wants_to_rotate() {
+        if now_millis - self.last_rotation_millis >= 50 &&
+            self.input.borrow().wants_to_rotate() &&
+            self.can_rotate()
+        {
             self.last_rotation_millis = now_millis;
             self.active_brick.next_phase();
         }
@@ -178,6 +181,14 @@ impl Game {
             }
         }
     }
+
+    fn can_rotate(&self) -> bool {
+        self.active_brick.all_bricklets(|x, y| {
+            self.is_empty_cell(x as i32, y + 1) &&
+                self.is_empty_cell(x as i32 + 1, y)
+        })
+    }
+
 
     fn get_horizontal_move_speed(&self, now_millis: u64) -> i8 {
         if !self.is_time_to_move(now_millis) { return 0; };

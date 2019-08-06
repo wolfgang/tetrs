@@ -51,16 +51,27 @@ fn rotating_brick_with_collision() {
             "..........",
             "..........",
             "..........",
-            "..........",
+            ".####.....",
             "..........",
             "..........",
         ])
         .with_brick_sequence(vec![j_block()])
         .build();
 
-    game.verify_frame_after(1, vec![
+    game.verify_frame_after(100, vec![
+        "..........",
         ".#........",
         ".###......",
-        ".........."
-    ])
+        ".####....."
+    ]);
+
+    game.is_rotating();
+
+    game.verify_frame_after(150, vec![
+        "..........",
+        ".#........",
+        ".###......",
+        ".####....."
+    ]);
+
 }
