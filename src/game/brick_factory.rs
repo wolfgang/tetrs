@@ -4,6 +4,7 @@ pub const I_BLOCK: u8 = 1;
 pub const O_BLOCK: u8 = 2;
 pub const T_BLOCK: u8 = 3;
 pub const J_BLOCK: u8 = 4;
+pub const S_BLOCK: u8 = 5;
 
 pub fn i_block() -> BrickDef {
     BrickDef {
@@ -79,7 +80,6 @@ pub fn l_block() -> BrickDef {
     }
 }
 
-
 pub fn j_block() -> BrickDef {
     BrickDef {
         brick_type: J_BLOCK,
@@ -103,6 +103,34 @@ pub fn j_block() -> BrickDef {
                 "##.",
                 ".#.",
                 ".#."
+            ]),
+        ],
+    }
+}
+
+pub fn s_block() -> BrickDef {
+    BrickDef {
+        brick_type: S_BLOCK,
+        bricklets:
+        vec![
+            from_strings(vec![
+                ".##",
+                "##."
+            ]),
+            from_strings(vec![
+                ".#.",
+                ".##",
+                "..#"
+            ]),
+            from_strings(vec![
+                "...",
+                ".##",
+                "##."
+            ]),
+            from_strings(vec![
+                "#.",
+                "##",
+                ".#"
             ]),
         ],
     }
