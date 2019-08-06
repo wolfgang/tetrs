@@ -1,7 +1,7 @@
 use std::{rc::Rc, cell::RefCell};
 
 use raylib::RaylibHandle;
-use raylib::consts::{KEY_RIGHT, KEY_LEFT, KEY_DOWN};
+use raylib::consts::{KEY_RIGHT, KEY_LEFT, KEY_UP};
 
 use crate::game::tinput::{TInput, TInputRef};
 
@@ -25,6 +25,6 @@ impl TInput for RaylibInput {
     }
 
     fn wants_to_rotate(&self) -> bool {
-        self.rl.is_key_down(KEY_DOWN as i32)
+        self.rl.is_key_down(KEY_UP as i32)
     }
 }

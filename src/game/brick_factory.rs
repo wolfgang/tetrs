@@ -6,6 +6,7 @@ pub const T_BLOCK: u8 = 3;
 pub const J_BLOCK: u8 = 4;
 pub const S_BLOCK: u8 = 5;
 pub const Z_BLOCK: u8 = 6;
+pub const L_BLOCK: u8 = 7;
 
 pub fn i_block() -> BrickDef {
     BrickDef {
@@ -71,7 +72,7 @@ pub fn t_block() -> BrickDef {
 
 pub fn l_block() -> BrickDef {
     BrickDef {
-        brick_type: J_BLOCK,
+        brick_type: L_BLOCK,
         bricklets:
         vec![
             from_strings(vec![

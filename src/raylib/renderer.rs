@@ -2,7 +2,7 @@ use std::rc::Rc;
 
 use raylib::{RaylibHandle, Color};
 use crate::game::trenderer::TRenderer;
-use crate::game::brick_factory::{I_BLOCK, O_BLOCK, T_BLOCK, J_BLOCK, S_BLOCK, Z_BLOCK};
+use crate::game::brick_factory::{I_BLOCK, O_BLOCK, T_BLOCK, J_BLOCK, S_BLOCK, Z_BLOCK, L_BLOCK};
 
 const BRICKLET_SIZE: i32 = 32;
 
@@ -24,6 +24,7 @@ impl<'a> RaylibRenderer {
         if brick_type == J_BLOCK { return Color::BLUE}
         if brick_type == S_BLOCK { return Color::GOLD}
         if brick_type == Z_BLOCK { return Color::LIME}
+        if brick_type == L_BLOCK { return Color::YELLOW}
 
         return Color::WHITE;
     }
@@ -38,7 +39,7 @@ impl TRenderer for RaylibRenderer {
             BRICKLET_SIZE,
             BRICKLET_SIZE * self.width as i32,
             BRICKLET_SIZE * self.height as i32,
-            Color::GREEN);
+            Color::LIGHTGRAY);
     }
 
     fn draw_bricklet_at(&mut self, x: u8, y: u8, _brick_type: u8) {
