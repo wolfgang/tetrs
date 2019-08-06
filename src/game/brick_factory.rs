@@ -47,7 +47,23 @@ pub fn t_block() -> BrickDef {
             from_strings(vec![
                 ".#.",
                 "###"
+            ]),
+            from_strings(vec![
+                ".#.",
+                ".##",
+                ".#."
+            ]),
+            from_strings(vec![
+                "...",
+                "###",
+                ".#."
+            ]),
+            from_strings(vec![
+                ".#.",
+                "##.",
+                ".#."
             ])
+
         ],
     }
 }
