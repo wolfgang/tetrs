@@ -94,3 +94,47 @@ fn rotating_brick_with_collision_3() {
         ".########."
     ]);
 }
+
+#[test]
+fn j_block_moving_left() {
+    let mut game = TestableGame::init()
+        .with_brick_sequence(vec![j_block()])
+        .with_drop_interval(500)
+        .build();
+
+    game.verify_frame_after(1, vec![
+        ".#........",
+        ".###......",
+        ".........."
+    ]);
+
+    game.is_rotating();
+
+    game.verify_frame_after(150, vec![
+        "..##......",
+        "..#.......",
+        "..#......."
+    ]);
+
+    game.stop_rotating();
+    game.is_moving_left();
+
+    game.verify_frame_after(160, vec![
+        ".##.......",
+        ".#........",
+        ".#........"
+    ]);
+
+    game.verify_frame_after(210, vec![
+        "##........",
+        "#.........",
+        "#........."
+    ]);
+
+    game.verify_frame_after(300, vec![
+        "##........",
+        "#.........",
+        "#........."
+    ]);
+
+}

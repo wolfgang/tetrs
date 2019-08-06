@@ -1,6 +1,4 @@
 use crate::_tests::helpers::testable_game::TestableGame;
-use crate::game::brick_factory::j_block;
-
 
 #[test]
 fn cursor_right_moves_brick_right_every_50_ms() {
@@ -59,50 +57,6 @@ fn cannot_move_horizontally_when_on_ground() {
     game.verify_exact_frame_after(600, vec![
         "..........",
         ".####....."
-    ]);
-
-}
-
-#[test]
-fn j_block_moving_left() {
-    let mut game = TestableGame::init()
-        .with_brick_sequence(vec![j_block()])
-        .with_drop_interval(500)
-        .build();
-
-    game.verify_frame_after(1, vec![
-        ".#........",
-        ".###......",
-        ".........."
-    ]);
-
-    game.is_rotating();
-
-    game.verify_frame_after(150, vec![
-        "..##......",
-        "..#.......",
-        "..#......."
-    ]);
-
-    game.stop_rotating();
-    game.is_moving_left();
-
-    game.verify_frame_after(160, vec![
-        ".##.......",
-        ".#........",
-        ".#........"
-    ]);
-
-    game.verify_frame_after(210, vec![
-        "##........",
-        "#.........",
-        "#........."
-    ]);
-
-    game.verify_frame_after(300, vec![
-        "##........",
-        "#.........",
-        "#........."
     ]);
 
 }
