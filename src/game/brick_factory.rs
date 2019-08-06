@@ -11,10 +11,22 @@ pub fn i_block() -> BrickDef {
         brick_type: I_BLOCK,
         bricklets:
         vec![
-            vec![(0, 0), (1, 0), (2, 0), (3, 0)],
-            vec![(2, 0), (2, 1), (2, 2), (2, 3)],
-            vec![(0, 1), (1, 1), (2, 1), (3, 1)],
-            vec![(1, 0), (1, 1), (1, 2), (1, 3)]
+            from_strings(vec!["####"]),
+            from_strings(vec![
+                "..#.",
+                "..#.",
+                "..#.",
+                "..#."]),
+
+            from_strings(vec![
+                "....",
+                "####"]),
+
+            from_strings(vec![
+                ".#..",
+                ".#..",
+                ".#..",
+                ".#.."]),
         ],
     }
 }
@@ -37,7 +49,6 @@ pub fn t_block() -> BrickDef {
     }
 }
 
-
 // #
 // ###
 pub fn j_block() -> BrickDef {
@@ -53,6 +64,7 @@ pub fn j_block() -> BrickDef {
         ],
     }
 }
+
 
 // ###
 //  #
@@ -70,4 +82,14 @@ pub fn j_block_flipped() -> BrickDef {
         brick_type: J_BLOCK,
         bricklets: vec![vec![(0, 0), (1, 0), (2, 0), (0, 1)]],
     }
+}
+
+fn from_strings(strings: Vec<&str>) -> Vec<(u8, u8)> {
+    let mut result = Vec::with_capacity(8);
+    for (y, row) in strings.iter().enumerate() {
+        for (x, char) in row.chars().enumerate() {
+            if char == '#' { result.push((x as u8, y as u8)) }
+        }
+    }
+    result
 }
