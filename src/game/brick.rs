@@ -1,7 +1,7 @@
 use crate::game::brick_provider::BrickDef;
 
 pub struct Brick {
-    pub x: i8,
+    x: i8,
     pub y: u8,
     phase: usize,
     brick_def: BrickDef,
@@ -23,6 +23,11 @@ impl Brick {
         self.y = 0;
         self.brick_def = brick_def;
         self.phase = 0;
+    }
+
+    pub fn move_by(&mut self, x_offset: i8, y_offset: u8) {
+        self.x += x_offset;
+        self.y += y_offset;
     }
 
     pub fn all_bricklets<F>(&self, condition: F) -> bool where F: Fn(usize, usize) -> bool {

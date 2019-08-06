@@ -135,14 +135,14 @@ impl Game {
         let speed = self.get_horizontal_move_speed(now_millis);
         if speed != 0 {
             self.last_move_millis = now_millis;
-            self.active_brick.x = self.active_brick.x + speed;
+            self.active_brick.move_by(speed, 0);
         }
     }
 
     fn drop_brick(&mut self, now_millis: u64) -> () {
         if self.is_time_to_drop(now_millis) {
             if self.can_drop() {
-                self.active_brick.y += 1;
+                self.active_brick.move_by(0, 1);
                 self.last_drop_millis = now_millis;
             } else {
                 self.last_drop_millis = now_millis;
