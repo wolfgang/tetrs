@@ -6,7 +6,7 @@ pub mod brick_factory;
 use tinput::{TInputRef, TInputNull};
 use trenderer::TRenderer;
 use brick_provider::{SingleBrickProvider, BrickProviderRef};
-use crate::game::brick_provider::Bricklets;
+use crate::game::brick_provider::BrickDef;
 
 #[derive(Clone)]
 pub struct GameBuilder {
@@ -77,7 +77,7 @@ impl GameBuilder {
             last_drop_millis: self.current_time_millis,
             last_move_millis: 0,
             last_rotation_millis: 0,
-            active_brick: Brick { x: 1, y: 0, phase: 0, bricklets },
+            active_brick: Brick { x: 1, y: 0, phase: 0, brick_def: bricklets },
             input: self.input.clone(),
             brick_provider: self.brick_provider.clone(),
         }
@@ -88,7 +88,7 @@ struct Brick {
     x: i8,
     y: u8,
     phase: usize,
-    bricklets: Bricklets,
+    brick_def: BrickDef,
 }
 
 impl Brick {
@@ -109,7 +109,7 @@ impl Brick {
     }
 
     fn next_phase(&self) -> usize {
-        (self.phase + 1) % self.bricklets.len()
+        (self.phase + 1) % self.brick_def.bricklets.len()
     }
 
     fn all_bricklets_at<F>(&self, phase: usize, condition: F) -> bool where F: Fn(usize, usize) -> bool {
@@ -120,7 +120,7 @@ impl Brick {
     }
 
     fn bricklets_at(&self, phase: usize) -> Vec<(usize, usize)> {
-        self.bricklets[phase].iter().map(|(bx, by)| {
+        self.brick_def.bricklets[phase].iter().map(|(bx, by)| {
             ((self.x + *bx as i8) as usize, (self.y + *by) as usize)
         }).collect()
     }
@@ -192,7 +192,7 @@ impl Game {
 
                 self.active_brick.x = 1;
                 self.active_brick.y = 0;
-                self.active_brick.bricklets = self.brick_provider.borrow_mut().next();
+                self.active_brick.brick_def = self.brick_provider.borrow_mut().next();
             }
         }
     }

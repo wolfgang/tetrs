@@ -1,9 +1,9 @@
-use crate::game::brick_provider::{BrickProvider, Bricklets};
+use crate::game::brick_provider::{BrickProvider, BrickDef};
 use std::rc::Rc;
 use std::cell::RefCell;
 
 pub struct SequentialBrickProvider {
-    sequence: Vec<Bricklets>,
+    sequence: Vec<BrickDef>,
     current_index: usize,
 }
 
@@ -16,13 +16,13 @@ impl SequentialBrickProvider {
             }))
     }
 
-    pub fn add(&mut self, bricklets: Bricklets) {
+    pub fn add(&mut self, bricklets: BrickDef) {
         self.sequence.push(bricklets);
     }
 }
 
 impl BrickProvider for SequentialBrickProvider {
-    fn next(&mut self) -> Bricklets {
+    fn next(&mut self) -> BrickDef {
         let next = self.sequence[self.current_index].clone();
         self.current_index += 1;
         next

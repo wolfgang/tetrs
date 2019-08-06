@@ -3,7 +3,7 @@ use crate::_tests::helpers::to_string_renderer::ToStringRenderer;
 use crate::_tests::helpers::sequential_brick_provider::SequentialBrickProvider;
 
 use crate::game::{Game, GameBuilder};
-use crate::game::brick_provider::Bricklets;
+use crate::game::brick_provider::BrickDef;
 
 pub struct TestableGameBuilder {
     game_builder: GameBuilder,
@@ -35,7 +35,7 @@ impl TestableGameBuilder {
         self
     }
 
-    pub fn with_brick_sequence(&mut self, brick_sequence: Vec<Bricklets>) -> &mut Self {
+    pub fn with_brick_sequence(&mut self, brick_sequence: Vec<BrickDef>) -> &mut Self {
         let brick_provider = SequentialBrickProvider::new_rc();
         for bricklets in brick_sequence {
             brick_provider.borrow_mut().add(bricklets)
