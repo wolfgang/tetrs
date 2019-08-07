@@ -67,25 +67,16 @@ impl GameState {
     }
 
     fn check_full_lines(&mut self) {
-        let mut vanished_lines = Vec::with_capacity(5);
-        for (i, row) in self.field.iter_mut().enumerate() {
-            let is_full = row.iter().all(|val| *val != 0);
-            if is_full {
-                vanished_lines.push(i);
-            }
-        }
+        let mut valid_rows = self.field.iter().fold(
+            Vec::with_capacity(self.field.len()),
+            |mut acc, row| {
+                if row.iter().any(|val| *val == 0) { acc.push(row.clone()); }
+                acc
+            });
 
-        let mut offset = 0;
-        let mut new_field = Vec::with_capacity(self.field.len());
-        for i in vanished_lines.iter() {
-            new_field.push(vec![0; FIELD_WIDTH]);
-            self.field.remove(*i - offset);
-            offset += 1;
-        }
-
-        new_field.append(&mut self.field);
+        let mut new_field = vec![vec![0; FIELD_WIDTH]; self.field.len() - valid_rows.len()];
+        new_field.append(&mut valid_rows);
         self.field = new_field;
-
     }
 
     fn can_rotate(&self) -> bool {
