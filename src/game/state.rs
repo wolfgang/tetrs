@@ -67,12 +67,24 @@ impl GameState {
     }
 
     fn check_full_lines(&mut self) {
-        for row in self.field.iter_mut() {
+        let mut vanished_lines = Vec::with_capacity(5);
+        for (i, row) in self.field.iter_mut().enumerate() {
             let is_full = row.iter().all(|val| *val != 0);
             if is_full {
-                *row = vec![0;FIELD_WIDTH]
+                vanished_lines.push(i);
             }
         }
+
+        let mut offset = 0;
+        let mut new_field = Vec::with_capacity(self.field.len());
+        for i in vanished_lines.iter() {
+            new_field.push(vec![0; FIELD_WIDTH]);
+            self.field.remove(*i - offset);
+            offset += 1;
+        }
+
+        new_field.append(&mut self.field);
+        self.field = new_field;
 
     }
 
