@@ -8,7 +8,6 @@ pub mod renderer;
 pub mod state;
 
 use trenderer::TRenderer;
-use brick::Brick;
 use builder::GameBuilder;
 use renderer::GameRenderer;
 use state::GameState;
@@ -25,24 +24,9 @@ impl Game {
     }
 
     pub fn from_builder(builder: &GameBuilder) -> Self {
-        let mut field = builder.initial_field.clone();
-        if builder.initial_field.len() == 0 {
-            field = vec![vec![0; 10]; builder.field_height as usize];
-        }
-
         Self {
             renderer: GameRenderer {},
-            state: GameState {
-                input: builder.input.clone(),
-                brick_provider: builder.brick_provider.clone(),
-                drop_interval: builder.drop_interval,
-                last_drop_millis: builder.current_time_millis,
-                last_move_millis: 0,
-                last_rotation_millis: 0,
-                field,
-                active_brick: Brick::new(builder.brick_provider.clone())
-
-            },
+            state: GameState::from_game_builder(builder)
         }
     }
 

@@ -1,6 +1,7 @@
 use crate::game::brick::Brick;
 use crate::game::tinput::TInputRef;
 use crate::game::brick_provider::BrickProviderRef;
+use crate::game::builder::GameBuilder;
 
 const FIELD_WIDTH: usize = 10;
 
@@ -12,10 +13,29 @@ pub struct GameState {
     pub(super) active_brick: Brick,
     pub(super) drop_interval: u16,
     pub(super) input: TInputRef,
-    pub(super) brick_provider: BrickProviderRef
+    pub(super) brick_provider: BrickProviderRef,
 }
 
 impl GameState {
+    pub(super) fn from_game_builder(builder: &GameBuilder) -> Self {
+        let mut field = builder.initial_field.clone();
+        if builder.initial_field.len() == 0 {
+            field = vec![vec![0; 10]; builder.field_height as usize];
+        }
+
+        Self {
+            input: builder.input.clone(),
+            brick_provider: builder.brick_provider.clone(),
+            drop_interval: builder.drop_interval,
+            last_drop_millis: builder.current_time_millis,
+            last_move_millis: 0,
+            last_rotation_millis: 0,
+            field,
+            active_brick: Brick::new(builder.brick_provider.clone()),
+        }
+    }
+
+
     pub(super) fn rotate_brick(&mut self, now_millis: u64) {
         if now_millis - self.last_rotation_millis >= 150 &&
             self.input.borrow().wants_to_rotate() &&
@@ -50,7 +70,6 @@ impl GameState {
             }
         }
     }
-
 
     fn can_rotate(&self) -> bool {
         self.active_brick.all_next_bricklets(|x, y| {
