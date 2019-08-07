@@ -13,6 +13,7 @@ use brick::Brick;
 use builder::GameBuilder;
 use crate::game::renderer::GameRenderer;
 
+const FIELD_WIDTH: usize = 10;
 
 #[derive(Default)]
 pub struct GameState {
@@ -25,7 +26,6 @@ pub struct GameState {
 }
 
 pub struct Game {
-    field_width: u8,
     drop_interval: u16,
     input: TInputRef,
     brick_provider: BrickProviderRef,
@@ -40,12 +40,11 @@ impl Game {
 
     pub fn from_builder(builder: &GameBuilder) -> Self {
         let mut field = builder.initial_field.clone();
-        if field.len() == 0 {
+        if builder.initial_field.len() == 0 {
             field = vec![vec![0; 10]; builder.field_height as usize];
         }
 
         Self {
-            field_width: 10,
             drop_interval: builder.drop_interval,
             input: builder.input.clone(),
             brick_provider: builder.brick_provider.clone(),
@@ -138,7 +137,7 @@ impl Game {
 
     fn is_empty_cell(&self, x: i32, y: usize) -> bool {
         x >= 0
-            && (x as usize) < self.field_width as usize
+            && (x as usize) < FIELD_WIDTH
             && y < self.state.field.len()
             && self.state.field[y][x as usize] == 0
     }
