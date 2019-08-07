@@ -95,8 +95,7 @@ impl GameState {
     }
 
     fn is_time_to_move(&self, now_millis: u64) -> bool {
-        self.active_brick.is_above(self.field.len() as u8 - 1) &&
-            now_millis - self.last_move_millis >= 50
+        now_millis - self.last_move_millis >= 50
     }
 
     fn can_move_to(&self, offset: i32) -> bool {

@@ -32,31 +32,3 @@ fn horizontal_movement_is_constrained_by_bounds() {
     game.verify_frame_after(400, vec!["......####"]);
     game.verify_frame_after(450, vec!["......####"]);
 }
-
-#[test]
-fn cannot_move_horizontally_when_on_ground() {
-    let mut game = TestableGame::init()
-        .with_drop_interval(500)
-        .with_field_height(2)
-        .build();
-
-    game.verify_exact_frame_after(500, vec![
-        "..........",
-        ".####....."
-    ]);
-
-    game.is_moving_left();
-
-    game.verify_exact_frame_after(550, vec![
-        "..........",
-        ".####....."
-    ]);
-
-    game.is_moving_right();
-
-    game.verify_exact_frame_after(600, vec![
-        "..........",
-        ".####....."
-    ]);
-
-}
