@@ -3,88 +3,14 @@ pub mod trenderer;
 pub mod brick_provider;
 pub mod brick_factory;
 pub mod brick;
+pub mod builder;
 
-use tinput::{TInputRef, TInputNull};
+use tinput::TInputRef;
 use trenderer::TRenderer;
-use brick_provider::{SingleBrickProvider, BrickProviderRef};
+use brick_provider::BrickProviderRef;
 use brick::Brick;
+use builder::GameBuilder;
 
-#[derive(Clone)]
-pub struct GameBuilder {
-    pub field_height: u8,
-    initial_field: Vec<Vec<u8>>,
-    current_time_millis: u64,
-    drop_interval: u16,
-    input: TInputRef,
-    brick_provider: BrickProviderRef,
-}
-
-impl GameBuilder {
-    pub fn init() -> GameBuilder {
-        GameBuilder {
-            field_height: 16,
-            initial_field: Vec::new(),
-            drop_interval: 100,
-            current_time_millis: 0,
-            input: TInputNull::new_rc(),
-            brick_provider: SingleBrickProvider::new_rc(),
-        }
-    }
-
-    pub fn with_field_height(&mut self, field_height: u8) -> &mut Self {
-        self.field_height = field_height;
-        self
-    }
-
-    pub fn with_field(&mut self, field: Vec<Vec<u8>>) -> &mut Self {
-        self.initial_field = field;
-        self
-    }
-
-    pub fn with_now_millis(&mut self, current_time_millis: u64) -> &mut Self {
-        self.current_time_millis = current_time_millis;
-        self
-    }
-
-    pub fn with_drop_interval(&mut self, drop_interval: u16) -> &mut Self {
-        self.drop_interval = drop_interval;
-        self
-    }
-
-    pub fn with_input(&mut self, input: TInputRef) -> &mut Self {
-        self.input = input;
-        self
-    }
-
-    pub fn with_brick_provider(&mut self, brick_provider: BrickProviderRef) -> &mut Self {
-        self.brick_provider = brick_provider;
-        self
-    }
-
-    pub fn build(&self) -> Game {
-        let mut field = self.initial_field.clone();
-        let mut field_height = field.len() as u8;
-        if field.len() == 0 {
-            field = vec![vec![0; 10]; self.field_height as usize];
-            field_height = self.field_height;
-        }
-        
-        let brick_def = self.brick_provider.borrow_mut().next();
-
-        Game {
-            field_width: 10,
-            field_height,
-            field,
-            drop_interval: self.drop_interval,
-            last_drop_millis: self.current_time_millis,
-            last_move_millis: 0,
-            last_rotation_millis: 0,
-            active_brick: Brick::new(brick_def),
-            input: self.input.clone(),
-            brick_provider: self.brick_provider.clone(),
-        }
-    }
-}
 
 
 pub struct Game {
@@ -105,8 +31,27 @@ impl Game {
         GameBuilder::init()
     }
 
-    pub fn default() -> Game {
-        Self::init().build()
+    pub fn from_builder(builder: &GameBuilder) -> Self {
+        let mut field = builder.initial_field.clone();
+        let mut field_height = field.len() as u8;
+        if field.len() == 0 {
+            field = vec![vec![0; 10]; builder.field_height as usize];
+            field_height = builder.field_height;
+        }
+
+        Self {
+            field_width: 10,
+            field_height,
+            field,
+            drop_interval: builder.drop_interval,
+            last_drop_millis: builder.current_time_millis,
+            last_move_millis: 0,
+            last_rotation_millis: 0,
+            active_brick: Brick::new(builder.brick_provider.borrow_mut().next()),
+            input: builder.input.clone(),
+            brick_provider: builder.brick_provider.clone(),
+        }
+
     }
 
     pub fn tick(&mut self, now_millis: u64) {

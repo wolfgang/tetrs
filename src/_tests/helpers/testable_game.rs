@@ -2,7 +2,7 @@ use crate::_tests::helpers::input_stub::{InputStubRef, InputStub};
 use crate::_tests::helpers::to_string_renderer::ToStringRenderer;
 use crate::_tests::helpers::sequential_brick_provider::SequentialBrickProvider;
 
-use crate::game::{Game, GameBuilder};
+use crate::game::{Game, {builder:: GameBuilder}};
 use crate::game::brick_provider::BrickDef;
 
 pub struct TestableGameBuilder {
