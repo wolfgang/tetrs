@@ -40,7 +40,7 @@ impl Game {
                 last_move_millis: 0,
                 last_rotation_millis: 0,
                 field,
-                active_brick: Brick::new(builder.brick_provider.borrow_mut().next())
+                active_brick: Brick::new(builder.brick_provider.clone())
 
             },
         }

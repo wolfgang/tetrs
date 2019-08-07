@@ -1,4 +1,4 @@
-use crate::game::brick_provider::BrickDef;
+use crate::game::brick_provider::{BrickDef, BrickProviderRef};
 
 #[derive(Default)]
 pub struct Brick {
@@ -9,16 +9,16 @@ pub struct Brick {
 }
 
 impl Brick {
-    pub fn new(brick_def: BrickDef) -> Self {
+    pub fn new(brick_provider: BrickProviderRef) -> Self {
         let mut brick = Self::default();
-        brick.reset(brick_def);
+        brick.reset(brick_provider);
         brick
     }
 
-    pub fn reset(&mut self, brick_def: BrickDef) {
+    pub fn reset(&mut self, brick_provider: BrickProviderRef) {
         self.x = 1;
         self.y = 0;
-        self.brick_def = brick_def;
+        self.brick_def = brick_provider.borrow_mut().next();
         self.phase = 0;
     }
 

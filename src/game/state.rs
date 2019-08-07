@@ -46,7 +46,7 @@ impl GameState {
                     self.field[y][x] = self.active_brick.brick_type();
                 }
 
-                self.active_brick.reset(self.brick_provider.borrow_mut().next());
+                self.active_brick.reset(self.brick_provider.clone());
             }
         }
     }
