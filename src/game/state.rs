@@ -61,12 +61,12 @@ impl GameState {
                 self.active_brick.move_by(0, 1);
             } else {
                 self.spawn_next_brick();
-                self.check_full_lines();
+                self.check_vanishing_lines();
             }
         }
     }
 
-    fn check_full_lines(&mut self) {
+    fn check_vanishing_lines(&mut self) {
         let mut valid_rows = self.field.iter().fold(
             Vec::with_capacity(self.field.len()),
             |mut acc, row| {
