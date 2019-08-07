@@ -1,5 +1,6 @@
 use crate::game::brick_provider::BrickDef;
 
+#[derive(Default)]
 pub struct Brick {
     x: i8,
     y: u8,

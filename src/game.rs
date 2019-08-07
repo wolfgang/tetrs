@@ -18,15 +18,16 @@ use crate::game::renderer::GameRenderer;
 pub struct GameState {
     last_drop_millis: u64,
     last_move_millis: u64,
-    last_rotation_millis: u64
+    last_rotation_millis: u64,
+    field: Vec<Vec<u8>>,
+    active_brick: Brick
+
 }
 
 pub struct Game {
     field_height: u8,
     field_width: u8,
     drop_interval: u16,
-    field: Vec<Vec<u8>>,
-    active_brick: Brick,
     input: TInputRef,
     brick_provider: BrickProviderRef,
     renderer: GameRenderer,
@@ -49,14 +50,14 @@ impl Game {
         Self {
             field_width: 10,
             field_height,
-            field,
             drop_interval: builder.drop_interval,
-            active_brick: Brick::new(builder.brick_provider.borrow_mut().next()),
             input: builder.input.clone(),
             brick_provider: builder.brick_provider.clone(),
             renderer: GameRenderer {},
             state: GameState {
                 last_drop_millis: builder.current_time_millis,
+                field,
+                active_brick: Brick::new(builder.brick_provider.borrow_mut().next()),
                 ..Default::default()
             },
         }
@@ -69,7 +70,7 @@ impl Game {
     }
 
     pub fn render(&self, t_renderer: &mut dyn TRenderer) {
-        self.renderer.render(t_renderer, &self.field, &self.active_brick);
+        self.renderer.render(t_renderer, &self.state.field, &self.state.active_brick);
     }
 
     fn rotate_brick(&mut self, now_millis: u64) {
@@ -78,7 +79,7 @@ impl Game {
             self.can_rotate()
         {
             self.state.last_rotation_millis = now_millis;
-            self.active_brick.goto_next_phase();
+            self.state.active_brick.goto_next_phase();
         }
     }
 
@@ -86,29 +87,29 @@ impl Game {
         let speed = self.get_horizontal_move_speed(now_millis);
         if speed != 0 {
             self.state.last_move_millis = now_millis;
-            self.active_brick.move_by(speed, 0);
+            self.state.active_brick.move_by(speed, 0);
         }
     }
 
     fn drop_brick(&mut self, now_millis: u64) -> () {
         if self.is_time_to_drop(now_millis) {
             if self.can_drop() {
-                self.active_brick.move_by(0, 1);
+                self.state.active_brick.move_by(0, 1);
                 self.state.last_drop_millis = now_millis;
             } else {
                 self.state.last_drop_millis = now_millis;
 
-                for (x, y) in self.active_brick.current_bricklets() {
-                    self.field[y][x] = self.active_brick.brick_type();
+                for (x, y) in self.state.active_brick.current_bricklets() {
+                    self.state.field[y][x] = self.state.active_brick.brick_type();
                 }
 
-                self.active_brick.reset(self.brick_provider.borrow_mut().next());
+                self.state.active_brick.reset(self.brick_provider.borrow_mut().next());
             }
         }
     }
 
     fn can_rotate(&self) -> bool {
-        self.active_brick.all_next_bricklets(|x, y| {
+        self.state.active_brick.all_next_bricklets(|x, y| {
             self.is_empty_cell(x as i32, y)
         })
     }
@@ -121,7 +122,7 @@ impl Game {
     }
 
     fn can_drop(&self) -> bool {
-        self.active_brick.all_bricklets(|x, y| {
+        self.state.active_brick.all_bricklets(|x, y| {
             self.is_empty_cell(x as i32, y + 1)
         })
     }
@@ -131,17 +132,17 @@ impl Game {
     }
 
     fn is_time_to_move(&self, now_millis: u64) -> bool {
-        self.active_brick.is_above(self.field_height - 1) && now_millis - self.state.last_move_millis >= 50
+        self.state.active_brick.is_above(self.field_height - 1) && now_millis - self.state.last_move_millis >= 50
     }
 
     fn can_move_to(&self, offset: i32) -> bool {
-        self.active_brick.all_bricklets(|x, y| { self.is_empty_cell(x as i32 + offset, y) })
+        self.state.active_brick.all_bricklets(|x, y| { self.is_empty_cell(x as i32 + offset, y) })
     }
 
     fn is_empty_cell(&self, x: i32, y: usize) -> bool {
         x >= 0
             && (x as usize) < self.field_width as usize
             && y < self.field_height as usize
-            && self.field[y][x as usize] == 0
+            && self.state.field[y][x as usize] == 0
     }
 }

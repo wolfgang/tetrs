@@ -6,7 +6,7 @@ use crate::game::brick_factory::*;
 
 pub type BrickProviderRef = Rc<RefCell<dyn BrickProvider>>;
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct BrickDef {
     pub brick_type: u8,
     pub bricklets: Vec<Vec<(u8, u8)>>
