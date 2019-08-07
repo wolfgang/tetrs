@@ -14,18 +14,23 @@ use builder::GameBuilder;
 use crate::game::renderer::GameRenderer;
 
 
+#[derive(Default)]
+pub struct GameState {
+    last_drop_millis: u64,
+    last_move_millis: u64,
+    last_rotation_millis: u64
+}
+
 pub struct Game {
     field_height: u8,
     field_width: u8,
     drop_interval: u16,
-    last_drop_millis: u64,
-    last_move_millis: u64,
-    last_rotation_millis: u64,
     field: Vec<Vec<u8>>,
     active_brick: Brick,
     input: TInputRef,
     brick_provider: BrickProviderRef,
-    renderer: GameRenderer
+    renderer: GameRenderer,
+    state: GameState,
 }
 
 impl Game {
@@ -46,16 +51,15 @@ impl Game {
             field_height,
             field,
             drop_interval: builder.drop_interval,
-            last_drop_millis: builder.current_time_millis,
-            last_move_millis: 0,
-            last_rotation_millis: 0,
             active_brick: Brick::new(builder.brick_provider.borrow_mut().next()),
             input: builder.input.clone(),
             brick_provider: builder.brick_provider.clone(),
-            renderer: GameRenderer {}
-
+            renderer: GameRenderer {},
+            state: GameState {
+                last_drop_millis: builder.current_time_millis,
+                ..Default::default()
+            },
         }
-
     }
 
     pub fn tick(&mut self, now_millis: u64) {
@@ -69,11 +73,11 @@ impl Game {
     }
 
     fn rotate_brick(&mut self, now_millis: u64) {
-        if now_millis - self.last_rotation_millis >= 150 &&
+        if now_millis - self.state.last_rotation_millis >= 150 &&
             self.input.borrow().wants_to_rotate() &&
             self.can_rotate()
         {
-            self.last_rotation_millis = now_millis;
+            self.state.last_rotation_millis = now_millis;
             self.active_brick.goto_next_phase();
         }
     }
@@ -81,7 +85,7 @@ impl Game {
     fn move_brick_horizontally(&mut self, now_millis: u64) {
         let speed = self.get_horizontal_move_speed(now_millis);
         if speed != 0 {
-            self.last_move_millis = now_millis;
+            self.state.last_move_millis = now_millis;
             self.active_brick.move_by(speed, 0);
         }
     }
@@ -90,9 +94,9 @@ impl Game {
         if self.is_time_to_drop(now_millis) {
             if self.can_drop() {
                 self.active_brick.move_by(0, 1);
-                self.last_drop_millis = now_millis;
+                self.state.last_drop_millis = now_millis;
             } else {
-                self.last_drop_millis = now_millis;
+                self.state.last_drop_millis = now_millis;
 
                 for (x, y) in self.active_brick.current_bricklets() {
                     self.field[y][x] = self.active_brick.brick_type();
@@ -106,7 +110,6 @@ impl Game {
     fn can_rotate(&self) -> bool {
         self.active_brick.all_next_bricklets(|x, y| {
             self.is_empty_cell(x as i32, y)
-
         })
     }
 
@@ -124,11 +127,11 @@ impl Game {
     }
 
     fn is_time_to_drop(&self, now_millis: u64) -> bool {
-        now_millis - self.last_drop_millis >= self.drop_interval as u64
+        now_millis - self.state.last_drop_millis >= self.drop_interval as u64
     }
 
     fn is_time_to_move(&self, now_millis: u64) -> bool {
-        self.active_brick.is_above(self.field_height - 1) && now_millis - self.last_move_millis >= 50
+        self.active_brick.is_above(self.field_height - 1) && now_millis - self.state.last_move_millis >= 50
     }
 
     fn can_move_to(&self, offset: i32) -> bool {
