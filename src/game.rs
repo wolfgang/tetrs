@@ -4,13 +4,14 @@ pub mod brick_provider;
 pub mod brick_factory;
 pub mod brick;
 pub mod builder;
+pub mod renderer;
 
 use tinput::TInputRef;
 use trenderer::TRenderer;
 use brick_provider::BrickProviderRef;
 use brick::Brick;
 use builder::GameBuilder;
-
+use crate::game::renderer::GameRenderer;
 
 
 pub struct Game {
@@ -24,6 +25,7 @@ pub struct Game {
     active_brick: Brick,
     input: TInputRef,
     brick_provider: BrickProviderRef,
+    renderer: GameRenderer
 }
 
 impl Game {
@@ -50,6 +52,8 @@ impl Game {
             active_brick: Brick::new(builder.brick_provider.borrow_mut().next()),
             input: builder.input.clone(),
             brick_provider: builder.brick_provider.clone(),
+            renderer: GameRenderer {}
+
         }
 
     }
@@ -60,10 +64,8 @@ impl Game {
         self.drop_brick(now_millis)
     }
 
-    pub fn render(&self, renderer: &mut dyn TRenderer) {
-        renderer.clear();
-        self.render_field(renderer);
-        self.render_active_brick(renderer)
+    pub fn render(&self, t_renderer: &mut dyn TRenderer) {
+        self.renderer.render(t_renderer, &self.field, &self.active_brick);
     }
 
     fn rotate_brick(&mut self, now_millis: u64) {
@@ -138,21 +140,5 @@ impl Game {
             && (x as usize) < self.field_width as usize
             && y < self.field_height as usize
             && self.field[y][x as usize] == 0
-    }
-
-    fn render_field(&self, renderer: &mut dyn TRenderer) {
-        for (y, row) in self.field.iter().enumerate() {
-            for (x, col) in row.iter().enumerate() {
-                if *col != 0 {
-                    renderer.draw_bricklet_at(x as u8, y as u8, *col)
-                }
-            }
-        }
-    }
-
-    fn render_active_brick(&self, renderer: &mut dyn TRenderer) -> () {
-        for (x, y) in self.active_brick.current_bricklets() {
-            renderer.draw_bricklet_at(x as u8, y as u8, self.active_brick.brick_type());
-        }
     }
 }
