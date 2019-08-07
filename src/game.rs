@@ -5,28 +5,18 @@ pub mod brick_factory;
 pub mod brick;
 pub mod builder;
 pub mod renderer;
+pub mod state;
 
 use tinput::TInputRef;
 use trenderer::TRenderer;
 use brick_provider::BrickProviderRef;
 use brick::Brick;
 use builder::GameBuilder;
-use crate::game::renderer::GameRenderer;
+use renderer::GameRenderer;
+use state::GameState;
 
-const FIELD_WIDTH: usize = 10;
-
-#[derive(Default)]
-pub struct GameState {
-    last_drop_millis: u64,
-    last_move_millis: u64,
-    last_rotation_millis: u64,
-    field: Vec<Vec<u8>>,
-    active_brick: Brick
-
-}
 
 pub struct Game {
-    drop_interval: u16,
     input: TInputRef,
     brick_provider: BrickProviderRef,
     renderer: GameRenderer,
@@ -45,11 +35,11 @@ impl Game {
         }
 
         Self {
-            drop_interval: builder.drop_interval,
             input: builder.input.clone(),
             brick_provider: builder.brick_provider.clone(),
             renderer: GameRenderer {},
             state: GameState {
+                drop_interval: builder.drop_interval,
                 last_drop_millis: builder.current_time_millis,
                 field,
                 active_brick: Brick::new(builder.brick_provider.borrow_mut().next()),
@@ -87,8 +77,8 @@ impl Game {
     }
 
     fn drop_brick(&mut self, now_millis: u64) -> () {
-        if self.is_time_to_drop(now_millis) {
-            if self.can_drop() {
+        if self.state.is_time_to_drop(now_millis) {
+            if self.state.can_drop() {
                 self.state.active_brick.move_by(0, 1);
                 self.state.last_drop_millis = now_millis;
             } else {
@@ -105,40 +95,14 @@ impl Game {
 
     fn can_rotate(&self) -> bool {
         self.state.active_brick.all_next_bricklets(|x, y| {
-            self.is_empty_cell(x as i32, y)
+            self.state.is_empty_cell(x as i32, y)
         })
     }
 
     fn get_horizontal_move_speed(&self, now_millis: u64) -> i8 {
-        if !self.is_time_to_move(now_millis) { return 0; };
-        if self.input.borrow().wants_to_move_right() && self.can_move_to(1) { return 1; }
-        if self.input.borrow().wants_to_move_left() && self.can_move_to(-1) { return -1; }
+        if !self.state.is_time_to_move(now_millis) { return 0; };
+        if self.input.borrow().wants_to_move_right() && self.state.can_move_to(1) { return 1; }
+        if self.input.borrow().wants_to_move_left() && self.state.can_move_to(-1) { return -1; }
         return 0;
-    }
-
-    fn can_drop(&self) -> bool {
-        self.state.active_brick.all_bricklets(|x, y| {
-            self.is_empty_cell(x as i32, y + 1)
-        })
-    }
-
-    fn is_time_to_drop(&self, now_millis: u64) -> bool {
-        now_millis - self.state.last_drop_millis >= self.drop_interval as u64
-    }
-
-    fn is_time_to_move(&self, now_millis: u64) -> bool {
-        self.state.active_brick.is_above(self.state.field.len() as u8 - 1) &&
-            now_millis - self.state.last_move_millis >= 50
-    }
-
-    fn can_move_to(&self, offset: i32) -> bool {
-        self.state.active_brick.all_bricklets(|x, y| { self.is_empty_cell(x as i32 + offset, y) })
-    }
-
-    fn is_empty_cell(&self, x: i32, y: usize) -> bool {
-        x >= 0
-            && (x as usize) < FIELD_WIDTH
-            && y < self.state.field.len()
-            && self.state.field[y][x as usize] == 0
     }
 }

@@ -10,12 +10,9 @@ pub struct Brick {
 
 impl Brick {
     pub fn new(brick_def: BrickDef) -> Self {
-        Self {
-            x: 1,
-            y: 0,
-            phase: 0,
-            brick_def
-        }
+        let mut brick = Self::default();
+        brick.reset(brick_def);
+        brick
     }
 
 
