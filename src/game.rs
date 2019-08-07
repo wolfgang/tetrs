@@ -70,7 +70,7 @@ impl Game {
     }
 
     pub fn render(&self, t_renderer: &mut dyn TRenderer) {
-        self.renderer.render(t_renderer, &self.state.field, &self.state.active_brick);
+        self.renderer.render(t_renderer, &self.state);
     }
 
     fn rotate_brick(&mut self, now_millis: u64) {
