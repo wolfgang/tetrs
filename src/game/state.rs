@@ -1,19 +1,20 @@
 use crate::game::brick::Brick;
+use crate::game::tinput::TInputRef;
 
 const FIELD_WIDTH: usize = 10;
 
-#[derive(Default)]
 pub struct GameState {
     pub(super) last_drop_millis: u64,
     pub(super) last_move_millis: u64,
     pub(super) last_rotation_millis: u64,
     pub(super) field: Vec<Vec<u8>>,
     pub(super) active_brick: Brick,
-    pub(super) drop_interval: u16
+    pub(super) drop_interval: u16,
+    pub(super) input: TInputRef,
 }
 
 impl GameState {
-    pub (super) fn can_drop(&self) -> bool {
+    pub(super) fn can_drop(&self) -> bool {
         self.active_brick.all_bricklets(|x, y| {
             self.is_empty_cell(x as i32, y + 1)
         })
@@ -38,5 +39,4 @@ impl GameState {
             && y < self.field.len()
             && self.field[y][x as usize] == 0
     }
-
 }

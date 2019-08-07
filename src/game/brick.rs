@@ -15,7 +15,6 @@ impl Brick {
         brick
     }
 
-
     pub fn reset(&mut self, brick_def: BrickDef) {
         self.x = 1;
         self.y = 0;

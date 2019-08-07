@@ -7,7 +7,6 @@ pub mod builder;
 pub mod renderer;
 pub mod state;
 
-use tinput::TInputRef;
 use trenderer::TRenderer;
 use brick_provider::BrickProviderRef;
 use brick::Brick;
@@ -17,7 +16,6 @@ use state::GameState;
 
 
 pub struct Game {
-    input: TInputRef,
     brick_provider: BrickProviderRef,
     renderer: GameRenderer,
     state: GameState,
@@ -35,15 +33,17 @@ impl Game {
         }
 
         Self {
-            input: builder.input.clone(),
             brick_provider: builder.brick_provider.clone(),
             renderer: GameRenderer {},
             state: GameState {
+                input: builder.input.clone(),
                 drop_interval: builder.drop_interval,
                 last_drop_millis: builder.current_time_millis,
+                last_move_millis: 0,
+                last_rotation_millis: 0,
                 field,
-                active_brick: Brick::new(builder.brick_provider.borrow_mut().next()),
-                ..Default::default()
+                active_brick: Brick::new(builder.brick_provider.borrow_mut().next())
+
             },
         }
     }
@@ -60,7 +60,7 @@ impl Game {
 
     fn rotate_brick(&mut self, now_millis: u64) {
         if now_millis - self.state.last_rotation_millis >= 150 &&
-            self.input.borrow().wants_to_rotate() &&
+            self.state.input.borrow().wants_to_rotate() &&
             self.can_rotate()
         {
             self.state.last_rotation_millis = now_millis;
@@ -101,8 +101,8 @@ impl Game {
 
     fn get_horizontal_move_speed(&self, now_millis: u64) -> i8 {
         if !self.state.is_time_to_move(now_millis) { return 0; };
-        if self.input.borrow().wants_to_move_right() && self.state.can_move_to(1) { return 1; }
-        if self.input.borrow().wants_to_move_left() && self.state.can_move_to(-1) { return -1; }
+        if self.state.input.borrow().wants_to_move_right() && self.state.can_move_to(1) { return 1; }
+        if self.state.input.borrow().wants_to_move_left() && self.state.can_move_to(-1) { return -1; }
         return 0;
     }
 }
