@@ -25,7 +25,6 @@ pub struct GameState {
 }
 
 pub struct Game {
-    field_height: u8,
     field_width: u8,
     drop_interval: u16,
     input: TInputRef,
@@ -41,15 +40,12 @@ impl Game {
 
     pub fn from_builder(builder: &GameBuilder) -> Self {
         let mut field = builder.initial_field.clone();
-        let mut field_height = field.len() as u8;
         if field.len() == 0 {
             field = vec![vec![0; 10]; builder.field_height as usize];
-            field_height = builder.field_height;
         }
 
         Self {
             field_width: 10,
-            field_height,
             drop_interval: builder.drop_interval,
             input: builder.input.clone(),
             brick_provider: builder.brick_provider.clone(),
@@ -132,7 +128,8 @@ impl Game {
     }
 
     fn is_time_to_move(&self, now_millis: u64) -> bool {
-        self.state.active_brick.is_above(self.field_height - 1) && now_millis - self.state.last_move_millis >= 50
+        self.state.active_brick.is_above(self.state.field.len() as u8 - 1) &&
+            now_millis - self.state.last_move_millis >= 50
     }
 
     fn can_move_to(&self, offset: i32) -> bool {
@@ -142,7 +139,7 @@ impl Game {
     fn is_empty_cell(&self, x: i32, y: usize) -> bool {
         x >= 0
             && (x as usize) < self.field_width as usize
-            && y < self.field_height as usize
+            && y < self.state.field.len()
             && self.state.field[y][x as usize] == 0
     }
 }
