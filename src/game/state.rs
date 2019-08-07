@@ -20,7 +20,7 @@ impl GameState {
     pub(super) fn from_game_builder(builder: &GameBuilder) -> Self {
         let mut field = builder.initial_field.clone();
         if builder.initial_field.len() == 0 {
-            field = vec![vec![0; 10]; builder.field_height as usize];
+            field = vec![vec![0; FIELD_WIDTH]; builder.field_height as usize];
         }
 
         Self {
@@ -61,8 +61,19 @@ impl GameState {
                 self.active_brick.move_by(0, 1);
             } else {
                 self.spawn_next_brick();
+                self.check_full_lines();
             }
         }
+    }
+
+    fn check_full_lines(&mut self) {
+        for row in self.field.iter_mut() {
+            let is_full = row.iter().all(|val| *val != 0);
+            if is_full {
+                *row = vec![0;FIELD_WIDTH]
+            }
+        }
+
     }
 
     fn can_rotate(&self) -> bool {
