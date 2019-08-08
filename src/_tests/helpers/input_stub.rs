@@ -32,20 +32,12 @@ impl InputStub {
         self.moving_right = false;
     }
 
-    pub fn is_rotating(&mut self) {
-        self.rotating = true;
+    pub fn is_rotating(&mut self, is: bool) {
+        self.rotating = is;
     }
 
-    pub fn stop_rotating(&mut self) {
-        self.rotating = false;
-    }
-
-    pub fn is_fast_dropping(&mut self) {
-        self.fast_dropping = true;
-    }
-
-    pub fn stop_fast_dropping(&mut self) {
-        self.fast_dropping = false;
+    pub fn is_fast_dropping(&mut self, is: bool) {
+        self.fast_dropping = is;
     }
 }
 

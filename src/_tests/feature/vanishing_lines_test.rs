@@ -96,7 +96,7 @@ fn two_vanishing_lines() {
         "###.######",
     ]);
 
-    game.is_rotating();
+    game.is_rotating(true);
 
     game.verify_frame_after(150, vec![
         "...#....##",

@@ -23,7 +23,7 @@ fn rotating_brick_with_collision_1() {
         ".####....."
     ]);
 
-    game.is_rotating();
+    game.is_rotating(true);
 
     game.verify_frame_after(700, vec![
         "..........",
@@ -53,7 +53,7 @@ fn rotating_brick_with_collision_2() {
         "..........",
     ]);
 
-    game.is_rotating();
+    game.is_rotating(true);
 
     game.verify_frame_after(150, vec![
         "..##......",
@@ -77,7 +77,7 @@ fn rotating_brick_with_collision_3() {
         .with_drop_interval(500)
         .build();
 
-    game.is_rotating();
+    game.is_rotating(true);
     game.verify_frame_after(150, vec![
         "...#......",
         "...#......",
@@ -108,7 +108,7 @@ fn j_block_moving_left() {
         ".........."
     ]);
 
-    game.is_rotating();
+    game.is_rotating(true);
 
     game.verify_frame_after(150, vec![
         "..##......",
@@ -116,7 +116,7 @@ fn j_block_moving_left() {
         "..#......."
     ]);
 
-    game.stop_rotating();
+    game.is_rotating(false);
     game.is_moving_left();
 
     game.verify_frame_after(160, vec![

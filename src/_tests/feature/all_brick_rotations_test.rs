@@ -13,7 +13,7 @@ fn rotations_for_i_block() {
         ".........."
     ]);
 
-    game.is_rotating();
+    game.is_rotating(true);
 
     game.verify_frame_after(150, vec![
         "...#......",
@@ -53,7 +53,7 @@ fn rotations_for_l_block() {
         ".###......"
     ]);
 
-    game.is_rotating();
+    game.is_rotating(true);
 
     game.verify_frame_after(150, vec![
         "..##......",
@@ -91,7 +91,7 @@ fn rotations_for_j_block() {
         ".###......"
     ]);
 
-    game.is_rotating();
+    game.is_rotating(true);
 
     game.verify_frame_after(150, vec![
         "..#.......",
@@ -129,7 +129,7 @@ fn rotations_for_s_block() {
         ".##......."
     ]);
 
-    game.is_rotating();
+    game.is_rotating(true);
 
     game.verify_frame_after(150, vec![
         "..#.......",
@@ -168,7 +168,7 @@ fn rotations_for_t_block() {
         ".###......"
     ]);
 
-    game.is_rotating();
+    game.is_rotating(true);
 
     game.verify_frame_after(150, vec![
         "..#.......",
@@ -206,7 +206,7 @@ fn rotations_for_z_block() {
         "..##......"
     ]);
 
-    game.is_rotating();
+    game.is_rotating(true);
 
     game.verify_frame_after(150, vec![
         "...#......",

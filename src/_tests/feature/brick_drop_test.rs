@@ -136,7 +136,7 @@ fn reset_rotation_for_new_brick() {
     ]);
 
     game.tick(100);
-    game.is_rotating();
+    game.is_rotating(true);
     game.verify_frame_after(150, vec![
         "..........",
         "...#......",
@@ -145,7 +145,7 @@ fn reset_rotation_for_new_brick() {
         "...#......",
     ]);
 
-    game.stop_rotating();
+    game.is_rotating(false);
 
     game.verify_frame_after(200, vec![
         ".####.....",
@@ -157,7 +157,7 @@ fn reset_rotation_for_new_brick() {
 }
 
 #[test]
-fn reduce_drop_interval_if_input_calls_for_it() {
+fn drop_with_10_ms_interval_if_fast_drop_activated() {
     let mut game = TestableGame::init()
         .with_drop_interval(100)
         .with_brick_sequence(vec![i_block(), o_block()])
@@ -177,7 +177,7 @@ fn reduce_drop_interval_if_input_calls_for_it() {
         "..........",
     ]);
 
-    game.is_fast_dropping();
+    game.is_fast_dropping(true);
 
     game.verify_frame_after(110, vec![
         "..........",
@@ -195,7 +195,7 @@ fn reduce_drop_interval_if_input_calls_for_it() {
         "..........",
     ]);
 
-    game.stop_fast_dropping();
+    game.is_fast_dropping(false);
 
     game.verify_frame_after(130, vec![
         "..........",
@@ -215,65 +215,73 @@ fn reduce_drop_interval_if_input_calls_for_it() {
 }
 
 #[test]
-fn reset_fast_drop_for_new_brick() {
+fn suspend_fast_drop_after_new_brick_spawns() {
     let mut game = TestableGame::init()
         .with_brick_sequence(vec![i_block(), i_block()])
         .with_drop_interval(100)
         .with_now_millis(1000)
-        .with_field(vec![
-            "..........",
-            "..........",
-            "..........",
-            "...##....."
-        ])
+        .with_field_height(4)
         .build();
 
     game.verify_frame_after(1000, vec![
         ".####.....",
         "..........",
         "..........",
-        "...##....."
+        ".........."
     ]);
 
-    game.is_fast_dropping();
+    game.is_fast_dropping(true);
 
     game.verify_frame_after(1010, vec![
         "..........",
         ".####.....",
         "..........",
-        "...##....."
+        ".........."
     ]);
 
     game.verify_frame_after(1020, vec![
         "..........",
         "..........",
         ".####.....",
-        "...##....."
+        ".........."
     ]);
 
     game.verify_frame_after(1030, vec![
-        ".####.....",
+        "..........",
+        "..........",
         "..........",
         ".####.....",
-        "...##....."
     ]);
 
     game.verify_frame_after(1040, vec![
         ".####.....",
         "..........",
+        "..........",
         ".####.....",
-        "...##....."
     ]);
 
-    game.verify_frame_after(1130, vec![
+    // After brick lands, next brick is not dropping as fast
+    game.verify_frame_after(1050, vec![
+        ".####.....",
+        "..........",
+        "..........",
+        ".####.....",
+    ]);
+
+    game.verify_frame_after(1140, vec![
+        "..........",
+        ".####.....",
+        "..........",
+        ".####.....",
+    ]);
+
+    // Fast drop resumes here if still active per input
+    game.verify_frame_after(1150, vec![
+        "..........",
         "..........",
         ".####.....",
         ".####.....",
-        "...##....."
     ]);
-
-
-
 
 }
 
