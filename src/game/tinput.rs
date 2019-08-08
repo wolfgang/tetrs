@@ -7,6 +7,7 @@ pub trait TInput {
     fn wants_to_move_right(&self) -> bool;
     fn wants_to_rotate(&self) ->  bool;
     fn wants_to_fast_drop(&self) -> bool;
+    fn wants_to_insta_drop(&self) -> bool;
 
 }
 
@@ -32,6 +33,10 @@ impl TInput for TInputNull {
     }
 
     fn wants_to_fast_drop(&self) -> bool {
+        false
+    }
+
+    fn wants_to_insta_drop(&self) -> bool {
         false
     }
 }

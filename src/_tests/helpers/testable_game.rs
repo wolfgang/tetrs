@@ -95,6 +95,10 @@ impl TestableGame {
         self.input.borrow_mut().is_fast_dropping(is);
     }
 
+    pub fn is_insta_dropping(&mut self, is: bool) {
+        self.input.borrow_mut().is_insta_dropping(is);
+    }
+
     pub fn tick(&mut self, now: u64) {
         self.game.tick(now);
     }

@@ -5,13 +5,15 @@ use crate::game::builder::GameBuilder;
 
 const FIELD_WIDTH: usize = 10;
 
+const FAST_DROP_INTERVAL: u16 = 10;
+const INSTA_DROP_INTERVAL: u16 = 1;
+
 pub struct GameState {
     last_drop_millis: u64,
     last_move_millis: u64,
     last_rotation_millis: u64,
     last_land_millis: u64,
     drop_interval: u16,
-    fast_drop_interval: u16,
     input: TInputRef,
     brick_provider: BrickProviderRef,
     field: Vec<Vec<u8>>,
@@ -34,8 +36,7 @@ impl GameState {
             last_rotation_millis: 0,
             last_land_millis: 0,
             field,
-            active_brick: Brick::new(builder.brick_provider.clone()),
-            fast_drop_interval: 10,
+            active_brick: Brick::new(builder.brick_provider.clone())
         }
     }
 
@@ -119,13 +120,17 @@ impl GameState {
 
     fn actual_drop_interval(&self, now_millis: u64) -> u16 {
         if now_millis - self.last_land_millis < self.drop_interval as u64 {
-            return self.drop_interval
+            return self.drop_interval;
         }
         if self.input.borrow_mut().wants_to_fast_drop() {
-            self.fast_drop_interval
-        } else {
-            self.drop_interval
+            return FAST_DROP_INTERVAL
         }
+
+        if self.input.borrow_mut().wants_to_insta_drop() {
+            return INSTA_DROP_INTERVAL
+        }
+
+        self.drop_interval
     }
 
     fn is_time_to_move(&self, now_millis: u64) -> bool {

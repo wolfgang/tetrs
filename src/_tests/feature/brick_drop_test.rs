@@ -286,3 +286,50 @@ fn suspend_fast_drop_after_new_brick_spawns() {
 }
 
 
+#[test]
+fn drop_with_1_ms_interval_if_insta_drop_activated() {
+    let mut game = TestableGame::init()
+        .with_drop_interval(100)
+        .with_brick_sequence(vec![i_block(), o_block()])
+        .with_now_millis(1000)
+        .build();
+
+    game.verify_frame_after(1000, vec![
+        ".####.....",
+        "..........",
+        "..........",
+        "..........",
+    ]);
+
+    game.is_insta_dropping(true);
+
+    game.verify_frame_after(1001, vec![
+        "..........",
+        ".####.....",
+        "..........",
+        "..........",
+    ]);
+
+    game.verify_frame_after(1002, vec![
+        "..........",
+        "..........",
+        ".####.....",
+        "..........",
+    ]);
+    game.is_insta_dropping(false);
+
+    game.verify_frame_after(1003, vec![
+        "..........",
+        "..........",
+        ".####.....",
+        "..........",
+    ]);
+
+    game.verify_frame_after(1102, vec![
+        "..........",
+        "..........",
+        "..........",
+        ".####.....",
+        "..........",
+    ])
+}

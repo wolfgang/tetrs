@@ -10,6 +10,7 @@ pub struct InputStub {
     moving_left: bool,
     rotating: bool,
     fast_dropping: bool,
+    insta_dropping: bool
 }
 
 impl InputStub {
@@ -39,6 +40,10 @@ impl InputStub {
     pub fn is_fast_dropping(&mut self, is: bool) {
         self.fast_dropping = is;
     }
+
+    pub fn is_insta_dropping(&mut self, is: bool) {
+        self.insta_dropping = is;
+    }
 }
 
 impl TInput for InputStub {
@@ -56,5 +61,9 @@ impl TInput for InputStub {
 
     fn wants_to_fast_drop(&self) -> bool {
         self.fast_dropping
+    }
+
+    fn wants_to_insta_drop(&self) -> bool {
+        self.insta_dropping
     }
 }
