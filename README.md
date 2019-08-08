@@ -18,7 +18,8 @@ The project also demonstrates a variant of the "Object Mother" pattern, with the
 TestableGameFactory. It is used througout the tests to configure the game and its dependencies to fit a given test, enabling
 easy writing and subsequent reading of tests with complex setup.
 
-The game itself is playable but not pretty.
+The game itself is playable but not pretty (or complete).
+
 TDD'ing a pretty game is probably not possible. But you can TDD an ugly one and make it easy for another, more graphically inclined person,
 to make it pretty.
 Maye next time!
