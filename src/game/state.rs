@@ -14,6 +14,7 @@ pub struct GameState {
     pub(super) drop_interval: u16,
     pub(super) input: TInputRef,
     pub(super) brick_provider: BrickProviderRef,
+    pub(super) drop_interval_modifier: u16,
 }
 
 impl GameState {
@@ -32,9 +33,17 @@ impl GameState {
             last_rotation_millis: 0,
             field,
             active_brick: Brick::new(builder.brick_provider.clone()),
+            drop_interval_modifier: 1,
         }
     }
 
+    pub(super) fn check_drop_interval(&mut self) {
+        if self.input.borrow_mut().wants_to_fast_drop() {
+            self.drop_interval_modifier = 10
+        } else {
+            self.drop_interval_modifier = 1
+        }
+    }
 
     pub(super) fn rotate_brick(&mut self, now_millis: u64) {
         if self.is_time_to_rotate(now_millis) &&
@@ -106,7 +115,8 @@ impl GameState {
     }
 
     fn is_time_to_drop(&self, now_millis: u64) -> bool {
-        now_millis - self.last_drop_millis >= self.drop_interval as u64
+        let interval = self.drop_interval / self.drop_interval_modifier;
+        now_millis - self.last_drop_millis >= interval as u64
     }
 
     fn is_time_to_move(&self, now_millis: u64) -> bool {

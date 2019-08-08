@@ -7,7 +7,8 @@ pub type InputStubRef = Rc<RefCell<InputStub>>;
 pub struct InputStub {
     moving_right: bool,
     moving_left: bool,
-    rotating: bool
+    rotating: bool,
+    fast_dropping: bool
 }
 
 impl InputStub {
@@ -16,7 +17,8 @@ impl InputStub {
             Self {
                 moving_right: false,
                 moving_left: false,
-                rotating: false
+                rotating: false,
+                fast_dropping: false
             }
         ))
     }
@@ -44,6 +46,15 @@ impl InputStub {
     pub fn stop_rotating(&mut self) {
         self.rotating = false;
     }
+
+    pub fn is_fast_dropping(&mut self) {
+        self.fast_dropping = true;
+    }
+
+    pub fn stop_fast_dropping(&mut self) {
+        self.fast_dropping = false;
+    }
+
 }
 
 impl TInput for InputStub {
@@ -58,4 +69,9 @@ impl TInput for InputStub {
     fn wants_to_rotate(&self) -> bool {
         self.rotating
     }
+
+    fn wants_to_fast_drop(&self) -> bool {
+        self.fast_dropping
+    }
+
 }

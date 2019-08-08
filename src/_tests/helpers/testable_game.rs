@@ -90,6 +90,14 @@ impl TestableGame {
         self.input.borrow_mut().stop_rotating();
     }
 
+    pub fn is_fast_dropping(&mut self) {
+        self.input.borrow_mut().is_fast_dropping();
+    }
+
+    pub fn stop_fast_dropping(&mut self) {
+        self.input.borrow_mut().stop_fast_dropping();
+    }
+
     pub fn tick(&mut self, now: u64) {
         self.game.tick(now);
     }

@@ -1,6 +1,7 @@
 use crate::_tests::helpers::to_string_renderer::*;
 use crate::game::Game;
 use crate::_tests::helpers::testable_game::TestableGame;
+use crate::game::brick_factory::{i_block, o_block};
 
 #[test]
 fn render_initially_shows_field_with_one_brick() {
@@ -153,7 +154,64 @@ fn reset_rotation_for_new_brick() {
         "...#......",
         "...#......",
     ]);
+}
 
+#[test]
+fn reduce_drop_interval_if_input_calls_for_it() {
+    let mut game = TestableGame::init()
+        .with_drop_interval(100)
+        .with_brick_sequence(vec![i_block(), o_block()])
+        .build();
+
+    game.verify_frame_after(0, vec![
+        ".####.....",
+        "..........",
+        "..........",
+        "..........",
+    ]);
+
+    game.verify_frame_after(100, vec![
+        "..........",
+        ".####.....",
+        "..........",
+        "..........",
+    ]);
+
+    game.is_fast_dropping();
+
+    game.verify_frame_after(110, vec![
+        "..........",
+        "..........",
+        ".####.....",
+        "..........",
+        "..........",
+    ]);
+
+    game.verify_frame_after(120, vec![
+        "..........",
+        "..........",
+        "..........",
+        ".####.....",
+        "..........",
+    ]);
+
+    game.stop_fast_dropping();
+
+    game.verify_frame_after(130, vec![
+        "..........",
+        "..........",
+        "..........",
+        ".####.....",
+        "..........",
+    ]);
+
+    game.verify_frame_after(220, vec![
+        "..........",
+        "..........",
+        "..........",
+        "..........",
+        ".####.....",
+    ])
 
 }
 

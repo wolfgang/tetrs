@@ -31,6 +31,7 @@ impl Game {
     }
 
     pub fn tick(&mut self, now_millis: u64) {
+        self.state.check_drop_interval();
         self.state.rotate_brick(now_millis);
         self.state.move_brick_horizontally(now_millis);
         self.state.drop_brick(now_millis)
