@@ -6,15 +6,15 @@ use crate::game::builder::GameBuilder;
 const FIELD_WIDTH: usize = 10;
 
 pub struct GameState {
-    pub(super) last_drop_millis: u64,
-    pub(super) last_move_millis: u64,
-    pub(super) last_rotation_millis: u64,
+    last_drop_millis: u64,
+    last_move_millis: u64,
+    last_rotation_millis: u64,
     pub(super) field: Vec<Vec<u8>>,
     pub(super) active_brick: Brick,
-    pub(super) drop_interval: u16,
-    pub(super) input: TInputRef,
-    pub(super) brick_provider: BrickProviderRef,
-    pub(super) fast_drop_interval: u16,
+    drop_interval: u16,
+    fast_drop_interval: u16,
+    input: TInputRef,
+    brick_provider: BrickProviderRef,
 }
 
 impl GameState {
