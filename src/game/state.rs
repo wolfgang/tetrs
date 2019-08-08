@@ -9,6 +9,7 @@ pub struct GameState {
     last_drop_millis: u64,
     last_move_millis: u64,
     last_rotation_millis: u64,
+    last_land_millis: u64,
     drop_interval: u16,
     fast_drop_interval: u16,
     input: TInputRef,
@@ -31,6 +32,7 @@ impl GameState {
             last_drop_millis: builder.current_time_millis,
             last_move_millis: 0,
             last_rotation_millis: 0,
+            last_land_millis: 0,
             field,
             active_brick: Brick::new(builder.brick_provider.clone()),
             fast_drop_interval: 10,
@@ -61,6 +63,7 @@ impl GameState {
             if self.can_drop() {
                 self.active_brick.move_by(0, 1);
             } else {
+                self.last_land_millis = now_millis;
                 self.spawn_next_brick();
                 self.check_vanishing_lines();
             }
@@ -111,10 +114,13 @@ impl GameState {
     }
 
     fn is_time_to_drop(&self, now_millis: u64) -> bool {
-        now_millis - self.last_drop_millis >= self.actual_drop_interval() as u64
+        now_millis - self.last_drop_millis >= self.actual_drop_interval(now_millis) as u64
     }
 
-    fn actual_drop_interval(&self) -> u16 {
+    fn actual_drop_interval(&self, now_millis: u64) -> u16 {
+        if now_millis - self.last_land_millis < self.drop_interval as u64 {
+            return self.drop_interval
+        }
         if self.input.borrow_mut().wants_to_fast_drop() {
             self.fast_drop_interval
         } else {

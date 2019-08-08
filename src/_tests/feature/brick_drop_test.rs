@@ -212,8 +212,69 @@ fn reduce_drop_interval_if_input_calls_for_it() {
         "..........",
         ".####.....",
     ])
-
 }
 
+#[test]
+fn reset_fast_drop_for_new_brick() {
+    let mut game = TestableGame::init()
+        .with_brick_sequence(vec![i_block(), i_block()])
+        .with_drop_interval(100)
+        .with_now_millis(1000)
+        .with_field(vec![
+            "..........",
+            "..........",
+            "..........",
+            "...##....."
+        ])
+        .build();
+
+    game.verify_frame_after(1000, vec![
+        ".####.....",
+        "..........",
+        "..........",
+        "...##....."
+    ]);
+
+    game.is_fast_dropping();
+
+    game.verify_frame_after(1010, vec![
+        "..........",
+        ".####.....",
+        "..........",
+        "...##....."
+    ]);
+
+    game.verify_frame_after(1020, vec![
+        "..........",
+        "..........",
+        ".####.....",
+        "...##....."
+    ]);
+
+    game.verify_frame_after(1030, vec![
+        ".####.....",
+        "..........",
+        ".####.....",
+        "...##....."
+    ]);
+
+    game.verify_frame_after(1040, vec![
+        ".####.....",
+        "..........",
+        ".####.....",
+        "...##....."
+    ]);
+
+    game.verify_frame_after(1130, vec![
+        "..........",
+        ".####.....",
+        ".####.....",
+        "...##....."
+    ]);
+
+
+
+
+}
 
 

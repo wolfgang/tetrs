@@ -44,6 +44,11 @@ impl TestableGameBuilder {
         self
     }
 
+    pub fn with_now_millis(&mut self, now_millis: u64) -> &mut Self {
+        self.game_builder = self.game_builder.with_now_millis(now_millis).clone();
+        self
+    }
+
     pub fn build(&mut self) -> TestableGame {
         let input = InputStub::new_rc();
         TestableGame {
