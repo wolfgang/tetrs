@@ -4,23 +4,17 @@ use crate::game::tinput::TInput;
 
 pub type InputStubRef = Rc<RefCell<InputStub>>;
 
+#[derive(Default)]
 pub struct InputStub {
     moving_right: bool,
     moving_left: bool,
     rotating: bool,
-    fast_dropping: bool
+    fast_dropping: bool,
 }
 
 impl InputStub {
     pub fn new_rc() -> InputStubRef {
-        Rc::new(RefCell::new(
-            Self {
-                moving_right: false,
-                moving_left: false,
-                rotating: false,
-                fast_dropping: false
-            }
-        ))
+        Rc::new(RefCell::new(Self::default()))
     }
 
     pub fn is_moving_right(&mut self) {
@@ -31,7 +25,6 @@ impl InputStub {
     pub fn is_moving_left(&mut self) {
         self.moving_left = true;
         self.moving_right = false;
-
     }
 
     pub fn is_not_moving(&mut self) {
@@ -54,7 +47,6 @@ impl InputStub {
     pub fn stop_fast_dropping(&mut self) {
         self.fast_dropping = false;
     }
-
 }
 
 impl TInput for InputStub {
@@ -73,5 +65,4 @@ impl TInput for InputStub {
     fn wants_to_fast_drop(&self) -> bool {
         self.fast_dropping
     }
-
 }
