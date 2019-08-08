@@ -120,7 +120,7 @@ impl GameState {
     }
 
     fn is_time_to_move(&self, now_millis: u64) -> bool {
-        now_millis - self.last_move_millis >= 50
+        now_millis - self.last_move_millis >= 100
     }
 
     fn is_time_to_rotate(&self, now_millis: u64) -> bool {

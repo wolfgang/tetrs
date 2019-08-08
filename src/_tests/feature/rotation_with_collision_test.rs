@@ -125,13 +125,13 @@ fn j_block_moving_left() {
         ".#........"
     ]);
 
-    game.verify_frame_after(210, vec![
+    game.verify_frame_after(260, vec![
         "##........",
         "#.........",
         "#........."
     ]);
 
-    game.verify_frame_after(300, vec![
+    game.verify_frame_after(360, vec![
         "##........",
         "#.........",
         "#........."
