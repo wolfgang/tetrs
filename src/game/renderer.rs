@@ -7,8 +7,9 @@ pub struct GameRenderer {}
 impl GameRenderer {
     pub fn render(&self, t_renderer: &mut dyn TRenderer, game_state: &GameState) {
         t_renderer.clear();
-        self.render_field(t_renderer, &game_state.field);
-        self.render_active_brick(t_renderer, &game_state.active_brick)
+        let (field, active_brick) = game_state.state_data();
+        self.render_field(t_renderer, field);
+        self.render_active_brick(t_renderer, active_brick)
     }
 
     fn render_field(&self, t_renderer: &mut dyn TRenderer, field: &Vec<Vec<u8>>) {

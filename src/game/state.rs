@@ -9,12 +9,12 @@ pub struct GameState {
     last_drop_millis: u64,
     last_move_millis: u64,
     last_rotation_millis: u64,
-    pub(super) field: Vec<Vec<u8>>,
-    pub(super) active_brick: Brick,
     drop_interval: u16,
     fast_drop_interval: u16,
     input: TInputRef,
     brick_provider: BrickProviderRef,
+    field: Vec<Vec<u8>>,
+    active_brick: Brick,
 }
 
 impl GameState {
@@ -65,6 +65,10 @@ impl GameState {
                 self.check_vanishing_lines();
             }
         }
+    }
+
+    pub(super) fn state_data(&self) -> (&Vec<Vec<u8>>, &Brick) {
+        (&self.field, &self.active_brick)
     }
 
     fn check_vanishing_lines(&mut self) {
