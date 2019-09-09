@@ -1,5 +1,5 @@
 use crate::game::trenderer::TRenderer;
-use crate::game::brick_factory::*;
+use crate::_tests::helpers::brick_type::brick_type_to_char;
 
 pub struct ToStringRenderer {
     pub frame: Vec<Vec<char>>,
@@ -38,16 +38,7 @@ impl ToStringRenderer {
 
     fn encode_brick_type(&self, brick_type: u8) -> char {
         if !self.use_brick_type_encoding { return '#'; }
-        match brick_type {
-            I_BLOCK => { 'i' }
-            O_BLOCK => { 'o' }
-            T_BLOCK => { 't' }
-            J_BLOCK => { 'j' }
-            S_BLOCK => { 's' }
-            Z_BLOCK => { 'z' }
-            L_BLOCK => { 'l' }
-            _ => '#'
-        }
+        brick_type_to_char(brick_type)
     }
 
 
