@@ -4,6 +4,7 @@ use crate::_tests::helpers::sequential_brick_provider::SequentialBrickProvider;
 
 use crate::game::{Game, {builder:: GameBuilder}};
 use crate::game::brick_provider::BrickDef;
+use crate::game::brick_factory::*;
 
 pub struct TestableGameBuilder {
     game_builder: GameBuilder,
@@ -25,11 +26,24 @@ impl TestableGameBuilder {
 
     pub fn with_field(&mut self, field_str: Vec<&'static str>) -> &mut Self {
         let field: Vec<Vec<u8>> = field_str.iter().map(|row| {
-            row.chars().map(|c| { if c == '.' { 0 } else { 1 } }).collect()
+            row.chars().map(|c| { if c == '.' { 0 } else { Self::brick_char_to_type(c) } }).collect()
         }).collect();
 
         self.game_builder = self.game_builder.with_field(field).clone();
         self
+    }
+
+    fn brick_char_to_type(c: char) -> u8 {
+        match c {
+            'i' => { I_BLOCK }
+            'o' => { O_BLOCK }
+            't' => { T_BLOCK }
+            'j' => { J_BLOCK }
+            's' => { S_BLOCK }
+            'z' => { Z_BLOCK }
+            'l' => { L_BLOCK }
+            _ => I_BLOCK
+        }
     }
 
     pub fn with_drop_interval(&mut self, drop_interval: u16) -> &mut Self {

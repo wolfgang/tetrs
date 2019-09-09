@@ -4,29 +4,30 @@ use crate::game::brick_factory::i_block;
 #[test]
 fn single_line_vanishes() {
     let mut game = TestableGame::init()
+        .with_brick_type_encoding()
         .with_brick_sequence(vec![i_block(), i_block()])
         .with_field(vec![
             "..........",
             "..........",
-            "#....#####",
+            "o....zzool",
         ])
         .build();
 
     game.verify_frame_after(0, vec![
-        ".####.....",
+        ".iiii.....",
         "..........",
-        "#....#####",
+        "o....zzool",
     ]);
 
     game.tick(100);
     game.verify_frame_after(200,vec![
         "..........",
         "..........",
-        "##########",
+        "oiiiizzool",
     ]);
 
     game.verify_frame_after(300,vec![
-        ".####.....",
+        ".iiii.....",
         "..........",
         "..........",
     ]);
