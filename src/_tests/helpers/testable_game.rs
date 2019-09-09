@@ -7,12 +7,14 @@ use crate::game::brick_provider::BrickDef;
 
 pub struct TestableGameBuilder {
     game_builder: GameBuilder,
+    use_brick_type_encoding: bool
 }
 
 impl TestableGameBuilder {
     pub fn new() -> Self {
         TestableGameBuilder {
-            game_builder: GameBuilder::init()
+            game_builder: GameBuilder::init(),
+            use_brick_type_encoding: false
         }
     }
 
@@ -49,12 +51,19 @@ impl TestableGameBuilder {
         self
     }
 
+    pub fn with_brick_type_encoding(&mut self) -> &mut Self {
+        self.use_brick_type_encoding = true;
+        self
+    }
+
     pub fn build(&mut self) -> TestableGame {
         let input = InputStub::new_rc();
+        let mut renderer = ToStringRenderer::with_height(self.game_builder.field_height as usize);
+        renderer.use_brick_type_encoding(self.use_brick_type_encoding);
         TestableGame {
             input: input.clone(),
             game: self.game_builder.with_input(input.clone()).build(),
-            renderer: ToStringRenderer::with_height(self.game_builder.field_height as usize),
+            renderer
         }
     }
 }
