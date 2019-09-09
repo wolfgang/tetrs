@@ -26,7 +26,7 @@ impl<'a> RaylibRenderer {
         if brick_type == Z_BLOCK { return Color::LIME}
         if brick_type == L_BLOCK { return Color::YELLOW}
 
-        return Color::WHITE;
+        Color::WHITE
     }
 
 }
