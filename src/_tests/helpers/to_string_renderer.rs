@@ -1,12 +1,10 @@
 use crate::game::trenderer::TRenderer;
-use std::collections::HashMap;
 use crate::game::brick_factory::*;
 
 pub struct ToStringRenderer {
     pub frame: Vec<Vec<char>>,
     width: usize,
-    use_brick_type_encoding: bool,
-    brick_type_to_char: HashMap<u8, char>
+    use_brick_type_encoding: bool
 }
 
 impl ToStringRenderer {
@@ -19,20 +17,10 @@ impl ToStringRenderer {
     }
 
     pub fn new(width: usize, height: usize) -> ToStringRenderer {
-        let mut brick_type_to_char = HashMap::new();
-        brick_type_to_char.insert(I_BLOCK, 'i');
-        brick_type_to_char.insert(O_BLOCK, 'o');
-        brick_type_to_char.insert(T_BLOCK, 't');
-        brick_type_to_char.insert(J_BLOCK, 'j');
-        brick_type_to_char.insert(S_BLOCK, 's');
-        brick_type_to_char.insert(Z_BLOCK, 'z');
-        brick_type_to_char.insert(L_BLOCK, 'l');
-
         ToStringRenderer {
             frame: vec![Vec::with_capacity(width); height],
             width,
-            use_brick_type_encoding: false,
-            brick_type_to_char
+            use_brick_type_encoding: false
         }
     }
 
@@ -49,14 +37,24 @@ impl ToStringRenderer {
     }
 
     fn encode_brick_type(&self, brick_type: u8) -> char {
-        if !self.use_brick_type_encoding { return '#' }
-        return *self.brick_type_to_char.get(&brick_type).unwrap_or(&'#')
+        if !self.use_brick_type_encoding { return '#'; }
+        match brick_type {
+            I_BLOCK => { 'i' }
+            O_BLOCK => { 'o' }
+            T_BLOCK => { 't' }
+            J_BLOCK => { 'j' }
+            S_BLOCK => { 's' }
+            Z_BLOCK => { 'z' }
+            L_BLOCK => { 'l' }
+            _ => '#'
+        }
     }
+
 
     fn assert_frame_internal(&self, expected_frame: Vec<&str>, exact: bool) {
         let max_checked_lines = if exact { self.frame.len() } else { expected_frame.len() };
         assert_eq!(
-            self.frame_as_strings()[0 .. max_checked_lines].join("\n"),
+            self.frame_as_strings()[0..max_checked_lines].join("\n"),
             expected_frame.join("\n")
         )
     }
