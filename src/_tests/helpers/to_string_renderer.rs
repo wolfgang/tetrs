@@ -1,8 +1,12 @@
 use crate::game::trenderer::TRenderer;
+use std::collections::HashMap;
+use crate::game::brick_factory::*;
 
 pub struct ToStringRenderer {
     pub frame: Vec<Vec<char>>,
     width: usize,
+    use_brick_type_encoding: bool,
+    brick_type_to_char: HashMap<u8, char>
 }
 
 impl ToStringRenderer {
@@ -15,10 +19,25 @@ impl ToStringRenderer {
     }
 
     pub fn new(width: usize, height: usize) -> ToStringRenderer {
+        let mut brick_type_to_char = HashMap::new();
+        brick_type_to_char.insert(I_BLOCK, 'i');
+        brick_type_to_char.insert(O_BLOCK, 'o');
+        brick_type_to_char.insert(T_BLOCK, 't');
+        brick_type_to_char.insert(J_BLOCK, 'j');
+        brick_type_to_char.insert(S_BLOCK, 's');
+        brick_type_to_char.insert(Z_BLOCK, 'z');
+        brick_type_to_char.insert(L_BLOCK, 'l');
+
         ToStringRenderer {
             frame: vec![Vec::with_capacity(width); height],
             width,
+            use_brick_type_encoding: false,
+            brick_type_to_char
         }
+    }
+
+    pub fn use_brick_type_encoding(&mut self, b: bool) {
+        self.use_brick_type_encoding = b;
     }
 
     pub fn assert_frame(&self, expected_frame: Vec<&str>) {
@@ -27,6 +46,11 @@ impl ToStringRenderer {
 
     pub fn assert_frame_exact(&self, expected_frame: Vec<&str>) {
         self.assert_frame_internal(expected_frame, true);
+    }
+
+    fn encode_brick_type(&self, brick_type: u8) -> char {
+        if !self.use_brick_type_encoding { return '#' }
+        return *self.brick_type_to_char.get(&brick_type).unwrap_or(&'#')
     }
 
     fn assert_frame_internal(&self, expected_frame: Vec<&str>, exact: bool) {
@@ -53,7 +77,7 @@ impl TRenderer for ToStringRenderer {
         }
     }
 
-    fn draw_bricklet_at(&mut self, x: u8, y: u8, _brick_type: u8) {
-        self.frame[y as usize][x as usize] = '#'
+    fn draw_bricklet_at(&mut self, x: u8, y: u8, brick_type: u8) {
+        self.frame[y as usize][x as usize] = self.encode_brick_type(brick_type)
     }
 }
