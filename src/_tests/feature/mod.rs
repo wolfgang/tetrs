@@ -7,3 +7,4 @@ pub mod testable_game_factory_test;
 pub mod rotation_with_collision_test;
 pub mod all_brick_rotations_test;
 pub mod vanishing_lines_test;
+pub mod demo_tests;
