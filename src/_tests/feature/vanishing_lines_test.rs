@@ -1,11 +1,11 @@
 use crate::_tests::helpers::testable_game::TestableGame;
-use crate::game::brick_factory::i_block;
+use crate::game::brick_factory::{i_block, z_block};
 
 #[test]
 fn single_line_vanishes() {
     let mut game = TestableGame::init()
         .with_brick_type_encoding()
-        .with_brick_sequence(vec![i_block(), i_block()])
+        .with_brick_sequence(vec![i_block(), z_block()])
         .with_field(vec![
             "..........",
             "..........",
@@ -27,8 +27,8 @@ fn single_line_vanishes() {
     ]);
 
     game.verify_frame_after(300, vec![
-        ".iiii.....",
-        "..........",
+        ".zz.......",
+        "..zz......",
         "..........",
     ]);
 }
