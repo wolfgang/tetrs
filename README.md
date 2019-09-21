@@ -1,7 +1,7 @@
 # tetrs
 Yet another TDD exploration in the context of game development, using Tetris as an example.
 
-You can read an introduction to the technique [here](https://wolfgangd.gitlab.io/blog/posts/outside-in-tdd-tetris/).
+You can read an introduction to the technique [here](https://blog.wolfgangdeutsch.work/posts/outside-in-tdd-tetris/).
 
 Rendering is done using the excellent [Rust bindings](https://github.com/deltaphc/raylib-rs) for the excellent [Raylib](https://www.raylib.com/) graphics library.
 
